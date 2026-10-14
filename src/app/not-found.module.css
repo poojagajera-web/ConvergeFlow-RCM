@@ -1,0 +1,27 @@
+.section {
+  min-height: 78vh;
+  display: grid;
+  align-items: center;
+  padding-block: calc(var(--header-h) + 4rem) 6rem;
+  background: var(--navy-900);
+  color: var(--on-dark);
+}
+
+.inner {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-5);
+}
+
+.title {
+  max-width: 16ch;
+  font-size: var(--fs-h2);
+  letter-spacing: -0.04em;
+  color: var(--white);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}

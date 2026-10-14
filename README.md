@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ConvergeFlow — marketing site
 
-## Getting Started
+Next.js 16 (App Router, Turbopack) · React 19 · CSS Modules + design tokens · GSAP 3 + ScrollTrigger/SplitText · Lenis.
 
-First, run the development server:
+## Run
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:3000
+npm run build    # production build (all routes prerender as static)
+npm run start
+npm run lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Structure
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+src/
+  app/                 layout (fonts, header/footer, Lenis), home, /demo, not-found, globals.css (tokens)
+  content/
+    home.ts            all home-page copy and product data
+    navigation.ts      sitemap IA (ConvergeFlow_RCM_Sitemap.xlsx) + BUILT_ROUTES
+  components/
+    layout/            Header (mega menus, mobile sheet), Footer
+    sections/          one folder-less component + CSS module per home section
+    product/           live verification console, video dialog
+    forms/             DemoForm (shared by home #demo and /demo)
+    motion/            SmoothScroll (Lenis ↔ GSAP ticker), MotionScope (data-anim reveals), useMotion
+    ui/                Button, SmartLink (hash-aware links), Logo
+  lib/gsap.ts          plugin registration + shared media queries
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Animation conventions
 
-## Learn More
+- Markup opts into scroll reveals with `data-anim="fade|stagger|lines|clip|draw|count"`; `MotionScope` wraps each page so reveals start only after hydration.
+- Component choreography uses `useMotion(ref, ({ motion, desktop }) => …)` — a `gsap.matchMedia` context that reverts on unmount and when reduced-motion changes.
+- `prefers-reduced-motion: reduce` disables Lenis and every tween; content is never hidden without JavaScript.
 
-To learn more about Next.js, take a look at the following resources:
+## Adding sitemap pages
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Navigation lists every sitemap slug. Until a page exists, links fall back to the matching home-page section. When you ship a route, add its slug to `BUILT_ROUTES` in `src/content/navigation.ts` and the header, mega menus and footer switch to it automatically.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Open items
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- The demo form validates and confirms locally only — it is not connected to a CRM, email or scheduling backend yet (the original site behaved the same way).
+- Pricing, Login/client portal, Resources content and legal pages from the sitemap are not built.
