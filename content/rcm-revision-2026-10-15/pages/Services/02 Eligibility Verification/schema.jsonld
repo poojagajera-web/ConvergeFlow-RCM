@@ -1,0 +1,85 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://marketing-domain.invalid/services/eligibility-verification/#webpage",
+      "url": "https://marketing-domain.invalid/services/eligibility-verification/",
+      "name": "Insurance Eligibility Verification | ConvergeFlow",
+      "description": "Review eligibility verification with appointment context, task status and risk flags. Bring payer and practice requirements to a ConvergeFlow product demo.",
+      "inLanguage": "en-US",
+      "isPartOf": {
+        "@id": "https://marketing-domain.invalid/#website"
+      },
+      "about": {
+        "@type": "Thing",
+        "name": "insurance eligibility verification"
+      },
+      "breadcrumb": {
+        "@id": "https://marketing-domain.invalid/services/eligibility-verification/#breadcrumb"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://marketing-domain.invalid/services/eligibility-verification/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://marketing-domain.invalid/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Services",
+          "item": "https://marketing-domain.invalid/services/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Insurance eligibility verification with appointment context",
+          "item": "https://marketing-domain.invalid/services/eligibility-verification/"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://marketing-domain.invalid/services/eligibility-verification/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does an eligibility flag confirm coverage?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. A displayed flag is a prompt for review, not confirmation that coverage applies or that a claim will be paid. Ask how each flag is defined and which information supports it. Your team should handle unresolved questions through its established payer and practice process before relying on a result."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which payer responses are available?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The available payer responses have not been established by the read-only product review. It confirmed queue and eligibility interfaces rather than live processing. Bring the payers, information fields and service situations relevant to your practice, and ask to see what the product returns and how incomplete responses are represented."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does a PMS name confirm an integration?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. A system name or connection field does not establish a working integration. Confirm the supported system and version, which information moves between systems, and what implementation requires. Review update behavior and ownership of corrections before planning to rely on the connection for your appointment workflow."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can medical and dental teams use the same workflow?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "That requires practice-specific confirmation. The observed account was dental-focused, and medical-specific support has not been validated. Medical teams should bring their specialty, payer requirements and systems to the discussion. Dental teams should also confirm their required information and data flows instead of assuming the demonstration covers every use case."
+          }
+        }
+      ]
+    }
+  ]
+}

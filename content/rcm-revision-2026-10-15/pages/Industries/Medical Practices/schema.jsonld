@@ -1,0 +1,60 @@
+{
+  "@graph": [
+    {
+      "name": "Medical Revenue Cycle Management Review | ConvergeFlow",
+      "about": {
+        "@id": "https://marketing-domain.invalid/#business"
+      },
+      "inLanguage": "en-US",
+      "breadcrumb": {
+        "@id": "https://marketing-domain.invalid/industries/medical/#breadcrumb"
+      },
+      "@type": "WebPage",
+      "description": "Review medical revenue cycle management requirements for your specialty, payers and systems. Use a ConvergeFlow demo to confirm available support.",
+      "@id": "https://marketing-domain.invalid/industries/medical/#webpage",
+      "url": "https://marketing-domain.invalid/industries/medical/",
+      "isPartOf": {
+        "@id": "https://marketing-domain.invalid/#website"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "item": "https://marketing-domain.invalid/",
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1
+        },
+        {
+          "item": "https://marketing-domain.invalid/industries/",
+          "@type": "ListItem",
+          "name": "Industries",
+          "position": 2
+        },
+        {
+          "item": "https://marketing-domain.invalid/industries/medical/",
+          "@type": "ListItem",
+          "name": "Medical Practices",
+          "position": 3
+        }
+      ],
+      "@id": "https://marketing-domain.invalid/industries/medical/#breadcrumb"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Are all medical specialties and payer workflows supported?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Support for every medical specialty or payer workflow has not been established. The reviewed account was dental-focused. Use the ConvergeFlow demo to confirm the fields, transactions, systems and review responsibilities relevant to your practice. Keep unresolved requirements visible before changing an operating process or making an implementation decision."
+          }
+        }
+      ],
+      "@id": "https://marketing-domain.invalid/industries/medical/#faq"
+    }
+  ],
+  "@context": "https://schema.org"
+}

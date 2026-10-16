@@ -5,6 +5,7 @@
    ========================================================================= */
 
 :root {
+  --cta-overlap-size: clamp(32px, 24px + 3vw, 64px);
   /* Brand */
   --navy-950: #071422;
   --navy-900: #0a1a2b;
@@ -267,6 +268,20 @@ button {
   color: var(--teal-ink);
 }
 
+/* The ConvergeFlow C-mark leads every eyebrow (navy ring on light grounds, white on dark). */
+.eyebrow::before {
+  content: "";
+  flex-shrink: 0;
+  width: 1.6em;
+  height: 1.6em;
+  margin-right: -0.125rem;
+  background: url("/assets/logos/convergeflow-mark-onlight.png") center / contain no-repeat;
+}
+
+.on-dark .eyebrow::before {
+  background-image: url("/assets/logos/convergeflow-mark.png");
+}
+
 .eyebrow-index {
   font-variant-numeric: tabular-nums;
   color: var(--ink-3);
@@ -491,6 +506,14 @@ button {
     column-gap: var(--gutter);
   }
 
+  .section-head.is-split.is-top {
+    align-items: start;
+  }
+
+  .section-head.is-split.is-top .section-head-aside {
+    padding-top: 2.25rem;
+  }
+
   .section-head.is-split .section-head-aside {
     padding-bottom: 0.4rem;
   }
@@ -546,4 +569,22 @@ html.lenis body {
 .split-line-mask {
   padding-bottom: 0.08em;
   margin-bottom: -0.08em;
+}
+
+/* Inline links inside approved body copy */
+.text-link {
+  color: var(--teal-ink);
+  text-decoration: underline;
+  text-decoration-color: rgba(2, 133, 121, 0.35);
+  text-underline-offset: 3px;
+}
+
+.text-link:hover {
+  text-decoration-color: currentColor;
+}
+
+/* When a page ends with the overlapping CTA card, the footer content still starts
+   120px below the footer top (the card overlaps part of that space). */
+body:has([data-cta-overlap]) > footer {
+  padding-top: calc(var(--cta-overlap-size) + clamp(40px, 30px + 2vw, 56px));
 }

@@ -7,13 +7,13 @@ export default function NotFound() {
       <div className={`container ${styles.inner}`}>
         <p className="eyebrow">404</p>
         <h1 id="nf-title" className={styles.title}>
-          This page isn’t in the flow yet.
+          This page isn’t available.
         </h1>
-        <p className="lede">The link may be outdated, or the page is still being built. Everything ConvergeFlow automates is on the home page.</p>
+        <p className="lede">The link may be outdated, or the page has not been published yet. Start from the home page or the services overview.</p>
         <div className={styles.actions}>
           <ButtonLink href="/">Back to home</ButtonLink>
-          <ButtonLink href="/demo" variant="secondary">
-            Schedule a Demo
+          <ButtonLink href="/services/" variant="secondary">
+            Explore the Services
           </ButtonLink>
         </div>
       </div>

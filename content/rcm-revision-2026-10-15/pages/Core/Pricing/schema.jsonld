@@ -1,0 +1,52 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://marketing-domain.invalid/#business",
+      "name": "ConvergeFlow",
+      "url": "https://marketing-domain.invalid/"
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://marketing-domain.invalid/#website",
+      "name": "ConvergeFlow",
+      "url": "https://marketing-domain.invalid/"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://marketing-domain.invalid/pricing/#webpage",
+      "url": "https://marketing-domain.invalid/pricing/",
+      "name": "ConvergeFlow Pricing | Discuss Your Requirements",
+      "description": "Discuss ConvergeFlow pricing with your workflow requirements in view. Prepare questions about scope, implementation and terms for a product demo.",
+      "inLanguage": "en-US",
+      "isPartOf": {
+        "@id": "https://marketing-domain.invalid/#website"
+      },
+      "about": {
+        "@id": "https://marketing-domain.invalid/#business"
+      },
+      "breadcrumb": {
+        "@id": "https://marketing-domain.invalid/pricing/#breadcrumb"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://marketing-domain.invalid/pricing/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://marketing-domain.invalid/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Pricing",
+          "item": "https://marketing-domain.invalid/pricing/"
+        }
+      ]
+    }
+  ]
+}

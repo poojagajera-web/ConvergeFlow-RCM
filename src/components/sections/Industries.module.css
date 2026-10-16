@@ -155,3 +155,11 @@
     text-align: right;
   }
 }
+
+.linkMuted {
+  color: var(--ink-3);
+}
+
+.row:hover .linkMuted {
+  color: var(--navy-700);
+}

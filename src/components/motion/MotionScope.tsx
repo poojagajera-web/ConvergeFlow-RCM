@@ -40,6 +40,7 @@ export function MotionScope({ children }: { children: ReactNode }) {
           y: 32,
           duration: 1.2,
           delay: Number(el.dataset.delay ?? 0),
+          clearProps: "opacity,transform",
           scrollTrigger: { trigger: el, start, once: true },
         });
       });
@@ -50,6 +51,7 @@ export function MotionScope({ children }: { children: ReactNode }) {
           y: 28,
           duration: 1.1,
           stagger: 0.08,
+          clearProps: "opacity,transform",
           scrollTrigger: { trigger: el, start, once: true },
         });
       });

@@ -3,6 +3,8 @@ import { Google_Sans, Plus_Jakarta_Sans } from "next/font/google";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
+import { HOME_META } from "@/content/home";
+import { ROBOTS, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -30,21 +32,12 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "ConvergeFlow | AI-Powered Revenue Cycle Management",
-  description:
-    "ConvergeFlow automates every step of RCM — from eligibility verification to payment posting — so your clinical team focuses on patients, not paperwork.",
-  keywords: [
-    "ConvergeFlow",
-    "Revenue Cycle Management",
-    "AI RCM",
-    "Healthcare SaaS",
-    "Insurance verification",
-    "Prior authorization",
-    "Denial management",
-    "Payment posting",
-    "QuantumDataLytica",
-  ],
-  authors: [{ name: "ConvergeFlow, LLC" }],
+  ...(SITE_URL ? { metadataBase: new URL(SITE_URL) } : {}),
+  title: { default: HOME_META.title, template: "%s | ConvergeFlow" },
+  description: HOME_META.description,
+  applicationName: "ConvergeFlow",
+  // Draft content: noindex/nofollow until the release is approved (see src/lib/site.ts).
+  robots: ROBOTS,
 };
 
 /**
@@ -55,7 +48,7 @@ const bootScript = `(function(){var d=document.documentElement;d.classList.add('
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${jakarta.variable} ${googleSans.variable}`} suppressHydrationWarning>
+    <html lang="en-US" className={`${jakarta.variable} ${googleSans.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: bootScript }} />
       </head>

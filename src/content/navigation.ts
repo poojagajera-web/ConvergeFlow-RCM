@@ -1,69 +1,64 @@
 /**
- * Information architecture from ConvergeFlow_RCM_Sitemap.xlsx (Nav Structure).
- *
- * Each entry keeps its planned sitemap slug in `route`. Until that page ships
- * it is added to BUILT_ROUTES, links resolve to the matching section of the
- * home page (`anchor`), so no navigation item ever leads to a 404.
+ * Site navigation, generated from the SEO package's Navigation Specification
+ * (content/rcm-revision-2026-10-15). Only routes that exist in this build are
+ * exposed as links; deferred destinations stay hidden rather than leading to
+ * empty pages.
  */
+import nav from "./generated/navigation.json";
+import pages from "./generated/pages.json";
 
-export type NavLink = {
+export type NavLink = { label: string; href: string };
+export type NavGroup = {
   label: string;
-  /** Planned sitemap URL. */
-  route: string;
-  /** Home-page fallback while the route is not built yet. */
-  anchor?: string;
-  note?: string;
+  /** Overview route when it is built; otherwise the category is a menu only. */
+  href?: string;
+  children: NavLink[];
 };
 
-/** Routes that exist in the app today. Add a slug here when its page ships. */
-export const BUILT_ROUTES = new Set<string>(["/", "/demo"]);
+/** Existing product login — never rebuilt or redirected by the marketing site. */
+export const LOGIN_URL = nav.utility.find((u) => u.label === "Login")?.url ?? "/";
 
-export function resolveHref(link: NavLink): string | null {
-  if (BUILT_ROUTES.has(link.route)) return link.route;
-  if (link.anchor) return `/#${link.anchor}`;
-  return null;
+export const BUILT_ROUTES = new Set<string>(["/", ...pages.map((p) => p.route)]);
+
+const normalize = (href: string) => {
+  const [path] = href.split("#");
+  if (!path) return href;
+  return path.endsWith("/") ? path : `${path}/`;
+};
+
+/** True for hashes, external URLs and internal routes this build serves. */
+export function isLive(href: string) {
+  if (href.startsWith("#") || /^https?:/.test(href) || href.startsWith("mailto:")) return true;
+  return BUILT_ROUTES.has(normalize(href));
 }
 
-export const SERVICE_LINKS: NavLink[] = [
-  { label: "Eligibility Verification", route: "/services/eligibility-verification", anchor: "eligibility-verification", note: "Real-time EDI 270/271 with audit evidence" },
-  { label: "Prior Authorization", route: "/services/prior-authorization", anchor: "prior-authorization", note: "Packet assembly, 278 dispatch, status polling" },
-  { label: "Charge Capture & Coding", route: "/services/charge-capture-coding", anchor: "charge-capture-coding", note: "CDT / CPT / ICD-10 crosswalks" },
-  { label: "Claims Submission", route: "/services/claims-submission", anchor: "claims-submission", note: "Scrubbed 837 batches, clearinghouse ACKs" },
-  { label: "Denial Management", route: "/services/denial-management", anchor: "denial-management", note: "Root-cause mapping and appeal briefs" },
-  { label: "Payment Posting", route: "/services/payment-posting", anchor: "payment-posting", note: "ERA 835 auto-posting to the penny" },
-  { label: "AR Management", route: "/services/ar-management", anchor: "ar-management", note: "Aged-balance recovery and forecasting" },
-];
+/** The href to render, or null when the destination is not published yet. */
+export function liveHref(href: string): string | null {
+  if (!isLive(href)) return null;
+  return href;
+}
 
-export const SERVICES_OVERVIEW: NavLink = { label: "All eight service pillars", route: "/services", anchor: "pipeline" };
-
-export const INDUSTRY_LINKS: NavLink[] = [
-  { label: "Dental Practices", route: "/industries/dental", anchor: "industry-dental", note: "Primary market" },
-  { label: "DSO / Group Practices", route: "/industries/dso-groups", anchor: "industry-dso", note: "Multi-location" },
-  { label: "Medical Clinics", route: "/industries/medical-clinics", anchor: "industry-medical", note: "Primary & urgent care" },
-  { label: "Specialty Practices", route: "/industries/specialty", anchor: "industry-specialty", note: "High prior-auth volume" },
-  { label: "Hospitals & Health Systems", route: "/industries/hospitals", anchor: "industry-hospitals", note: "Enterprise scale" },
-  { label: "Behavioral Health", route: "/industries/behavioral-health", anchor: "industry-behavioral", note: "Session limits & carve-outs" },
-  { label: "RCM Billing Companies", route: "/industries/billing-companies", anchor: "billing-companies", note: "White-label engine" },
-];
-
-export const INDUSTRIES_OVERVIEW: NavLink = { label: "Every practice vertical", route: "/industries", anchor: "industries" };
-
-export const RESOURCE_LINKS: NavLink[] = [
-  { label: "Client stories", route: "/resources/case-studies", anchor: "testimonials", note: "Results from live practices" },
-  { label: "Implementation process", route: "/resources/guides", anchor: "how-it-works", note: "From PMS connect to go-live" },
-  { label: "FAQ", route: "/resources/faq", anchor: "faq", note: "Security, setup time, ROI" },
-];
-
-export const PRIMARY_NAV = {
-  technology: { label: "Technology", route: "/technology", anchor: "technology" } satisfies NavLink,
-  outcomes: { label: "Outcomes", route: "/roi-calculator", anchor: "results" } satisfies NavLink,
-  demo: { label: "Schedule a Demo", route: "/demo", anchor: "demo" } satisfies NavLink,
+/** Friendlier labels than the long-form spec where the menu needs them short. */
+const SHORT: Record<string, string> = {
+  "/services/claims-submission/": "Claims Submission",
+  "/services/ar-management/": "AR Management and Reporting",
 };
 
+export const MAIN_NAV: NavGroup[] = nav.primary.map((item) => ({
+  label: item.label,
+  href: isLive(item.url) ? item.url : undefined,
+  children: (item.children ?? []).filter((c) => isLive(c.url)).map((c) => ({ label: SHORT[c.url] ?? c.label, href: c.url })),
+}));
+
+export const DEMO_LINK: NavLink = { label: "Schedule a Demo", href: "/demo/" };
+
 export const COMPANY_LINKS: NavLink[] = [
-  { label: "Why ConvergeFlow", route: "/about/why-convergeflow", anchor: "revenue-cycle" },
-  { label: "QuantumDataLytica platform", route: "/technology/qdl-platform", anchor: "technology" },
-  { label: "Security & HIPAA", route: "/technology/security", anchor: "security" },
-  { label: "Measurable outcomes", route: "/roi-calculator", anchor: "results" },
-  { label: "Contact & demo", route: "/demo", anchor: "demo" },
-];
+  { label: "About", href: "/about/" },
+  { label: "Why ConvergeFlow", href: "/why-convergeflow/" },
+  { label: "How It Works", href: "/how-it-works/" },
+  { label: "Pricing", href: "/pricing/" },
+  { label: "Resources", href: "/resources/" },
+  { label: "Contact", href: "/contact/" },
+].filter((l) => isLive(l.href));
+
+export const groupByLabel = (label: string) => MAIN_NAV.find((g) => g.label === label);

@@ -137,7 +137,7 @@
 
 @media (min-width: 1100px) {
   .layout {
-    grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
     align-items: start;
   }
 
@@ -204,22 +204,22 @@
   }
 
   .step {
-    min-height: 78vh;
+    min-height: clamp(260px, 40vh, 380px);
     align-content: center;
-    padding-block: var(--space-7);
+    padding-block: var(--space-5);
     opacity: 0.38;
     transition: opacity 600ms var(--ease-out);
   }
 
   .step:first-of-type {
     align-content: start;
-    min-height: 64vh;
+    min-height: clamp(220px, 32vh, 320px);
     padding-top: 0;
   }
 
   .step:last-child {
-    min-height: 64vh;
-    align-content: end;
+    min-height: clamp(220px, 32vh, 320px);
+    align-content: start;
     padding-bottom: 0;
   }
 
@@ -234,8 +234,14 @@
   .stage {
     display: block;
     position: sticky;
-    top: calc(var(--header-h) + 2.5rem);
+    top: calc(var(--header-h) + 2rem);
     padding-left: var(--space-6);
+  }
+
+  /* All frames share one height so the stage does not jump between steps. */
+  .frameSlot > figure {
+    min-height: min(34rem, calc(100vh - var(--header-h) - 12rem));
+    height: 100%;
   }
 
   .stageInner {
@@ -362,5 +368,24 @@
   .counterNow,
   .stageTimeline {
     animation: none;
+  }
+}
+
+/* Let the illustrative frames shrink to the column on small screens. */
+.layout,
+.stepList,
+.step {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.steps,
+.inlineFrame,
+.inlineFrame > figure {
+  min-width: 0;
+}
+
+@media (min-width: 1100px) {
+  .layout {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
   }
 }

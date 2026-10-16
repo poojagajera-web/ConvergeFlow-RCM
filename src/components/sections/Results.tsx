@@ -1,174 +1,243 @@
 "use client";
 
 import Image from "next/image";
-import { useRef } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { RESULTS } from "@/content/home";
 import { ButtonLink } from "@/components/ui/Button";
 import { useMotion } from "@/components/motion/useMotion";
-import { gsap } from "@/lib/gsap";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 import styles from "./Results.module.css";
 
-/** Statement line items, all drawn from RESULTS copy. */
-const LINES = [
-  { label: "Manual eligibility verification time", note: RESULTS.items[0].body, sign: "−", value: 94, unit: "%" },
-  { label: "Initial denial rate", note: RESULTS.items[1].body, sign: "−", value: 31, unit: "%" },
-  { label: "Payment turnaround", note: RESULTS.items[2].body, sign: "", value: 14, unit: " days faster" },
-];
-const SPARK = [8, 12, 15, 19, 22, 26, 29, 32, 35, 38, 40, 42];
+const CARDS = RESULTS.cards ?? [];
+const DEFS = ["Baseline period", "Reporting scope", "Review dates", "Measure definition"];
+const CYCLE_MS = 5200;
+const pad = (n: number) => String(n).padStart(2, "0");
+
+/* Chart outlines for each measure — shapes only, never values. */
+function Chart({ kind }: { kind: number }) {
+  if (kind === 0)
+    return (
+      <div className={styles.chart}>
+        <div className={styles.legend}>
+          <span data-key="a">Entering the queue</span>
+          <span data-key="b">Waiting for attention</span>
+        </div>
+        <div className={styles.groups}>
+          {[
+            [62, 40],
+            [74, 46],
+            [58, 52],
+            [80, 44],
+            [66, 38],
+            [72, 50],
+          ].map(([a, b], i) => (
+            <span key={i} className={styles.group}>
+              <i data-key="a" style={{ height: `${a}%` }} data-grow />
+              <i data-key="b" style={{ height: `${b}%` }} data-grow />
+            </span>
+          ))}
+        </div>
+      </div>
+    );
+  if (kind === 1)
+    return (
+      <div className={styles.chart}>
+        <ul className={styles.items}>
+          {[
+            { id: "Claim 0002", tag: "Correction", tone: "review", owner: "Billing" },
+            { id: "Claim 0005", tag: "Denial", tone: "alert", owner: "Billing" },
+            { id: "Claim 0007", tag: "Correction", tone: "review", owner: "Front desk" },
+          ].map((r) => (
+            <li key={r.id} data-grow>
+              <span className={styles.itemId}>{r.id}</span>
+              <span className={styles.itemTag} data-tone={r.tone}>
+                {r.tag}
+              </span>
+              <span className={styles.itemOwner}>{r.owner}</span>
+              <span className={styles.itemNext}>Next step</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  if (kind === 2)
+    return (
+      <div className={styles.chart}>
+        <svg className={styles.line} viewBox="0 0 400 160" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="mp-fill" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" stopColor="#0ca394" stopOpacity="0.22" />
+              <stop offset="1" stopColor="#0ca394" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          <path className={styles.lineFill} d="M0 120 C 60 112, 90 70, 140 78 S 230 110, 280 72 S 360 44, 400 50 V160 H0z" />
+          <path className={styles.lineStroke} data-draw d="M0 120 C 60 112, 90 70, 140 78 S 230 110, 280 72 S 360 44, 400 50" />
+        </svg>
+      </div>
+    );
+  return (
+    <div className={styles.chart}>
+      <div className={styles.aging}>
+        {["0–30", "31–60", "61–90", "90+"].map((l, i) => (
+          <span key={l} className={styles.bucket}>
+            <i style={{ height: `${[78, 58, 38, 26][i]}%` }} data-older={i > 1 || undefined} data-grow />
+            <b>{l}</b>
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 /**
- * Outcomes on one screen: the $42K headline card on the left, a board-ready
- * statement on the right whose lines print in, tally up, and get stamped.
+ * "Measure the work": a light measurement viewer. The four approved measures
+ * are tabs; each shows a chart outline and the definitions still to agree.
  */
 export function Results() {
   const ref = useRef<HTMLElement>(null);
-  const { hero } = RESULTS;
+  const panelRef = useRef<HTMLDivElement>(null);
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const [active, setActive] = useState(0);
+  const [playing, setPlaying] = useState(false);
+  const paused = useRef(false);
 
   useMotion(ref, ({ motion }) => {
-    if (!motion) return;
     const root = ref.current!;
-
-    // Feature card: number counts, sparkline bars rise.
-    const card = gsap.timeline({ scrollTrigger: { trigger: root.querySelector("[data-feature]"), start: "top 82%", once: true }, defaults: { ease: "expo.out" } });
-    card.from(root.querySelector("[data-feature]"), { opacity: 0, y: 40, duration: 1.2 });
-    card.from(root.querySelectorAll("[data-spark]"), { scaleY: 0, transformOrigin: "bottom", duration: 0.8, stagger: 0.05 }, 0.3);
-    const hv = root.querySelector<HTMLElement>("[data-hero-count]");
-    if (hv) {
-      const s = { v: 0 };
-      hv.textContent = "0";
-      card.to(s, { v: hero.value, duration: 1.8, ease: "power3.out", onUpdate: () => (hv.textContent = String(Math.round(s.v))) }, 0.2);
-    }
-
-    // Statement: rise, print each line, tally, total, stamp.
-    const doc = root.querySelector<HTMLElement>("[data-statement]")!;
-    const tl = gsap.timeline({ scrollTrigger: { trigger: doc, start: "top 80%", once: true }, defaults: { ease: "expo.out" } });
-    tl.from(doc, { y: 70, rotation: -2, opacity: 0, duration: 1.3, transformOrigin: "50% 100%" }).from(
-      doc.querySelectorAll("[data-head]"),
-      { opacity: 0, y: 10, duration: 0.7, stagger: 0.08 },
-      0.35,
-    );
-    doc.querySelectorAll<HTMLElement>("[data-line]").forEach((line, i) => {
-      const at = 0.6 + i * 0.32;
-      tl.fromTo(line, { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", duration: 0.9, ease: "power3.out", clearProps: "clipPath" }, at);
-      const v = line.querySelector<HTMLElement>("[data-tally]");
-      if (v) {
-        const target = Number(v.dataset.tally);
-        const s = { v: 0 };
-        v.textContent = "0";
-        tl.to(s, { v: target, duration: 1.1, ease: "power2.out", onUpdate: () => (v.textContent = String(Math.round(s.v))) }, at + 0.15);
-      }
-    });
-    tl.from(doc.querySelector("[data-total]"), { opacity: 0, y: 12, duration: 0.7 }, 1.7)
-      .fromTo(doc.querySelector("[data-total-bar]"), { scaleX: 0 }, { scaleX: 1, duration: 1, ease: "power3.inOut" }, 1.8)
-      .fromTo(doc.querySelector("[data-stamp]"), { scale: 1.9, rotation: -28, opacity: 0 }, { scale: 1, rotation: -12, opacity: 1, duration: 0.45, ease: "power4.in" }, 2.3)
-      .fromTo(doc, { x: 0 }, { x: 3, duration: 0.05, yoyo: true, repeat: 3, ease: "none", clearProps: "x" }, 2.75);
+    const board = root.querySelector<HTMLElement>("[data-board]")!;
+    if (!motion) return;
+    gsap.fromTo(board, { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 1.3, ease: "expo.out", clearProps: "opacity,transform", scrollTrigger: { trigger: board, start: "top 82%", once: true } });
+    ScrollTrigger.create({ trigger: board, start: "top 75%", end: "bottom 25%", onToggle: (self) => setPlaying(self.isActive) });
   });
+
+  // Auto-advance through the measures while the board is in view.
+  useEffect(() => {
+    if (!playing || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const id = window.setInterval(() => {
+      if (!paused.current) setActive((a) => (a + 1) % CARDS.length);
+    }, CYCLE_MS);
+    return () => window.clearInterval(id);
+  }, [playing]);
+
+  // Chart entrance on every change of measure.
+  useEffect(() => {
+    const panel = panelRef.current;
+    if (!panel || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const paths = panel.querySelectorAll<SVGPathElement>("[data-draw]");
+    paths.forEach((p) => {
+      const len = p.getTotalLength();
+      gsap.set(p, { strokeDasharray: len, strokeDashoffset: len });
+    });
+    const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
+    tl.fromTo(panel.querySelectorAll("[data-swap]"), { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.6, stagger: 0.05 })
+      .fromTo(panel.querySelectorAll("[data-grow]"), { scaleY: 0, opacity: 0 }, { scaleY: 1, opacity: 1, duration: 0.8, stagger: 0.03, ease: "power3.out", clearProps: "transform,opacity" }, 0.1)
+      .to(paths, { strokeDashoffset: 0, duration: 1.2, ease: "power2.inOut" }, 0.1)
+      .fromTo(panel.querySelectorAll("[data-def]"), { opacity: 0, x: 10 }, { opacity: 1, x: 0, duration: 0.5, stagger: 0.05, clearProps: "opacity,transform" }, 0.2);
+    return () => {
+      tl.progress(1).kill();
+    };
+  }, [active]);
+
+  const onKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
+    const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+    if (!step) return;
+    e.preventDefault();
+    const next = (active + step + CARDS.length) % CARDS.length;
+    setActive(next);
+    tabRefs.current[next]?.focus();
+  };
+
+  const card = CARDS[active];
 
   return (
     <section ref={ref} id="results" className={`section ${styles.section}`} aria-labelledby="results-title">
       <div className={`container ${styles.layout}`}>
         <div className={styles.left}>
           <p className="eyebrow" data-anim="fade">
-            <span className="eyebrow-index">06</span>
             {RESULTS.eyebrow}
           </p>
           <h2 id="results-title" className={styles.title} data-anim="lines">
-            The numbers your <span className="accent">CFO and board</span> want to see
+            {RESULTS.heading}
           </h2>
           <p className={styles.lede} data-anim="fade">
-            {RESULTS.body}
+            {RESULTS.intro}
           </p>
+          {RESULTS.primary && (
+            <div data-anim="fade">
+              <ButtonLink href={RESULTS.primary.url}>{RESULTS.primary.label}</ButtonLink>
+            </div>
+          )}
+        </div>
 
-          <div className={`${styles.feature} on-dark`} data-feature>
-            <div className={styles.featureTop}>
-              <p className={styles.featureLabel}>{hero.label}</p>
-              <div className={styles.spark} aria-hidden="true">
-                {SPARK.map((v, i) => (
-                  <span key={i} style={{ height: `${(v / 42) * 100}%` }} data-spark data-last={i === SPARK.length - 1 || undefined} />
+        <figure
+          className={styles.board}
+          data-board
+          aria-label="Illustrative measurement plan"
+          onPointerEnter={() => (paused.current = true)}
+          onPointerLeave={() => (paused.current = false)}
+          onFocus={() => (paused.current = true)}
+          onBlur={() => (paused.current = false)}
+        >
+          <div className={styles.boardHead}>
+            <span className={styles.boardTitle}>
+              <Image src="/assets/logos/convergeflow-mark-onlight.png" alt="" width={180} height={180} />
+              Measurement plan
+            </span>
+            <span className={styles.boardTag}>Draft</span>
+          </div>
+
+          <div className={styles.tabs} role="tablist" aria-label="Measures">
+            {CARDS.map((c, i) => (
+              <button
+                key={c.title}
+                ref={(el) => {
+                  tabRefs.current[i] = el;
+                }}
+                type="button"
+                role="tab"
+                id={`measure-tab-${i}`}
+                aria-selected={i === active}
+                aria-controls="measure-panel"
+                tabIndex={i === active ? 0 : -1}
+                className={styles.tab}
+                onClick={() => setActive(i)}
+                onKeyDown={onKeyDown}
+              >
+                <span className={`${styles.tabIndex} num`}>{pad(i + 1)}</span>
+                <span className={styles.tabLabel}>{c.title}</span>
+                <span className={styles.tabBar} aria-hidden="true">
+                  <span key={i === active ? `on-${active}` : "off"} data-run={(i === active && playing) || undefined} />
+                </span>
+              </button>
+            ))}
+          </div>
+
+          <div ref={panelRef} id="measure-panel" role="tabpanel" aria-labelledby={`measure-tab-${active}`} className={styles.panel}>
+            <div className={styles.main}>
+              <div className={styles.mainHead} data-swap>
+                <h3 className={styles.measureTitle}>{card?.title}</h3>
+                <p className={styles.measureBody}>{card?.body}</p>
+              </div>
+              <div className={styles.chartWrap} data-swap>
+                <span className={styles.baselineTag}>Baseline — to be agreed</span>
+                <Chart kind={active} />
+              </div>
+            </div>
+            <aside className={styles.defs} aria-label="Definitions to agree">
+              <p className={styles.defsTitle}>Definitions to agree</p>
+              <ul>
+                {DEFS.map((d) => (
+                  <li key={d} data-def>
+                    <span className={styles.defBox} aria-hidden="true" />
+                    <span className={styles.defName}>{d}</span>
+                    <span className={styles.defState}>To agree</span>
+                  </li>
                 ))}
-              </div>
-            </div>
-            <p className={`${styles.featureValue} num`}>
-              <span className="visually-hidden">{`${hero.prefix}${hero.value}${hero.suffix}`}</span>
-              <span aria-hidden="true">
-                <span className={styles.unit}>{hero.prefix}</span>
-                <span data-hero-count>{hero.value}</span>
-                <span className={styles.unit}>{hero.suffix}</span>
-              </span>
-            </p>
-            <h3 className={styles.featureTitle}>{hero.title}</h3>
-            <p className={styles.featureBody}>{hero.body}</p>
+              </ul>
+            </aside>
           </div>
 
-          <div className={styles.actions} data-anim="fade">
-            <ul className={styles.badges}>
-              {hero.footer.map((f) => (
-                <li key={f}>{f}</li>
-              ))}
-            </ul>
-            <ButtonLink href="/#demo">{RESULTS.cta}</ButtonLink>
-          </div>
-        </div>
-
-        <div className={styles.paperWrap}>
-          <article className={styles.statement} data-statement aria-label="Outcome statement">
-            <header className={styles.docHead}>
-              <div className={styles.docTop} data-head>
-                <span className={styles.docTitle}>Outcome statement</span>
-                <Image src="/assets/logos/convergeflow-light.png" alt="ConvergeFlow" width={1024} height={177} style={{ width: 118, height: "auto" }} />
-              </div>
-              <span className={styles.docMeta} data-head>
-                Audited practice ROI · {hero.footer[0]}
-              </span>
-            </header>
-
-            <div className={styles.docCols} aria-hidden="true">
-              <span>Line item</span>
-              <span>Result</span>
-            </div>
-
-            <dl className={styles.lines}>
-              {LINES.map((l, i) => (
-                <div key={l.label} className={styles.line} data-line>
-                  <dt>
-                    <span className={`${styles.lineIndex} num`}>{String(i + 1).padStart(2, "0")}</span>
-                    <span className={styles.lineText}>
-                      <span className={styles.lineLabel}>{l.label}</span>
-                      <span className={styles.lineNote}>{l.note}</span>
-                    </span>
-                  </dt>
-                  <span className={styles.leader} aria-hidden="true" />
-                  <dd className="num">
-                    <span className="visually-hidden">{`${l.sign}${l.value}${l.unit}`}</span>
-                    <span aria-hidden="true">
-                      {l.sign}
-                      <span data-tally={l.value}>{l.value}</span>
-                      <span className={styles.lineUnit}>{l.unit}</span>
-                    </span>
-                  </dd>
-                </div>
-              ))}
-            </dl>
-
-            <div className={styles.total} data-total>
-              <span className={styles.totalLabel}>Time to measurable ROI</span>
-              <span className={`${styles.totalValue} num`}>60–90 days</span>
-              <span className={styles.totalBar} data-total-bar aria-hidden="true" />
-            </div>
-
-            <footer className={styles.docFoot}>
-              <span className={styles.sign}>
-                <span className={styles.signLine} />
-                ConvergeFlow revenue operations
-              </span>
-              <span className={styles.stamp} data-stamp>
-                <span>90-Day</span>
-                <strong>ROI</strong>
-                <span>Guarantee</span>
-              </span>
-            </footer>
-          </article>
-        </div>
+          <figcaption className={styles.boardFoot}>Illustrative · chart outlines only, not results</figcaption>
+        </figure>
       </div>
     </section>
   );

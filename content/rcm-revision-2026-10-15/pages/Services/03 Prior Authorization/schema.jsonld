@@ -1,0 +1,85 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://marketing-domain.invalid/services/prior-authorization/#webpage",
+      "url": "https://marketing-domain.invalid/services/prior-authorization/",
+      "name": "Prior Authorization Workflow Review | ConvergeFlow",
+      "description": "Prepare prior authorization questions, responsibilities and handoffs. Confirm available ConvergeFlow support for your practice during a product demo.",
+      "inLanguage": "en-US",
+      "isPartOf": {
+        "@id": "https://marketing-domain.invalid/#website"
+      },
+      "about": {
+        "@type": "Thing",
+        "name": "prior authorization workflow"
+      },
+      "breadcrumb": {
+        "@id": "https://marketing-domain.invalid/services/prior-authorization/#breadcrumb"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://marketing-domain.invalid/services/prior-authorization/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://marketing-domain.invalid/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Services",
+          "item": "https://marketing-domain.invalid/services/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Prior authorization workflow",
+          "item": "https://marketing-domain.invalid/services/prior-authorization/"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://marketing-domain.invalid/services/prior-authorization/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does ConvergeFlow submit prior authorization requests?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "That capability has not been confirmed. The reviewed evidence does not validate prior authorization submission or payer response handling. Use the demo to establish whether your required workflow is supported, which actions are available and which steps your practice must perform through its existing channels before making an implementation decision."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What should we bring to the discussion?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Bring your practice type, the systems involved and a de-identified description of an authorization question. Explain who prepares information, who checks status and who decides the next action. Do not include patient records, insurance documents or clinical details in a public demo request. Discuss an appropriate channel if further information is needed."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does eligibility review settle an authorization question?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Do not assume that it does. Review what the eligibility information actually establishes and keep any authorization requirement visible as a separate question. Follow your practice’s approved process to confirm the relevant requirements. A product label or task status alone does not establish that the required authorization work has been completed."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Will the product replace our current process?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "That has not been established. Describe your current process and ask which parts, if any, the available product can support. Confirm staff responsibilities, data sources and exception handling before changing an operating procedure. This page does not promise replacement of your existing tools, payer channels or review responsibilities."
+          }
+        }
+      ]
+    }
+  ]
+}

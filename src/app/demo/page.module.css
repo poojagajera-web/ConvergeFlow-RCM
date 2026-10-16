@@ -1,9 +1,0 @@
-.page {
-  position: relative;
-}
-
-/* Dark band behind the transparent header so the page opens like the home hero. */
-.band {
-  height: calc(var(--header-h) + env(safe-area-inset-top, 0px) + clamp(1rem, 3vw, 2.5rem));
-  background: var(--navy-900);
-}

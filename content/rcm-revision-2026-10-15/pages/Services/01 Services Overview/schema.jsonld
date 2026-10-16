@@ -1,0 +1,115 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "CollectionPage",
+      "@id": "https://marketing-domain.invalid/services/#webpage",
+      "url": "https://marketing-domain.invalid/services/",
+      "name": "Revenue Cycle Management Services | ConvergeFlow",
+      "description": "Explore revenue cycle management workflows, from eligibility to claims and AR. Compare your practice needs with available ConvergeFlow views in a demo.",
+      "inLanguage": "en-US",
+      "isPartOf": {
+        "@id": "https://marketing-domain.invalid/#website"
+      },
+      "about": {
+        "@type": "Thing",
+        "name": "revenue cycle management services"
+      },
+      "breadcrumb": {
+        "@id": "https://marketing-domain.invalid/services/#breadcrumb"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://marketing-domain.invalid/services/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://marketing-domain.invalid/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Services",
+          "item": "https://marketing-domain.invalid/services/"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://marketing-domain.invalid/services/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does ConvergeFlow deliver every stage listed here?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "That has not been confirmed. The services menu describes areas of the revenue cycle for evaluation. Current evidence establishes specific product views, while processing, payer connectivity and support for additional stages require confirmation. Ask to see the workflow you need rather than assuming that a menu label establishes operational availability."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is this an outsourced billing service?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A managed billing service has not been confirmed. ConvergeFlow has been reviewed as a product with operational views. If your team needs someone to perform tasks on its behalf, discuss staffing, ownership and delivery scope explicitly. Do not assume that software access includes outsourced execution or payer follow-up."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How should we choose the first workflow to review?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Start with a task whose inputs, owner and unresolved question your team can describe. Bring a de-identified example and identify what the next staff member needs to know. Follow that task through the relevant views, recording what is demonstrated and what still needs confirmation for your practice."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can we discuss pricing and implementation?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, bring those questions to the product discussion. This draft does not publish prices, implementation timelines or included service commitments because those terms have not been confirmed. Establish the required workflow and available product scope, then request the commercial and implementation details relevant to that scope."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "ItemList",
+      "@id": "https://marketing-domain.invalid/services/#topics",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "insurance eligibility verification",
+          "url": "https://marketing-domain.invalid/services/eligibility-verification/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "prior authorization workflow",
+          "url": "https://marketing-domain.invalid/services/prior-authorization/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "claims submission workflow",
+          "url": "https://marketing-domain.invalid/services/claims-submission/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": "denial management workflow",
+          "url": "https://marketing-domain.invalid/services/denial-management/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "name": "AR management and reporting",
+          "url": "https://marketing-domain.invalid/services/ar-management/"
+        }
+      ]
+    }
+  ]
+}

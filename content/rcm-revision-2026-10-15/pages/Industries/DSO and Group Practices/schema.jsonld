@@ -1,0 +1,60 @@
+{
+  "@graph": [
+    {
+      "name": "DSO Revenue Cycle Management Evaluation | ConvergeFlow",
+      "about": {
+        "@id": "https://marketing-domain.invalid/#business"
+      },
+      "inLanguage": "en-US",
+      "breadcrumb": {
+        "@id": "https://marketing-domain.invalid/industries/dso/#breadcrumb"
+      },
+      "@type": "WebPage",
+      "description": "Evaluate DSO revenue cycle management with questions about practice context, shared review and reporting scope. Prepare a focused ConvergeFlow demo.",
+      "@id": "https://marketing-domain.invalid/industries/dso/#webpage",
+      "url": "https://marketing-domain.invalid/industries/dso/",
+      "isPartOf": {
+        "@id": "https://marketing-domain.invalid/#website"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "item": "https://marketing-domain.invalid/",
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1
+        },
+        {
+          "item": "https://marketing-domain.invalid/industries/",
+          "@type": "ListItem",
+          "name": "Industries",
+          "position": 2
+        },
+        {
+          "item": "https://marketing-domain.invalid/industries/dso/",
+          "@type": "ListItem",
+          "name": "DSO and Group Practices",
+          "position": 3
+        }
+      ],
+      "@id": "https://marketing-domain.invalid/industries/dso/#breadcrumb"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does a practice selector confirm support for our entire group?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. A practice selector demonstrates practice context, not your complete group workflow. Confirm the supported organization structure, access boundaries, shared responsibilities and reporting scope in a ConvergeFlow evaluation. Ask how the available features handle differences between practices before deciding how a rollout would work for your organization."
+          }
+        }
+      ],
+      "@id": "https://marketing-domain.invalid/industries/dso/#faq"
+    }
+  ],
+  "@context": "https://schema.org"
+}

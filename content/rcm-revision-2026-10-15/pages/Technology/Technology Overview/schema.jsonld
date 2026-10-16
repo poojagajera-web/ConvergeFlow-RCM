@@ -1,0 +1,54 @@
+{
+  "@graph": [
+    {
+      "name": "Revenue Cycle Management Technology | ConvergeFlow",
+      "about": {
+        "@id": "https://marketing-domain.invalid/#business"
+      },
+      "inLanguage": "en-US",
+      "breadcrumb": {
+        "@id": "https://marketing-domain.invalid/technology/#breadcrumb"
+      },
+      "@type": "WebPage",
+      "description": "Evaluate revenue cycle management technology through data flow, exceptions and reporting questions. Review ConvergeFlow’s available views in a demo.",
+      "@id": "https://marketing-domain.invalid/technology/#webpage",
+      "url": "https://marketing-domain.invalid/technology/",
+      "isPartOf": {
+        "@id": "https://marketing-domain.invalid/#website"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "item": "https://marketing-domain.invalid/",
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1
+        },
+        {
+          "item": "https://marketing-domain.invalid/technology/",
+          "@type": "ListItem",
+          "name": "Technology",
+          "position": 2
+        }
+      ],
+      "@id": "https://marketing-domain.invalid/technology/#breadcrumb"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does a feature label establish a working integration or automation?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. A label identifies an area to examine, not a validated connection or completed action. Use a ConvergeFlow technical evaluation to confirm supported systems, data flows, triggers and exception behavior. Record what is demonstrated and ask for the evidence your team needs before planning an implementation or relying on an automated step."
+          }
+        }
+      ],
+      "@id": "https://marketing-domain.invalid/technology/#faq"
+    }
+  ],
+  "@context": "https://schema.org"
+}

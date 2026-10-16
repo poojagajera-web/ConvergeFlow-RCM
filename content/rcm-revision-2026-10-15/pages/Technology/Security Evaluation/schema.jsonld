@@ -1,0 +1,60 @@
+{
+  "@graph": [
+    {
+      "name": "RCM Security Evaluation Questions | ConvergeFlow",
+      "about": {
+        "@id": "https://marketing-domain.invalid/#business"
+      },
+      "inLanguage": "en-US",
+      "breadcrumb": {
+        "@id": "https://marketing-domain.invalid/technology/security/#breadcrumb"
+      },
+      "@type": "WebPage",
+      "description": "Prepare an RCM security evaluation covering access, credentials, activity records and data handling. Discuss your evidence requirements with ConvergeFlow.",
+      "@id": "https://marketing-domain.invalid/technology/security/#webpage",
+      "url": "https://marketing-domain.invalid/technology/security/",
+      "isPartOf": {
+        "@id": "https://marketing-domain.invalid/#website"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "item": "https://marketing-domain.invalid/",
+          "@type": "ListItem",
+          "name": "Home",
+          "position": 1
+        },
+        {
+          "item": "https://marketing-domain.invalid/technology/",
+          "@type": "ListItem",
+          "name": "Technology",
+          "position": 2
+        },
+        {
+          "item": "https://marketing-domain.invalid/technology/security/",
+          "@type": "ListItem",
+          "name": "Security Evaluation",
+          "position": 3
+        }
+      ],
+      "@id": "https://marketing-domain.invalid/technology/security/#breadcrumb"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does an audit trail establish a security certification?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. An audit interface does not establish a certification, regulatory compliance or complete control coverage. ConvergeFlow’s observed audit fields provide a starting point for questions about activity visibility. Request the evidence your organization needs and have the responsible reviewers assess it before connecting systems or making an implementation decision."
+          }
+        }
+      ],
+      "@id": "https://marketing-domain.invalid/technology/security/#faq"
+    }
+  ],
+  "@context": "https://schema.org"
+}

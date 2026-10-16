@@ -512,3 +512,47 @@
   vector-effect: non-scaling-stroke;
 }
 
+
+/* Illustrative phase checklists */
+.more {
+  margin-top: var(--space-3);
+  max-width: 38rem;
+  color: var(--ink-2);
+}
+
+.checks li {
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 0.5rem;
+  border-bottom: 1px dashed var(--line);
+  font-size: 0.9375rem;
+  color: var(--navy-700);
+}
+
+.checks li:last-child {
+  border-bottom: 0;
+}
+
+.status {
+  flex-shrink: 0;
+  padding: 0.125rem 0.5rem;
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.status[data-tone="ok"] {
+  background: var(--teal-50);
+  color: var(--teal-ink);
+}
+
+.status[data-tone="review"] {
+  background: var(--amber-100);
+  color: #8a5205;
+}
+
+.status[data-tone="open"] {
+  background: #e8edf7;
+  color: #33507a;
+}

@@ -1,79 +1,60 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { REVENUE_CYCLE } from "@/content/home";
+import { RCM } from "@/content/home";
 import { ButtonLink } from "@/components/ui/Button";
 import { useMotion } from "@/components/motion/useMotion";
 import { getLenis } from "@/components/motion/SmoothScroll";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import styles from "./RevenueCycle.module.css";
 
-const money = (v: number, decimals = 0) =>
-  `$${v.toLocaleString("en-US", { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}`;
+type Tone = "ok" | "review" | "open";
+type Item = { label: string; status: string; tone: Tone };
 
-function BenefitArtifact() {
-  const checks = ["Coverage active", "Deductible met", "Prior auth approved"];
+/** Illustrative checklists per phase — synthetic statuses, no figures. */
+const CHECKLISTS: { title: string; items: Item[] }[] = [
+  {
+    title: "Appointment preparation",
+    items: [
+      { label: "Patient information", status: "Ready", tone: "ok" },
+      { label: "Insurance information", status: "Ready", tone: "ok" },
+      { label: "Eligibility question", status: "Needs review", tone: "review" },
+      { label: "Authorization question", status: "Open", tone: "open" },
+    ],
+  },
+  {
+    title: "Visit and charge review",
+    items: [
+      { label: "Documented service", status: "Recorded", tone: "ok" },
+      { label: "Charge information", status: "Needs review", tone: "review" },
+      { label: "Billing requirements", status: "Open", tone: "open" },
+    ],
+  },
+  {
+    title: "Billing follow-up",
+    items: [
+      { label: "Claim status", status: "Follow up", tone: "open" },
+      { label: "Unresolved denial", status: "Needs review", tone: "review" },
+      { label: "Payment", status: "Recorded", tone: "ok" },
+      { label: "Outstanding balance", status: "Open", tone: "open" },
+    ],
+  },
+];
+
+function Checklist({ index }: { index: number }) {
+  const list = CHECKLISTS[index];
   return (
-    <div className={styles.artifact} data-artifact="0">
+    <div className={styles.artifact} data-artifact={index}>
       <div className={styles.artifactHead}>
-        <span className={styles.artifactTag}>EDI 271</span>
-        <span>Eligibility response</span>
-      </div>
-      <div className={styles.artifactRow}>
-        <span>Annual benefit remaining</span>
-        <span className="num">
-          <span data-count="1850" data-format="money">
-            $1,850
-          </span>{" "}
-          / $2,000
-        </span>
-      </div>
-      <div className={styles.meter} aria-hidden="true">
-        <span data-meter style={{ width: "92.5%" }} />
+        <span className={styles.artifactTag}>Illustrative</span>
+        <span>{list.title}</span>
       </div>
       <ul className={styles.checks}>
-        {checks.map((c) => (
-          <li key={c} data-check>
-            <svg viewBox="0 0 16 16" aria-hidden="true">
-              <path d="m3.5 8.5 3 3 6-7" data-tick />
-            </svg>
-            {c}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-function ClaimMixArtifact() {
-  const mix = [
-    { label: "Clean", value: 65 },
-    { label: "Scrubbed", value: 25 },
-    { label: "Queue", value: 10 },
-  ];
-  return (
-    <div className={styles.artifact} data-artifact="1">
-      <div className={styles.artifactHead}>
-        <span className={styles.artifactTag}>CDT / CPT</span>
-        <span>Charge capture</span>
-      </div>
-      <div className={styles.artifactRow}>
-        <span>Clean claim velocity</span>
-        <span className="num" data-count="18450" data-format="money2">
-          $18,450.00
-        </span>
-      </div>
-      <div className={styles.stack} role="img" aria-label="Claim mix: 65% clean, 25% scrubbed, 10% in queue">
-        {mix.map((m) => (
-          <span key={m.label} style={{ flexGrow: m.value }} data-tone={m.label.toLowerCase()} data-bar />
-        ))}
-      </div>
-      <ul className={styles.legend}>
-        {mix.map((m) => (
-          <li key={m.label} data-tone={m.label.toLowerCase()}>
-            {m.label}{" "}
-            <span className="num" data-count={m.value} data-format="pct">
-              {m.value}%
+        {list.items.map((item) => (
+          <li key={item.label} data-check>
+            <span>{item.label}</span>
+            <span className={styles.status} data-tone={item.tone}>
+              {item.status}
             </span>
           </li>
         ))}
@@ -82,74 +63,18 @@ function ClaimMixArtifact() {
   );
 }
 
-function SettlementArtifact() {
-  return (
-    <div className={styles.artifact} data-artifact="2">
-      <div className={styles.artifactHead}>
-        <span className={styles.artifactTag}>ERA 835</span>
-        <span>Settlement</span>
-      </div>
-      <div className={styles.artifactRow}>
-        <span>First-pass settlement</span>
-        <span className="num">
-          <span data-count="1420" data-format="money2">
-            $1,420.00
-          </span>{" "}
-          <em className={styles.delta} data-pop>
-            +14.2%
-          </em>
-        </span>
-      </div>
-      <svg className={styles.spark} viewBox="0 0 240 64" preserveAspectRatio="none" role="img" aria-label="Settlement trend rising over the month">
-        <defs>
-          <linearGradient id="rcm-spark" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0" stopColor="#028579" stopOpacity="0.22" />
-            <stop offset="1" stopColor="#028579" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-        <path d="M0 52 C 30 50, 40 40, 70 42 S 110 30, 140 32 S 190 14, 240 10 L 240 64 L 0 64 Z" fill="url(#rcm-spark)" data-area />
-        <path d="M0 52 C 30 50, 40 40, 70 42 S 110 30, 140 32 S 190 14, 240 10" className={styles.sparkLine} data-line />
-        <circle cx="240" cy="10" r="3.5" className={styles.sparkDot} data-pop />
-      </svg>
-    </div>
-  );
-}
+const ARTIFACTS = [0, 1, 2].map((i) => {
+  const C = () => <Checklist index={i} />;
+  C.displayName = `Checklist${i}`;
+  return C;
+});
 
-const ARTIFACTS = [BenefitArtifact, ClaimMixArtifact, SettlementArtifact];
-
-function formatCount(format: string | undefined, v: number) {
-  if (format === "money") return money(v);
-  if (format === "money2") return money(v, 2);
-  if (format === "pct") return `${Math.round(v)}%`;
-  return Math.round(v).toLocaleString("en-US");
-}
-
-/** Builds the paused "data comes alive" timeline for one phase artifact. */
+/** Builds the paused entrance timeline for one phase checklist. */
 function artifactTimeline(el: HTMLElement) {
   const tl = gsap.timeline({ paused: true, defaults: { ease: "expo.out" } });
   tl.from(el, { y: 24, opacity: 0, scale: 0.97, duration: 0.9 });
-
-  el.querySelectorAll<HTMLElement>("[data-count]").forEach((node) => {
-    const target = Number(node.dataset.count);
-    const state = { v: 0 };
-    node.textContent = formatCount(node.dataset.format, 0);
-    tl.to(state, { v: target, duration: 1.6, ease: "power3.out", onUpdate: () => (node.textContent = formatCount(node.dataset.format, state.v)) }, 0.2);
-  });
-  const meter = el.querySelector("[data-meter]");
-  if (meter) tl.from(meter, { scaleX: 0, transformOrigin: "left center", duration: 1.6, ease: "power3.inOut" }, 0.2);
   const checks = el.querySelectorAll("[data-check]");
-  if (checks.length) {
-    tl.from(checks, { opacity: 0, x: -8, duration: 0.6, stagger: 0.22 }, 0.5);
-    tl.from(el.querySelectorAll("[data-tick]"), { drawSVG: "0%", duration: 0.5, stagger: 0.22, ease: "power2.out" }, 0.6);
-  }
-  const bars = el.querySelectorAll("[data-bar]");
-  if (bars.length) tl.from(bars, { scaleX: 0, transformOrigin: "left center", duration: 1.1, stagger: 0.18, ease: "power3.inOut" }, 0.25);
-  const line = el.querySelector("[data-line]");
-  if (line) tl.from(line, { drawSVG: "0%", duration: 1.6, ease: "power2.inOut" }, 0.2);
-  const area = el.querySelector("[data-area]");
-  if (area) tl.from(area, { opacity: 0, duration: 1 }, 0.9);
-  const pops = el.querySelectorAll("[data-pop]");
-  if (pops.length) tl.from(pops, { scale: 0, opacity: 0, transformOrigin: "50% 50%", duration: 0.7, ease: "back.out(2.2)", stagger: 0.1 }, 1.4);
+  if (checks.length) tl.from(checks, { opacity: 0, x: -10, duration: 0.6, stagger: 0.14 }, 0.3);
   return tl;
 }
 
@@ -158,9 +83,9 @@ const R = 222;
 const GAP_DEG = 7;
 const PHASE_SEC = 4.6;
 const MILESTONES = [
-  ["Scheduling", "Eligibility", "Prior auth"],
-  ["Check-in", "Charge capture", "Coding"],
-  ["Claim submission", "Denials", "Payment posting"],
+  ["Patient information", "Eligibility", "Authorization"],
+  ["Documented service", "Charges", "Billing requirements"],
+  ["Claim status", "Denials", "Payments and balances"],
 ];
 
 const polar = (deg: number, r = R) => {
@@ -308,23 +233,25 @@ export function RevenueCycle() {
   return (
     <section ref={ref} id="revenue-cycle" className={`section ${styles.section}`} aria-labelledby="rcm-title">
       <div className="container">
-        <header className="section-head is-split">
+        <header className="section-head is-split is-top">
           <div className={styles.headMain}>
             <p className="eyebrow" data-anim="fade">
-              <span className="eyebrow-index">01</span>
-              {REVENUE_CYCLE.eyebrow}
+              {RCM.eyebrow}
             </p>
             <h2 id="rcm-title" className="title-xl" data-anim="lines">
-              {REVENUE_CYCLE.title}
+              {RCM.heading}
             </h2>
           </div>
           <div className="section-head-aside" data-anim="fade">
-            <p className="lede">{REVENUE_CYCLE.body}</p>
-            <div className={styles.cta}>
-              <ButtonLink href="/#demo" variant="secondary">
-                {REVENUE_CYCLE.cta}
-              </ButtonLink>
-            </div>
+            <p className="lede">{RCM.intro}</p>
+            {RCM.body && <p className={styles.more}>{RCM.body}</p>}
+            {RCM.primary && (
+              <div className={styles.cta}>
+                <ButtonLink href={RCM.primary.url} variant="secondary">
+                  {RCM.primary.label}
+                </ButtonLink>
+              </div>
+            )}
           </div>
         </header>
       </div>
@@ -333,12 +260,12 @@ export function RevenueCycle() {
         <div className={styles.sticky}>
         <div className={`container ${styles.layout}`}>
           <ol className={styles.phases} data-anim="stagger">
-            {REVENUE_CYCLE.phases.map((phase, i) => (
+            {(RCM.cards ?? []).map((phase, i) => (
               <li key={phase.title} className={styles.phase} data-on={i === active || undefined}>
                 <button type="button" className={styles.phaseBtn} onClick={() => jump(i)} aria-pressed={i === active}>
                   <span className={`${styles.phaseIndex} num`}>0{i + 1}</span>
                   <span className={styles.phaseText}>
-                    <span className={styles.when}>{phase.when}</span>
+                    <span className={styles.when}>Phase {String(i + 1).padStart(2, "0")}</span>
                     <span className={styles.phaseTitle}>{phase.title}</span>
                     <span className={styles.phaseBody}>{phase.body}</span>
                     <span className={styles.phaseTrack} aria-hidden="true">

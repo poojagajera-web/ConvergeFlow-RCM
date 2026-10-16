@@ -1,43 +1,22 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { PROCESS } from "@/content/home";
+import { STEPS } from "@/content/home";
 import { useMotion } from "@/components/motion/useMotion";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { ProcessFrame } from "./ProcessVisuals";
 import styles from "./Process.module.css";
 
+const LIST = STEPS.steps ?? [];
 const pad = (n: number) => String(n).padStart(2, "0");
 
-/** Counts the first number inside an element's text, keeping prefix/suffix. */
-function countUp(tl: gsap.core.Timeline, el: HTMLElement, at: number) {
-  const text = el.dataset.final ?? el.textContent ?? "";
-  el.dataset.final = text;
-  const m = /[\d,]+(\.\d+)?/.exec(text);
-  if (!m) return;
-  const target = parseFloat(m[0].replace(/,/g, ""));
-  const decimals = m[1] ? m[1].length - 1 : 0;
-  const before = text.slice(0, m.index);
-  const after = text.slice(m.index + m[0].length);
-  const state = { v: 0 };
-  const render = () =>
-    (el.textContent = `${before}${state.v.toLocaleString("en-US", { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}${after}`);
-  render();
-  tl.to(state, { v: target, duration: 1.4, ease: "power3.out", onUpdate: render, onComplete: () => void (el.textContent = text) }, at);
-}
-
-/** Brings one implementation frame to life: items, meters, counters, chips, logs. */
+/** Brings one illustrative frame in: items rise, check boxes pop. */
 function animateFrame(frame: HTMLElement) {
   const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
-  tl.from(frame.querySelectorAll("[data-item]"), { opacity: 0, y: 18, duration: 0.8, stagger: 0.08 }, 0.1);
-  frame.querySelectorAll<HTMLElement>("[data-meter]").forEach((m) => tl.from(m, { scaleX: 0, transformOrigin: "left", duration: 1.4, ease: "power3.inOut" }, 0.3));
-  frame.querySelectorAll<HTMLElement>("[data-count]").forEach((c) => countUp(tl, c, 0.3));
-  tl.from(frame.querySelectorAll("[data-pop]"), { scale: 0.4, opacity: 0, duration: 0.6, stagger: 0.07, ease: "back.out(2.4)" }, 0.55);
-  frame.querySelectorAll<HTMLElement>("[data-log]").forEach((log, i) => {
-    const text = log.dataset.log!;
-    log.textContent = "";
-    tl.to(log, { duration: Math.min(1.4, text.length * 0.02), text: { value: text }, ease: "none" }, 0.7 + i * 0.9);
-  });
+  const items = frame.querySelectorAll("[data-item]");
+  const pops = frame.querySelectorAll("[data-pop]");
+  if (items.length) tl.from(items, { opacity: 0, y: 16, duration: 0.8, stagger: 0.08 }, 0.1);
+  if (pops.length) tl.from(pops, { scale: 0.4, opacity: 0, duration: 0.5, stagger: 0.07, ease: "back.out(2.4)" }, 0.4);
   return tl;
 }
 
@@ -47,6 +26,7 @@ export function Process() {
   const motionOn = useRef(false);
   const stageSeen = useRef(false);
   const activeRef = useRef(0);
+
   useEffect(() => {
     activeRef.current = active;
   }, [active]);
@@ -57,7 +37,6 @@ export function Process() {
     const steps = gsap.utils.toArray<HTMLElement>("[data-step]", root);
 
     if (!desktop) {
-      // Stacked layout: each inline frame performs as it scrolls into view.
       if (!motion) return;
       gsap.utils.toArray<HTMLElement>("[data-inline-frame]", root).forEach((frame) => {
         ScrollTrigger.create({ trigger: frame, start: "top 80%", once: true, onEnter: () => void animateFrame(frame) });
@@ -78,11 +57,7 @@ export function Process() {
       gsap.fromTo(
         root.querySelector("[data-progress]"),
         { scaleY: 0 },
-        {
-          scaleY: 1,
-          ease: "none",
-          scrollTrigger: { trigger: root.querySelector("[data-steps]"), start: "top 55%", end: "bottom 55%", scrub: true },
-        },
+        { scaleY: 1, ease: "none", scrollTrigger: { trigger: root.querySelector("[data-steps]"), start: "top 55%", end: "bottom 55%", scrub: true } },
       );
       gsap.from(root.querySelector("[data-stage]"), {
         opacity: 0,
@@ -103,7 +78,7 @@ export function Process() {
     }
   });
 
-  // Desktop stage: the newly active frame performs its data.
+  // Desktop stage: the newly active frame performs.
   useEffect(() => {
     if (!motionOn.current || !stageSeen.current || !window.matchMedia("(min-width: 1100px)").matches) return;
     const frame = ref.current?.querySelector<HTMLElement>(`[data-slot="${active}"]`);
@@ -117,18 +92,17 @@ export function Process() {
   return (
     <section ref={ref} id="how-it-works" className={`section ${styles.section}`} aria-labelledby="process-title">
       <div className="container">
-        <header className="section-head is-split">
+        <header className="section-head is-split is-top">
           <div className={styles.headMain}>
             <p className="eyebrow" data-anim="fade">
-              <span className="eyebrow-index">04</span>
-              {PROCESS.eyebrow}
+              {STEPS.eyebrow}
             </p>
             <h2 id="process-title" className="title-xl" data-anim="lines">
-              Live <span className="accent">automation</span> in weeks, not months
+              {STEPS.heading}
             </h2>
           </div>
           <div className="section-head-aside" data-anim="fade">
-            <p className="lede">{PROCESS.body}</p>
+            <p className="lede">{STEPS.intro}</p>
           </div>
         </header>
 
@@ -138,63 +112,44 @@ export function Process() {
               <span data-progress />
             </span>
             <ol className={styles.stepList}>
-              {PROCESS.steps.map((step, i) => (
-                <li key={step.tab} className={styles.step} data-step data-active={i === active || undefined} data-done={i < active || undefined}>
+              {LIST.map((step, i) => (
+                <li key={step.title} className={styles.step} data-step data-active={i === active || undefined} data-done={i < active || undefined}>
                   <p className={styles.when}>
                     <span className={styles.node} aria-hidden="true">
                       <span className="num">{pad(i + 1)}</span>
                     </span>
                     <span className={`${styles.whenIndex} num`}>{pad(i + 1)}</span>
-                    <span>{step.tab}</span>
-                    <span className={styles.timeline}>{step.timeline}</span>
+                    <span>Step {pad(i + 1)}</span>
                   </p>
                   <h3 className={styles.title}>{step.title}</h3>
                   <p className={styles.body}>{step.body}</p>
-                  <ul className={styles.features}>
-                    {step.features.map((f, fi) => (
-                      <li key={f.title}>
-                        <span className={`${styles.featureIndex} num`} aria-hidden="true">
-                          {pad(fi + 1)}
-                        </span>
-                        <span className={styles.featureTitle}>{f.title}</span>
-                        <span className={styles.featureBody}>{f.body}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <p className={styles.stat}>
-                    <span>{step.stat.label}</span>
-                    <strong className="num">{step.stat.value}</strong>
-                  </p>
                   <div className={styles.inlineFrame} data-inline-frame>
-                    <ProcessFrame index={i} system={step.system} badge={step.badge} logs={step.logs} />
+                    <ProcessFrame index={i} title={step.title} />
                   </div>
                 </li>
               ))}
             </ol>
           </div>
 
-          <aside className={styles.stage} aria-label="Implementation preview" data-stage>
+          <aside className={styles.stage} aria-label="Evaluation step illustration" data-stage>
             <div className={styles.stageInner}>
               <div className={styles.stageMeta}>
                 <span className={styles.counter} aria-hidden="true">
                   <span key={active} className={`${styles.counterNow} num`}>
                     {pad(active + 1)}
                   </span>
-                  <span className={styles.counterTotal}>/ {pad(PROCESS.steps.length)}</span>
-                </span>
-                <span key={`t-${active}`} className={styles.stageTimeline}>
-                  {PROCESS.steps[active].timeline}
+                  <span className={styles.counterTotal}>/ {pad(LIST.length)}</span>
                 </span>
               </div>
               <div className={styles.dots} aria-hidden="true">
-                {PROCESS.steps.map((s, i) => (
-                  <span key={s.tab} data-on={i <= active || undefined} />
+                {LIST.map((s, i) => (
+                  <span key={s.title} data-on={i <= active || undefined} />
                 ))}
               </div>
               <div className={styles.frames}>
-                {PROCESS.steps.map((step, i) => (
-                  <div key={step.tab} className={styles.frameSlot} data-slot={i} data-on={i === active || undefined} aria-hidden={i !== active}>
-                    <ProcessFrame index={i} system={step.system} badge={step.badge} logs={step.logs} />
+                {LIST.map((step, i) => (
+                  <div key={step.title} className={styles.frameSlot} data-slot={i} data-on={i === active || undefined} aria-hidden={i !== active}>
+                    <ProcessFrame index={i} title={step.title} />
                   </div>
                 ))}
               </div>

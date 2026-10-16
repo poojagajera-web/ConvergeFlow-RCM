@@ -5,36 +5,31 @@ import { usePathname } from "next/navigation";
 import { Logo } from "@/components/ui/Logo";
 import { SmartLink } from "@/components/ui/SmartLink";
 import { getLenis } from "@/components/motion/SmoothScroll";
-import {
-  INDUSTRIES_OVERVIEW,
-  INDUSTRY_LINKS,
-  PRIMARY_NAV,
-  RESOURCE_LINKS,
-  SERVICES_OVERVIEW,
-  SERVICE_LINKS,
-  resolveHref,
-  type NavLink,
-} from "@/content/navigation";
+import { DEMO_LINK, LOGIN_URL, MAIN_NAV, type NavGroup, type NavLink } from "@/content/navigation";
+import { INDUSTRIES, PIPELINE, TECHNOLOGY } from "@/content/home";
+import pages from "@/content/generated/pages.json";
 import styles from "./Header.module.css";
 
-type MenuKey = "services" | "industries" | "resources";
-
-const MEGA: Record<Exclude<MenuKey, "resources">, { label: string; title: string; body: string; overview: NavLink; links: NavLink[] }> = {
-  services: {
-    label: "Services",
-    title: "Eight pillars. One closed loop.",
-    body: "From intake to zero-balance reconciliation, every RCM step runs on the same orchestration engine.",
-    overview: SERVICES_OVERVIEW,
-    links: SERVICE_LINKS,
-  },
-  industries: {
-    label: "Industries",
-    title: "Built around how your practice bills.",
-    body: "Dental, medical, specialty and enterprise workflows — integrated with the PMS and EHR you already run.",
-    overview: INDUSTRIES_OVERVIEW,
-    links: INDUSTRY_LINKS,
-  },
+/** Dropdown intros reuse approved homepage headings; notes reuse approved card copy. */
+const INTRO: Record<string, { title: string; body: string; overview?: string }> = {
+  Services: { title: PIPELINE.heading, body: firstSentence(PIPELINE.intro), overview: "Services overview" },
+  Industries: { title: INDUSTRIES.heading, body: firstSentence(INDUSTRIES.intro) },
+  Technology: { title: TECHNOLOGY.heading, body: firstSentence(TECHNOLOGY.intro), overview: "Technology overview" },
 };
+
+const NOTES = new Map<string, string>([
+  ...(PIPELINE.pipeline ?? []).map((c) => [c.url ?? "", c.body] as [string, string]),
+  ...(INDUSTRIES.cards ?? []).map((c) => [c.url ?? "", c.body] as [string, string]),
+  ...pages.map((p) => [p.route, firstSentence(p.seo.description ?? "")] as [string, string]),
+]);
+
+function firstSentence(text: string) {
+  const m = text.match(/^.*?[.!?](\s|$)/);
+  return (m ? m[0] : text).trim();
+}
+
+const DROPDOWNS = MAIN_NAV.filter((g) => g.children.length > 0);
+type MenuKey = string;
 
 function Chevron() {
   return (
@@ -42,10 +37,6 @@ function Chevron() {
       <path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
-}
-
-function href(link: NavLink) {
-  return resolveHref(link) ?? "/";
 }
 
 export function Header() {
@@ -91,7 +82,7 @@ export function Header() {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        const trigger = headerRef.current?.querySelector<HTMLButtonElement>(`[data-menu-trigger="${open}"]`);
+        const trigger = headerRef.current?.querySelector<HTMLButtonElement>(`[data-menu-trigger="${CSS.escape(open)}"]`);
         setOpen(null);
         trigger?.focus();
       }
@@ -158,12 +149,11 @@ export function Header() {
     if (e.key === "ArrowDown") {
       e.preventDefault();
       setOpen(key);
-      requestAnimationFrame(() => document.getElementById(`${id}-${key}`)?.querySelector<HTMLElement>("a")?.focus());
+      requestAnimationFrame(() => document.getElementById(`${id}-${slug(key)}`)?.querySelector<HTMLElement>("a")?.focus());
     }
   };
 
   const solid = scrolled || open !== null;
-  const tone = solid ? "dark" : "light";
 
   return (
     <header
@@ -171,73 +161,49 @@ export function Header() {
       className={styles.header}
       data-solid={solid || undefined}
       data-hidden={(hidden && !open && !mobileOpen) || undefined}
+      data-menu-open={open !== null || undefined}
       data-mobile-open={mobileOpen || undefined}
     >
       <div className={`container ${styles.bar}`}>
         <SmartLink href="/" className={styles.brand} aria-label="ConvergeFlow home">
-          <Logo tone={mobileOpen ? "light" : tone} width={164} priority />
+          <Logo tone={solid && !mobileOpen ? "dark" : "light"} width={196} priority />
         </SmartLink>
 
         <nav className={styles.nav} aria-label="Primary">
           <ul className={styles.navList}>
-            {(["services", "industries"] as const).map((key) => (
-              <li key={key} onMouseEnter={() => openWithIntent(key)} onMouseLeave={closeWithIntent}>
-                <button
-                  type="button"
-                  className={styles.navItem}
-                  aria-expanded={open === key}
-                  aria-controls={`${id}-${key}`}
-                  data-menu-trigger={key}
-                  onClick={() => setOpen(open === key ? null : key)}
-                  onKeyDown={onTriggerKey(key)}
-                >
-                  {MEGA[key].label}
-                  <Chevron />
-                </button>
-              </li>
-            ))}
-            <li>
-              <SmartLink href={href(PRIMARY_NAV.technology)} className={styles.navItem} onClick={close}>
-                {PRIMARY_NAV.technology.label}
-              </SmartLink>
-            </li>
-            <li>
-              <SmartLink href={href(PRIMARY_NAV.outcomes)} className={styles.navItem} onClick={close}>
-                {PRIMARY_NAV.outcomes.label}
-              </SmartLink>
-            </li>
-            <li className={styles.dropdownHost} onMouseEnter={() => openWithIntent("resources")} onMouseLeave={closeWithIntent}>
-              <button
-                type="button"
-                className={styles.navItem}
-                aria-expanded={open === "resources"}
-                aria-controls={`${id}-resources`}
-                data-menu-trigger="resources"
-                onClick={() => setOpen(open === "resources" ? null : "resources")}
-                onKeyDown={onTriggerKey("resources")}
-              >
-                Resources
-                <Chevron />
-              </button>
-              <div id={`${id}-resources`} className={styles.dropdown} data-open={open === "resources" || undefined} hidden={open !== "resources"}>
-                <ul>
-                  {RESOURCE_LINKS.map((link, i) => (
-                    <li key={link.label} style={{ "--i": i } as React.CSSProperties}>
-                      <SmartLink href={href(link)} className={styles.dropLink} onClick={close}>
-                        <span className={styles.dropLabel}>{link.label}</span>
-                        <span className={styles.dropNote}>{link.note}</span>
-                      </SmartLink>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </li>
+            {MAIN_NAV.map((group) =>
+              group.children.length > 0 ? (
+                <li key={group.label} onMouseEnter={() => openWithIntent(group.label)} onMouseLeave={closeWithIntent}>
+                  <button
+                    type="button"
+                    className={styles.navItem}
+                    aria-expanded={open === group.label}
+                    aria-controls={`${id}-${slug(group.label)}`}
+                    data-menu-trigger={group.label}
+                    onClick={() => setOpen(open === group.label ? null : group.label)}
+                    onKeyDown={onTriggerKey(group.label)}
+                  >
+                    {group.label}
+                    <Chevron />
+                  </button>
+                </li>
+              ) : group.href ? (
+                <li key={group.label}>
+                  <SmartLink href={group.href} className={styles.navItem} onClick={close}>
+                    {group.label}
+                  </SmartLink>
+                </li>
+              ) : null,
+            )}
           </ul>
         </nav>
 
         <div className={styles.actions}>
-          <SmartLink href={href(PRIMARY_NAV.demo)} className={`btn btn-primary ${styles.cta}`} onClick={close}>
-            <span>{PRIMARY_NAV.demo.label}</span>
+          <a href={LOGIN_URL} className={styles.login}>
+            Login
+          </a>
+          <SmartLink href={DEMO_LINK.href} className={`btn btn-primary ${styles.cta}`} onClick={close}>
+            <span>{DEMO_LINK.label}</span>
           </SmartLink>
           <button
             ref={toggleRef}
@@ -254,35 +220,37 @@ export function Header() {
         </div>
       </div>
 
-      {(["services", "industries"] as const).map((key) => {
-        const menu = MEGA[key];
+      {DROPDOWNS.map((group) => {
+        const intro = INTRO[group.label];
         return (
           <div
-            key={key}
-            id={`${id}-${key}`}
+            key={group.label}
+            id={`${id}-${slug(group.label)}`}
             className={styles.mega}
-            data-open={open === key || undefined}
-            hidden={open !== key}
-            onMouseEnter={() => openWithIntent(key)}
+            data-open={open === group.label || undefined}
+            hidden={open !== group.label}
+            onMouseEnter={() => openWithIntent(group.label)}
             onMouseLeave={closeWithIntent}
           >
             <div className={`container ${styles.megaInner}`}>
               <div className={styles.megaIntro}>
-                <p className="eyebrow">{menu.label}</p>
-                <p className={styles.megaTitle}>{menu.title}</p>
-                <p className={styles.megaBody}>{menu.body}</p>
-                <SmartLink href={href(menu.overview)} className="link-arrow" onClick={close}>
-                  {menu.overview.label} <span aria-hidden="true">→</span>
-                </SmartLink>
+                <p className="eyebrow">{group.label}</p>
+                {intro && <p className={styles.megaTitle}>{intro.title}</p>}
+                {intro && <p className={styles.megaBody}>{intro.body}</p>}
+                {group.href && (
+                  <SmartLink href={group.href} className="link-arrow" onClick={close}>
+                    {intro?.overview ?? `All ${group.label.toLowerCase()}`} <span aria-hidden="true">→</span>
+                  </SmartLink>
+                )}
               </div>
               <ul className={styles.megaList}>
-                {menu.links.map((link, i) => (
-                  <li key={link.label} style={{ "--i": i } as React.CSSProperties}>
-                    <SmartLink href={href(link)} className={styles.megaLink} onClick={close}>
+                {group.children.map((link, i) => (
+                  <li key={link.href} style={{ "--i": i } as React.CSSProperties}>
+                    <SmartLink href={link.href} className={styles.megaLink} onClick={close}>
                       <span className={`${styles.megaIndex} num`}>{String(i + 1).padStart(2, "0")}</span>
                       <span>
                         <span className={styles.megaLabel}>{link.label}</span>
-                        <span className={styles.megaNote}>{link.note}</span>
+                        {NOTES.get(link.href) && <span className={styles.megaNote}>{NOTES.get(link.href)}</span>}
                       </span>
                     </SmartLink>
                   </li>
@@ -295,18 +263,21 @@ export function Header() {
 
       <div id={`${id}-sheet`} ref={sheetRef} className={styles.sheet} hidden={!mobileOpen} data-lenis-prevent>
         <div className={`container ${styles.sheetInner}`}>
-          <MobileGroup title="Services" links={[SERVICES_OVERVIEW, ...SERVICE_LINKS]} onNavigate={() => setMobileOpen(false)} />
-          <MobileGroup title="Industries" links={[INDUSTRIES_OVERVIEW, ...INDUSTRY_LINKS]} onNavigate={() => setMobileOpen(false)} />
-          <SmartLink href={href(PRIMARY_NAV.technology)} className={styles.sheetLink} onClick={() => setMobileOpen(false)}>
-            {PRIMARY_NAV.technology.label}
-          </SmartLink>
-          <SmartLink href={href(PRIMARY_NAV.outcomes)} className={styles.sheetLink} onClick={() => setMobileOpen(false)}>
-            {PRIMARY_NAV.outcomes.label}
-          </SmartLink>
-          <MobileGroup title="Resources" links={RESOURCE_LINKS} onNavigate={() => setMobileOpen(false)} />
+          {MAIN_NAV.map((group) =>
+            group.children.length > 0 ? (
+              <MobileGroup key={group.label} group={group} onNavigate={() => setMobileOpen(false)} />
+            ) : group.href ? (
+              <SmartLink key={group.label} href={group.href} className={styles.sheetLink} onClick={() => setMobileOpen(false)}>
+                {group.label}
+              </SmartLink>
+            ) : null,
+          )}
+          <a href={LOGIN_URL} className={styles.sheetLink}>
+            Login
+          </a>
           <div className={`${styles.sheetCta} on-dark`}>
-            <SmartLink href={href(PRIMARY_NAV.demo)} className="btn btn-primary" onClick={() => setMobileOpen(false)}>
-              <span>{PRIMARY_NAV.demo.label}</span>
+            <SmartLink href={DEMO_LINK.href} className="btn btn-primary" onClick={() => setMobileOpen(false)}>
+              <span>{DEMO_LINK.label}</span>
             </SmartLink>
           </div>
         </div>
@@ -315,19 +286,20 @@ export function Header() {
   );
 }
 
-function MobileGroup({ title, links, onNavigate }: { title: string; links: NavLink[]; onNavigate: () => void }) {
+function MobileGroup({ group, onNavigate }: { group: NavGroup; onNavigate: () => void }) {
   const [expanded, setExpanded] = useState(false);
   const id = useId();
+  const links: NavLink[] = [...(group.href ? [{ label: INTRO[group.label]?.overview ?? `All ${group.label.toLowerCase()}`, href: group.href }] : []), ...group.children];
   return (
     <div className={styles.group}>
       <button type="button" className={styles.sheetLink} aria-expanded={expanded} aria-controls={id} onClick={() => setExpanded((v) => !v)}>
-        {title}
+        {group.label}
         <span className={styles.plus} aria-hidden="true" />
       </button>
       <ul id={id} className={styles.groupList} hidden={!expanded}>
         {links.map((link) => (
-          <li key={link.label}>
-            <SmartLink href={href(link)} onClick={onNavigate}>
+          <li key={link.href}>
+            <SmartLink href={link.href} onClick={onNavigate}>
               {link.label}
             </SmartLink>
           </li>
@@ -335,4 +307,8 @@ function MobileGroup({ title, links, onNavigate }: { title: string; links: NavLi
       </ul>
     </div>
   );
+}
+
+function slug(label: string) {
+  return label.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 }

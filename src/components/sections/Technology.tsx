@@ -1,24 +1,26 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { TECHNOLOGY } from "@/content/home";
 import { ButtonLink } from "@/components/ui/Button";
+import { SmartLink } from "@/components/ui/SmartLink";
 import { useMotion } from "@/components/motion/useMotion";
 import { getLenis } from "@/components/motion/SmoothScroll";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import styles from "./Technology.module.css";
 
-/** Top → bottom of the platform stack. */
-const ITEMS = [TECHNOLOGY.core, ...TECHNOLOGY.modules];
+/** The six approved technology topics, top → bottom of the stack. */
+const ITEMS = (TECHNOLOGY.cards ?? []).map((c) => ({ name: c.title, body: c.body }));
 const N = ITEMS.length;
-const SHORT = ["QDL orchestration", "Portal RPA", "EDI & clearinghouse bus", "Credential vault", "Exception AI", "Audit ledger"];
+const SHORT = ITEMS.map((i) => i.name);
+/* Portal workflows, API/clearinghouse, credentials, orchestration, exceptions, reporting */
 const ICONS = [
-  "M12 3v3 M12 18v3 M3 12h3 M18 12h3 M7 7l2 2 M15 15l2 2 M17 7l-2 2 M9 15l-2 2 M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z",
-  "M3 5h18v14H3z M3 9h18 M6 7h.01 M8.5 7h.01 M11 7h.01 M8 13l3 3 5-5",
-  "M4 8h14l-3-3 M20 16H6l3 3",
-  "M6 11h12v9H6z M8.5 11V8a3.5 3.5 0 0 1 7 0v3 M12 14.5v2.5",
-  "M12 4 21 20H3z M12 10v4.5 M12 17h.01",
-  "M4 5h16v4H4z M4 10h16v4H4z M4 15h16v4H4z",
+  "M3 4.5h18v12H3z M3 8h18 M5.5 6.25h.01 M8 6.25h.01 M13 11.5l7 2.6-3 1.2-1.2 3z",
+  "M9 3v5 M15 3v5 M7 8h10v3a5 5 0 0 1-10 0z M12 16v5",
+  "M8 4a4 4 0 1 0 0 8 4 4 0 1 0 0-8z M11 11l9 9 M17 17l-2 2 M19.5 19.5l-1.5 1.5",
+  "M3 10h5v4H3z M16 4h5v4h-5z M16 16h5v4h-5z M8 12h4 M12 6v12 M12 6h4 M12 18h4",
+  "M12 3 21 12 12 21 3 12z M12 8v5 M12 16h.01",
+  "M3 20h18 M5 20v-8 M10 20V6 M15 20v-6 M20 20v-11",
 ];
 const GAP_MIN = 14;
 const GAP_MAX = 70;
@@ -48,19 +50,6 @@ export function Technology() {
     const t = window.setTimeout(() => setActive((i) => (i + 1) % N), CYCLE_MS);
     return () => window.clearTimeout(t);
   }, [isDesktop, cycling, inView, active]);
-
-  // Detail card performs on every change of layer.
-  useEffect(() => {
-    const card = ref.current?.querySelector<HTMLElement>("[data-detail]");
-    if (!card || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
-    tl.from(card.querySelectorAll("[data-swap]"), { opacity: 0, y: 16, duration: 0.7, stagger: 0.06 });
-    const badge = card.querySelector<HTMLElement>("[data-badge]");
-    if (badge) tl.to(badge, { duration: 0.7, scrambleText: { text: badge.dataset.badge!, chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", speed: 0.6 } }, 0);
-    return () => {
-      tl.progress(1).kill();
-    };
-  }, [active]);
 
   useMotion(ref, ({ desktop, motion }) => {
     const root = ref.current!;
@@ -97,6 +86,7 @@ export function Technology() {
           gap = GAP_MIN + (GAP_MAX - GAP_MIN) * Math.min(1, p / EXPLODE_END);
           const q = Math.max(0, (p - EXPLODE_END) / (1 - EXPLODE_END));
           const k = Math.min(N - 1, Math.floor(q * N));
+          root.style.setProperty("--tq", String(Math.min(1, Math.max(0, q))));
           if (k !== activeRef.current) {
             activeRef.current = k;
             setActive(k);
@@ -131,24 +121,29 @@ export function Technology() {
     else window.scrollTo({ top: y, behavior: "smooth" });
   };
 
-  const item = ITEMS[active];
 
   return (
     <section ref={ref} id="technology" className={`section section-dark on-dark ${styles.section}`} aria-labelledby="tech-title">
       <div className="container">
-        <header className="section-head is-split">
+        <header className="section-head is-split is-top">
           <div className={styles.headMain}>
             <p className="eyebrow" data-anim="fade">
-              <span className="eyebrow-index">05</span>
               {TECHNOLOGY.eyebrow}
             </p>
             <h2 id="tech-title" className="title-xl" data-anim="lines">
-              Built on <span className="accent">AI and robotics</span> — not offshore manual headcount
+              {TECHNOLOGY.heading}
             </h2>
           </div>
-          <p className="lede section-head-aside" data-anim="fade">
-            {TECHNOLOGY.body}
-          </p>
+          <div className="section-head-aside" data-anim="fade">
+            <p className="lede">{TECHNOLOGY.intro}</p>
+            {TECHNOLOGY.primary && (
+              <div className={styles.headCta}>
+                <ButtonLink href={TECHNOLOGY.primary.url} variant="secondary">
+                  {TECHNOLOGY.primary.label}
+                </ButtonLink>
+              </div>
+            )}
+          </div>
         </header>
       </div>
 
@@ -156,56 +151,59 @@ export function Technology() {
         <div className={styles.sticky}>
           <div className={`container ${styles.stage}`}>
             <div className={styles.copy}>
-              <div className={styles.meter} aria-hidden="true">
-                <span className={styles.meterCount}>
-                  <span key={active} className={`${styles.meterNow} num`}>
+              <p className={styles.topicHead} aria-hidden="true">
+                <span>Topic</span>
+                <span className={styles.topicCount}>
+                  <span key={active} className={`${styles.topicNow} num`}>
                     {pad(active + 1)}
                   </span>
-                  <span className={styles.meterTotal}>/ {pad(N)}</span>
+                  <span className="num"> / {pad(N)}</span>
                 </span>
-                <span className={styles.meterSide}>
-                  <span className={styles.meterLabel}>Platform layer</span>
-                  <span className={styles.segments}>
-                    {ITEMS.map((m, i) => (
-                      <span key={m.name} data-on={i <= active || undefined} />
-                    ))}
-                  </span>
+              </p>
+              <div
+                className={styles.topicsWrap}
+                style={isDesktop ? undefined : ({ ["--tq" as string]: String((active + 1) / N) } as CSSProperties)}
+              >
+                <span className={styles.rail} aria-hidden="true">
+                  <span className={styles.railFill} />
+                  <span className={styles.railDot} />
                 </span>
-              </div>
-
-              <div id="tech-panel" role="tabpanel" aria-labelledby={`tech-tab-${active}`} className={styles.detail} data-detail>
-                <span className={`${styles.badge} mono`} data-swap data-badge={item.badge}>
-                  {item.badge}
-                </span>
-                <h3 className={styles.detailName} data-swap>
-                  {item.name}
-                </h3>
-                <p className={styles.detailBody} data-swap>
-                  {item.body}
-                </p>
-                <p className={styles.status} data-swap>
-                  <span className={styles.statusDot} aria-hidden="true" />
-                  {item.status}
-                </p>
-              </div>
-
-              <div className={styles.layerList} role="tablist" aria-label="Platform layers">
-                {ITEMS.map((m, i) => (
-                  <button
-                    key={m.name}
-                    type="button"
-                    role="tab"
-                    id={`tech-tab-${i}`}
-                    aria-selected={i === active}
-                    aria-controls="tech-panel"
-                    className={styles.layerTab}
-                    data-done={i < active || undefined}
-                    onClick={() => choose(i)}
-                  >
-                    <span className={`${styles.layerTabIndex} num`}>{pad(i + 1)}</span>
-                    <span>{SHORT[i]}</span>
-                  </button>
-                ))}
+              <ol className={styles.topics} data-mode={isDesktop ? "scroll" : "auto"}>
+                {ITEMS.map((m, i) => {
+                  const on = i === active;
+                  return (
+                    <li key={m.name} className={styles.topic} data-on={on || undefined} data-done={i < active || undefined}>
+                      <button
+                        type="button"
+                        id={`tech-tab-${i}`}
+                        className={styles.topicBtn}
+                        aria-expanded={on}
+                        aria-controls={`tech-topic-${i}`}
+                        onClick={() => choose(i)}
+                      >
+                        <span className={styles.topicIcon} aria-hidden="true">
+                          <svg viewBox="0 0 24 24">
+                            <path d={ICONS[i]} />
+                          </svg>
+                        </span>
+                        <span className={styles.topicName}>{m.name}</span>
+                        <span className={`${styles.topicIndex} num`}>{pad(i + 1)}</span>
+                      </button>
+                      <div id={`tech-topic-${i}`} className={styles.topicPanel} role="region" aria-labelledby={`tech-tab-${i}`}>
+                        <div className={styles.topicInner}>
+                          <p className={styles.topicBody}>{m.body}</p>
+                          <SmartLink href="/demo/" className={styles.topicLink}>
+                            Discuss this in a demo
+                            <svg viewBox="0 0 20 20" aria-hidden="true">
+                              <path d="M4 10h11m-4.5-4.5L15 10l-4.5 4.5" />
+                            </svg>
+                          </SmartLink>
+                        </div>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ol>
               </div>
             </div>
 
@@ -222,7 +220,6 @@ export function Technology() {
                       </svg>
                       <span className={styles.slabName}>{SHORT[i]}</span>
                       <span className={`${styles.slabIndex} num`}>{pad(i + 1)}</span>
-                      <span className={styles.slabChip}>{m.badge}</span>
                     </div>
                   </div>
                 ))}
@@ -232,28 +229,6 @@ export function Technology() {
         </div>
       </div>
 
-      <div className="container">
-        <section id="security" className={styles.security} data-anim="fade" aria-labelledby="security-title">
-          <svg className={styles.shield} viewBox="0 0 48 56" aria-hidden="true" data-anim="draw">
-            <path d="M24 2 4 9.5v14C4 37 12.6 48.6 24 53c11.4-4.4 20-16 20-29.5v-14L24 2Z" data-draw />
-            <path d="m15.5 28 6 6 11-12" data-draw />
-          </svg>
-          <div className={styles.securityCopy}>
-            <h3 id="security-title" className={styles.securityTitle}>
-              {TECHNOLOGY.security.title}
-            </h3>
-            <p>{TECHNOLOGY.security.body}</p>
-            <ul className={styles.points}>
-              {TECHNOLOGY.security.points.map((p) => (
-                <li key={p}>{p}</li>
-              ))}
-            </ul>
-          </div>
-          <ButtonLink href="/#demo" variant="secondary">
-            {TECHNOLOGY.security.cta}
-          </ButtonLink>
-        </section>
-      </div>
     </section>
   );
 }

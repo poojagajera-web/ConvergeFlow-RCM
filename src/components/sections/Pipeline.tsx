@@ -2,16 +2,30 @@
 
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { PIPELINE } from "@/content/home";
+import { liveHref } from "@/content/navigation";
+import { ButtonLink } from "@/components/ui/Button";
+import { SmartLink } from "@/components/ui/SmartLink";
 import { useMotion } from "@/components/motion/useMotion";
-import { gsap, ScrollTrigger, SplitText } from "@/lib/gsap";
+import { gsap, SplitText } from "@/lib/gsap";
 import styles from "./Pipeline.module.css";
 
-const STEPS = PIPELINE.steps;
-const AUTOPLAY_MS = 6500;
+const STAGES = PIPELINE.pipeline ?? [];
+const GROUP_CARDS = PIPELINE.cards ?? [];
+/** Which stages each approved group card covers, in pipeline order. */
+const GROUP_RANGES: [number, number][] = [
+  [0, 2],
+  [3, 4],
+  [5, 5],
+  [6, 7],
+];
+const SHORT = ["Registration", "Eligibility", "Prior Auth", "Coding", "Claims", "Denials", "Posting", "AR"];
 
+const groupOf = (i: number) => GROUP_RANGES.findIndex(([a, b]) => i >= a && i <= b);
+const keyOf = (url?: string) => (url ?? "").split("/").filter(Boolean).pop() ?? "";
 const reducedMotion = () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const pad = (i: number) => String(i + 1).padStart(2, "0");
 
-/** Choreographs a freshly mounted step panel: words, list, metric, telemetry, log. */
+/** Choreographs a freshly mounted stage panel. */
 function playPanel(panel: HTMLElement) {
   const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
   const title = panel.querySelector<HTMLElement>("[data-title]");
@@ -21,27 +35,8 @@ function playPanel(panel: HTMLElement) {
     tl.from(split.words, { yPercent: 110, duration: 0.9, stagger: 0.035 }, 0.05);
   }
   tl.from(panel.querySelectorAll("[data-fade]"), { opacity: 0, y: 16, duration: 0.8, stagger: 0.06 }, 0)
-    .from(panel.querySelectorAll("[data-bullet]"), { opacity: 0, x: -10, duration: 0.6, stagger: 0.05 }, 0.25)
-    .from(panel.querySelector("[data-ghost]"), { opacity: 0, x: 40, duration: 1.4 }, 0);
-
-  const metric = panel.querySelector<HTMLElement>("[data-metric]");
-  if (metric) tl.to(metric, { duration: 1, scrambleText: { text: metric.dataset.metric!, chars: "0123456789.%$K", speed: 0.7 } }, 0.3);
-
-  const term = panel.querySelector<HTMLElement>("[data-terminal]");
-  if (term) {
-    tl.fromTo(term.querySelector("[data-scan]"), { yPercent: -100, opacity: 1 }, { yPercent: 2400, opacity: 0, duration: 1.4, ease: "power2.in" }, 0.1);
-    tl.from(term.querySelectorAll("[data-row]"), { opacity: 0, duration: 0.3, stagger: 0.16 }, 0.2);
-    term.querySelectorAll<HTMLElement>("[data-value]").forEach((v, i) => {
-      tl.to(v, { duration: 0.9, scrambleText: { text: v.dataset.value!, chars: "0123456789/-.", speed: 0.8, revealDelay: 0.2 } }, 0.25 + i * 0.16);
-    });
-    const log = term.querySelector<HTMLElement>("[data-log]");
-    if (log) {
-      const text = log.dataset.log!;
-      log.textContent = "";
-      tl.to(log, { duration: Math.min(2.2, text.length * 0.022), text: { value: text }, ease: "none" }, 1.0);
-    }
-    tl.fromTo(term.querySelector("[data-done]"), { scaleX: 0 }, { scaleX: 1, duration: 1.8, ease: "power2.inOut" }, 0.2);
-  }
+    .from(panel.querySelector("[data-ghost]"), { opacity: 0, x: 40, duration: 1.4 }, 0)
+    .from(panel.querySelectorAll("[data-chip]"), { opacity: 0, y: 8, duration: 0.5, stagger: 0.05 }, 0.3);
   return () => {
     tl.kill();
     split?.revert();
@@ -54,34 +49,21 @@ export function Pipeline() {
   const cometRef = useRef<HTMLSpanElement>(null);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const [active, setActive] = useState(1);
-  const [playing, setPlaying] = useState(false);
-  const [inView, setInView] = useState(false);
-  const interacted = useRef(false);
   const seen = useRef(false);
   const previous = useRef(1);
 
-  const select = useCallback((index: number) => {
-    interacted.current = true;
-    setPlaying(false);
-    setActive(index);
-  }, []);
+  const select = useCallback((index: number) => setActive(index), []);
 
-  // Deep links from the Services menu: /#eligibility-verification etc.
+  // Deep links such as /#eligibility-verification select the matching stage.
   useEffect(() => {
     const fromHash = () => {
-      const index = STEPS.findIndex((s) => s.key === window.location.hash.slice(1));
+      const index = STAGES.findIndex((s) => keyOf(s.url) === window.location.hash.slice(1));
       if (index >= 0) select(index);
     };
     fromHash();
     window.addEventListener("hashchange", fromHash);
     return () => window.removeEventListener("hashchange", fromHash);
   }, [select]);
-
-  useEffect(() => {
-    if (!playing || !inView) return;
-    const t = window.setTimeout(() => setActive((i) => (i + 1) % STEPS.length), AUTOPLAY_MS);
-    return () => window.clearTimeout(t);
-  }, [playing, inView, active]);
 
   // Keep the active station visible inside the scrollable mobile rail.
   useEffect(() => {
@@ -91,7 +73,7 @@ export function Pipeline() {
     rail.scrollTo({ left: tab.offsetLeft - rail.clientWidth / 2 + tab.offsetWidth / 2, behavior: "smooth" });
   }, [active]);
 
-  // Each step change: comet travels the rail, then the new panel performs.
+  // Each stage change: a light travels the rail, then the panel performs.
   useEffect(() => {
     const from = previous.current;
     previous.current = active;
@@ -100,7 +82,7 @@ export function Pipeline() {
     const comet = cometRef.current;
     let tween: gsap.core.Tween | null = null;
     if (comet && from !== active) {
-      const x = (i: number) => `${(i / (STEPS.length - 1)) * 100}%`;
+      const x = (i: number) => `${(i / (STAGES.length - 1)) * 100}%`;
       tween = gsap.fromTo(comet, { left: x(from), opacity: 1 }, { left: x(active), duration: 0.9, ease: "power3.inOut", onComplete: () => void gsap.to(comet, { opacity: 0, duration: 0.4 }) });
     }
     return () => {
@@ -124,19 +106,21 @@ export function Pipeline() {
       ease: "power3.inOut",
       scrollTrigger: { trigger: rail, start: "top 85%", once: true },
     });
+    const groups = root.querySelector("[data-groups]");
+    gsap
+      .timeline({ scrollTrigger: { trigger: groups, start: "top 85%", once: true }, defaults: { ease: "expo.out" } })
+      .fromTo(root.querySelectorAll("[data-group-card]"), { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 1.1, stagger: 0.12, clearProps: "transform,opacity" }, 0)
+      .fromTo(root.querySelectorAll("[data-group-line]"), { scaleX: 0 }, { scaleX: 1, duration: 1.2, stagger: 0.12, ease: "power3.inOut", clearProps: "transform" }, 0.15);
 
-    // First time the panel is on screen: perform it and start the guided tour.
-    ScrollTrigger.create({
-      trigger: root.querySelector("[data-panel-wrap]"),
-      start: "top 75%",
-      end: "bottom 25%",
-      onToggle: (self) => {
-        setInView(self.isActive);
-        if (self.isActive && !seen.current) {
+    gsap.timeline({
+      scrollTrigger: {
+        trigger: root.querySelector("[data-panel-wrap]"),
+        start: "top 75%",
+        once: true,
+        onEnter: () => {
           seen.current = true;
           if (panelRef.current) playPanel(panelRef.current);
-          if (!interacted.current) setPlaying(true);
-        }
+        },
       },
     });
   });
@@ -144,69 +128,55 @@ export function Pipeline() {
   const onKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
     const keys: Record<string, number> = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
     let next: number | null = null;
-    if (e.key in keys) next = (active + keys[e.key] + STEPS.length) % STEPS.length;
+    if (e.key in keys) next = (active + keys[e.key] + STAGES.length) % STAGES.length;
     if (e.key === "Home") next = 0;
-    if (e.key === "End") next = STEPS.length - 1;
+    if (e.key === "End") next = STAGES.length - 1;
     if (next === null) return;
     e.preventDefault();
     select(next);
     tabRefs.current[next]?.focus();
   };
 
-  const step = STEPS[active];
-  const progress = active / (STEPS.length - 1);
-  const num = (i: number) => String(i + 1).padStart(2, "0");
+  const stage = STAGES[active];
+  const g = groupOf(active);
+  const group = GROUP_CARDS[g];
+  const stageHref = liveHref(stage?.url ?? "");
+  const progress = active / (STAGES.length - 1);
 
   return (
-    <section ref={sectionRef} id="pipeline" className={`section section-dark on-dark ${styles.section}`} aria-labelledby="pipeline-title">
+    <section ref={sectionRef} id="services" className={`section section-dark on-dark ${styles.section}`} aria-labelledby="pipeline-title">
       <div className={styles.glow} aria-hidden="true" />
       <div className="container">
-        <header className="section-head is-split">
+        <header className="section-head is-split is-top">
           <div className={styles.headMain}>
             <p className="eyebrow" data-anim="fade">
-              <span className="eyebrow-index">02</span>
               {PIPELINE.eyebrow}
             </p>
             <h2 id="pipeline-title" className="title-xl" data-anim="lines">
-              {PIPELINE.title}
+              {PIPELINE.heading}
             </h2>
           </div>
           <div className="section-head-aside" data-anim="fade">
-            <p className="lede">{PIPELINE.body}</p>
-            <div className={styles.status}>
-              <p className={styles.statusValue}>
-                <span className="num">{PIPELINE.status.value}</span>
-                <span>
-                  {PIPELINE.status.label}
-                  <small>{PIPELINE.status.sub}</small>
-                </span>
-              </p>
-              <button
-                type="button"
-                className={styles.tour}
-                onClick={() => {
-                  interacted.current = true;
-                  setPlaying((p) => !p);
-                }}
-                aria-pressed={playing}
-              >
-                <span aria-hidden="true" className={styles.tourIcon} data-playing={playing || undefined} />
-                {playing ? "Pause tour" : "Play tour"}
-              </button>
-            </div>
+            <p className="lede">{PIPELINE.intro}</p>
+            {PIPELINE.primary && (
+              <div className={styles.headCta}>
+                <ButtonLink href={PIPELINE.primary.url} variant="secondary">
+                  {PIPELINE.primary.label}
+                </ButtonLink>
+              </div>
+            )}
           </div>
         </header>
 
         <div className={styles.rail} data-rail>
           <div className={styles.railInner}>
-            <ol className={styles.groups}>
-              {PIPELINE.groups.map((g) => {
-                const on = active >= g.range[0] && active <= g.range[1];
+            <ol className={styles.groups} aria-hidden="true">
+              {GROUP_CARDS.map((card, i) => {
+                const [a, b] = GROUP_RANGES[i];
                 return (
-                  <li key={g.label} className={styles.group} data-on={on || undefined} style={{ gridColumn: `${g.range[0] + 1} / ${g.range[1] + 2}` }}>
-                    <button type="button" className={styles.groupBtn} onClick={() => select(g.range[0])}>
-                      <span className={styles.groupLabel}>{g.label}</span>
-                      <span className={styles.groupStat}>{g.stat}</span>
+                  <li key={card.title} className={styles.group} data-on={g === i || undefined} style={{ gridColumn: `${a + 1} / ${b + 2}` }}>
+                    <button type="button" className={styles.groupBtn} tabIndex={-1} onClick={() => select(a)}>
+                      <span className={styles.groupLabel}>{card.title}</span>
                     </button>
                   </li>
                 );
@@ -219,11 +189,11 @@ export function Pipeline() {
                 <span ref={cometRef} className={styles.comet} />
               </div>
 
-              <div className={styles.stations} role="tablist" aria-label="Revenue cycle services">
-                {STEPS.map((s, i) => (
+              <div className={styles.stations} role="tablist" aria-label="Revenue cycle stages">
+                {STAGES.map((s, i) => (
                   <button
-                    key={s.key}
-                    id={s.key}
+                    key={s.title}
+                    id={keyOf(s.url)}
                     ref={(el) => {
                       tabRefs.current[i] = el;
                     }}
@@ -238,11 +208,9 @@ export function Pipeline() {
                     onClick={() => select(i)}
                     onKeyDown={onKeyDown}
                   >
-                    <span className={styles.dot} aria-hidden="true">
-                      {playing && inView && i === active && <span key={active} className={styles.timer} style={{ animationDuration: `${AUTOPLAY_MS}ms` }} />}
-                    </span>
-                    <span className={`${styles.stationNum} num`}>{num(i)}</span>
-                    <span className={styles.stationName}>{s.short}</span>
+                    <span className={styles.dot} aria-hidden="true" />
+                    <span className={`${styles.stationNum} num`}>{pad(i)}</span>
+                    <span className={styles.stationName}>{SHORT[i] ?? s.title}</span>
                   </button>
                 ))}
               </div>
@@ -251,87 +219,86 @@ export function Pipeline() {
         </div>
 
         <div className={styles.panelWrap} data-panel-wrap>
-          <div ref={panelRef} id="pipeline-panel" role="tabpanel" aria-labelledby={step.key} className={styles.panel}>
-            <div key={step.key} className={styles.panelInner}>
+          <div ref={panelRef} id="pipeline-panel" role="tabpanel" aria-labelledby={keyOf(stage?.url)} className={styles.panel}>
+            <div key={stage?.title} className={styles.panelInner}>
               <span className={`${styles.ghost} num`} aria-hidden="true" data-ghost>
-                {num(active)}
+                {pad(active)}
               </span>
               <div className={styles.detail}>
                 <p className={styles.meta} data-fade>
-                  <span>
-                    Phase {num(active)} • {step.phase}
-                  </span>
-                  <span className={styles.protocol}>{step.protocol}</span>
-                </p>
-                <p className={styles.nameKicker} data-fade>
-                  {step.name}
+                  <span>Stage {pad(active)} of {String(STAGES.length).padStart(2, "0")}</span>
+                  {group && <span className={styles.protocol}>{group.title}</span>}
                 </p>
                 <h3 className={styles.name} data-title>
-                  {step.headline}
+                  {stage?.title}
                 </h3>
                 <p className={styles.body} data-fade>
-                  {step.body}
+                  {stage?.body}
                 </p>
-                <ul className={styles.bullets}>
-                  {step.bullets.map((b) => (
-                    <li key={b} data-bullet>
-                      <svg viewBox="0 0 16 16" aria-hidden="true">
-                        <path d="m3.5 8.5 3 3 6-7" />
-                      </svg>
-                      {b}
-                    </li>
-                  ))}
-                </ul>
-                <div className={styles.metric} data-fade>
-                  <p className={`${styles.metricValue} num`} data-metric={step.metric.value}>
-                    {step.metric.value}
-                  </p>
-                  <p className={styles.metricLabel}>
-                    {step.metric.label}
-                    <span>{step.metric.change}</span>
-                  </p>
+                <div data-fade>
+                  {stageHref ? (
+                    <SmartLink href={stageHref} className="link-arrow">
+                      Explore {stage?.title.toLowerCase()} <span aria-hidden="true">→</span>
+                    </SmartLink>
+                  ) : (
+                    <SmartLink href="/demo/" className="link-arrow">
+                      Discuss this stage in a demo <span aria-hidden="true">→</span>
+                    </SmartLink>
+                  )}
                 </div>
               </div>
 
-              <div className={styles.terminal} data-terminal role="group" aria-label={`${step.telemetry.title} sample output`}>
-                <span className={styles.scan} aria-hidden="true" data-scan />
-                <div className={styles.termHead}>
-                  <span className={styles.leds} aria-hidden="true">
-                    <span />
-                    <span />
-                    <span />
-                  </span>
-                  <span className="mono">{step.telemetry.title}</span>
-                </div>
-                <div className={styles.termStatusRow}>
-                  <span className={styles.termStep}>
-                    Step {num(active)} / {num(STEPS.length - 1)}
-                  </span>
-                  <span className={styles.termStatus}>{step.telemetry.status}</span>
-                </div>
-                <dl className={styles.termRows}>
-                  {step.telemetry.rows.map((r) => (
-                    <div key={r.label} className={styles.termRow} data-tone={r.tone} data-row>
-                      <dt>{r.label}</dt>
-                      <dd data-value={r.value}>{r.value}</dd>
-                    </div>
-                  ))}
-                </dl>
-                <p className={`${styles.termLog} mono`}>
-                  <span aria-hidden="true">&gt;&gt; </span>
-                  <span data-log={step.telemetry.log}>{step.telemetry.log}</span>
-                  <span className={styles.caret} aria-hidden="true" />
-                </p>
-                <div className={styles.termFoot} aria-hidden="true">
-                  <span className={styles.doneBar}>
-                    <span data-done />
-                  </span>
-                  <span className="mono">200 OK</span>
-                </div>
-              </div>
+              {group && (
+                <aside className={styles.groupPanel} data-fade aria-label={`Part of: ${group.title}`}>
+                  <p className={styles.groupKicker}>Part of</p>
+                  <p className={styles.groupTitle}>{group.title}</p>
+                  <p className={styles.groupBody}>{group.body}</p>
+                  <ul className={styles.groupStages}>
+                    {STAGES.slice(GROUP_RANGES[g][0], GROUP_RANGES[g][1] + 1).map((s, k) => {
+                      const idx = GROUP_RANGES[g][0] + k;
+                      return (
+                        <li key={s.title} data-chip data-on={idx === active || undefined}>
+                          <span className="num">{pad(idx)}</span>
+                          {s.title}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </aside>
+              )}
             </div>
           </div>
         </div>
+
+        <ol className={styles.groupCards} data-groups aria-label="Workflow groups">
+          {GROUP_CARDS.map((card, i) => {
+            const href = liveHref(card.url ?? "");
+            const [from, to] = GROUP_RANGES[i];
+            return (
+              <li key={card.title} className={styles.groupCard} data-group-card data-on={g === i || undefined}>
+                <span className={styles.groupLine} aria-hidden="true" data-group-line />
+                <span className={`${styles.groupNumeral} num`} aria-hidden="true">
+                  {pad(i)}
+                </span>
+                <h3 className={styles.groupCardTitle}>{card.title}</h3>
+                <p className={styles.groupCardBody}>{card.body}</p>
+                <ul className={styles.groupList} aria-label="Stages covered">
+                  {STAGES.slice(from, to + 1).map((st) => (
+                    <li key={st.title}>{st.title}</li>
+                  ))}
+                </ul>
+                {href && (
+                  <SmartLink href={href} className={styles.groupLink} aria-label={`Explore: ${card.title}`}>
+                    Explore
+                    <svg viewBox="0 0 20 20" aria-hidden="true">
+                      <path d="M4 10h11m-4.5-4.5L15 10l-4.5 4.5" />
+                    </svg>
+                  </SmartLink>
+                )}
+              </li>
+            );
+          })}
+        </ol>
       </div>
     </section>
   );
