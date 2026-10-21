@@ -209,16 +209,17 @@
   }
 }
 
+/* Soft radial blobs on their own GPU layers (no filter blur, so the drift costs no repaints) */
 .aurora {
   position: absolute;
   inset: -30%;
   z-index: -2;
-  filter: blur(40px);
 }
 
 .aurora i {
   position: absolute;
   border-radius: 50%;
+  will-change: transform;
   animation: drift 10s var(--ease-in-out) infinite alternate;
 }
 
@@ -227,7 +228,7 @@
   top: 10%;
   width: 60%;
   height: 60%;
-  background: rgba(63, 214, 195, 0.7);
+  background: radial-gradient(closest-side, rgba(63, 214, 195, 0.75), rgba(63, 214, 195, 0.4) 50%, transparent);
 }
 
 .aurora i:nth-child(2) {
@@ -235,7 +236,7 @@
   top: 30%;
   width: 45%;
   height: 50%;
-  background: rgba(40, 140, 220, 0.5);
+  background: radial-gradient(closest-side, rgba(40, 140, 220, 0.55), rgba(40, 140, 220, 0.28) 50%, transparent);
   animation-duration: 13s;
   animation-direction: alternate-reverse;
 }
@@ -245,7 +246,7 @@
   bottom: 0;
   width: 50%;
   height: 45%;
-  background: rgba(200, 255, 240, 0.45);
+  background: radial-gradient(closest-side, rgba(200, 255, 240, 0.5), rgba(200, 255, 240, 0.22) 50%, transparent);
   animation-duration: 16s;
 }
 
@@ -351,7 +352,7 @@
 
 .uiTag {
   font-family: var(--font-mono);
-  font-size: 0.5625rem;
+  font-size: 0.6875rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text-3);
@@ -397,7 +398,7 @@
 
 .rowState {
   font-family: var(--font-mono);
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--mint);
@@ -507,5 +508,27 @@
   .aurora i,
   .cursor {
     animation: none;
+  }
+}
+
+/* Narrow screens: all four tabs visible as a 2x2 grid instead of a row running off-screen */
+@media (max-width: 559.98px) {
+  .tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.25rem 1rem;
+    overflow: visible;
+  }
+
+  .tab {
+    white-space: normal;
+    text-align: left;
+  }
+}
+
+/* Small phones: the role cursors would sit on top of the checklist text */
+@media (max-width: 479.98px) {
+  .cursors {
+    display: none;
   }
 }

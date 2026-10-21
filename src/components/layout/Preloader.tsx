@@ -8,8 +8,9 @@ import { STAGES } from "@/content/site/services";
 import { Aurora } from "@/components/fx/Aurora";
 import styles from "./Preloader.module.css";
 
-const MIN_MS = 2200;
-const MAX_MS = 6500;
+/* The counter reaches 100% about 3.5s after navigation starts (later only on slow connections, capped at MAX_MS). */
+const MIN_MS = 3400;
+const MAX_MS = 7000;
 const R = 54;
 const RING = 2 * Math.PI * R;
 const PANELS = 6;
@@ -19,13 +20,26 @@ const DIGITS = Array.from({ length: 10 }, (_, d) => d);
 const pad = (n: number) => String(n).padStart(2, "0");
 
 /**
+ * Pace of the minimum timeline, in eight beats (one per stage): within each beat the
+ * count eases in and out, so it settles briefly on every stage name before moving on.
+ */
+const paced = (t: number) => {
+  const s = Math.min(1, t / MIN_MS) * STAGES.length;
+  const k = Math.floor(s);
+  if (k >= STAGES.length) return 1;
+  const f = s - k;
+  return (k + f * f * (3 - 2 * f)) / STAGES.length;
+};
+
+/**
  * Loading screen for a full page load.
  *
  * Over drifting green and blue light, the eight stages orbit in as points of
  * light and converge on the mark while a ring fills and the mark is revealed
  * clockwise; "ConvergeFlow" assembles letter by letter beneath it; rolling
- * odometer digits count to 100% (paced by real font and page loading, with a
- * short minimum measured from navigation start).
+ * odometer digits count to 100% in eight eased beats, settling on each stage
+ * name, over about 3.5s from navigation start (longer only while a slow
+ * connection is still loading fonts and files).
  *
  * At 100% the mark flashes and collapses, the letters and digits roll away,
  * and the screen opens in six panels sliding up from the centre while the
@@ -111,10 +125,10 @@ export function Preloader() {
     const frame = (t: number) => {
       const dt = last ? Math.min(100, t - last) : 16;
       last = t;
-      // Creep forward while waiting; real loading signals pull ahead; never faster than MIN_MS.
-      const creep = 0.92 * (1 - Math.exp(-t / 1200));
+      // Creep forward while waiting; real loading signals pull ahead; never ahead of the paced minimum.
+      const creep = 0.92 * (1 - Math.exp(-t / 1600));
       let goal = real >= 1 || t > MAX_MS ? 1 : Math.max(real * 0.9, creep);
-      goal = Math.min(goal, t / MIN_MS);
+      goal = Math.min(goal, paced(t));
       // Ease toward the goal with a ~110ms time constant, the same at any refresh rate.
       shown += (goal - shown) * (1 - Math.exp(-dt / 110));
       if (goal === 1 && 1 - shown < 0.01) shown = 1;

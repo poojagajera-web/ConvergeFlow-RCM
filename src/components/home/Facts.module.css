@@ -105,22 +105,30 @@
   overflow: hidden;
   border: 1px solid var(--stroke);
   border-radius: 22px;
-  background: linear-gradient(180deg, rgba(10, 20, 20, 0.62), rgba(5, 11, 11, 0.5));
+  background: linear-gradient(180deg, rgba(10, 20, 20, 0.72), rgba(5, 11, 11, 0.62));
   isolation: isolate;
-  -webkit-backdrop-filter: blur(14px);
-  backdrop-filter: blur(14px);
   /* hover lift uses `translate` so it never fights the GSAP entrance (which owns `transform`) */
   transition: border-color 600ms var(--ease-out), translate 700ms var(--ease-out), box-shadow 700ms var(--ease-out);
 }
 
-/* White sheet that floods the card from the pointer on hover, and drains back toward it on leave */
+/*
+ * White sheet that floods the card on hover: a large disc centred where the pointer
+ * entered (--fx/--fy, set once on enter and leave) that scales up from nothing.
+ * Only its transform animates, so it stays smooth.
+ */
 .fill {
   position: absolute;
-  inset: 0;
+  left: var(--fx, 50%);
+  top: var(--fy, 0%);
   z-index: -1;
-  background: linear-gradient(165deg, #ffffff 0%, #f2fbf9 55%, #dff4ef 100%);
-  clip-path: circle(0px at var(--mx) var(--my));
-  transition: clip-path 750ms cubic-bezier(0.65, 0, 0.35, 1);
+  width: 360%;
+  aspect-ratio: 1;
+  /* percentage margins resolve against the card width: this centres the disc on the point */
+  margin: -180% 0 0 -180%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, #ffffff 0%, #f6fcfb 40%, #e4f5f1 100%);
+  transform: scale(0);
+  transition: transform 800ms cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 /* Soft light that follows the pointer */
@@ -153,7 +161,7 @@
 }
 
 .card:hover .fill {
-  clip-path: circle(150% at var(--mx) var(--my));
+  transform: scale(1);
 }
 
 .card:hover .glow {

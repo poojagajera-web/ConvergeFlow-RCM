@@ -7,17 +7,15 @@
   transition: transform 520ms var(--ease-out);
 }
 
-/* Dark glass bar once the page scrolls (single-function backdrop-filter:
-   the CSS minifier drops multi-function values). */
+/* Dark bar once the page scrolls. Opaque enough to read on any section, without a
+   backdrop blur (re-blurring the moving light underneath every frame made scrolling heavy). */
 .header::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
   border-bottom: 1px solid var(--stroke);
-  background: linear-gradient(to bottom, rgba(3, 8, 7, 0.86), rgba(3, 8, 7, 0.7));
-  -webkit-backdrop-filter: blur(20px);
-  backdrop-filter: blur(20px);
+  background: linear-gradient(to bottom, rgba(3, 8, 7, 0.95), rgba(3, 8, 7, 0.88));
   opacity: 0;
   transition: opacity var(--dur) var(--ease-out);
 }
@@ -68,9 +66,7 @@
   padding: 0.25rem;
   border: 1px solid var(--stroke);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.03);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
+  background: rgba(9, 18, 17, 0.72);
 }
 
 .navItem {

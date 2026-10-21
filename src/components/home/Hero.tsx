@@ -8,27 +8,27 @@ import { gsap } from "@/lib/gsap";
 import { onSiteReady } from "@/lib/siteReady";
 import { HOME_HERO, HOME_HERO_POINTS } from "@/content/site/home";
 import { Icon } from "@/components/site/Icon";
+import { Aurora } from "@/components/fx/Aurora";
 import styles from "./Hero.module.css";
 
 /**
- * Homepage hero: a drifting green and blue aurora that leans toward the
- * pointer, a dot-grid spotlight under the pointer and film grain over
- * everything; the headline tracks in from blur and a band of light sweeps
- * across it.
+ * Homepage hero: green and blue light roaming the whole hero and leaning
+ * toward the pointer, a dot-grid spotlight under the pointer and a fine grain;
+ * the headline tracks in from blur and a band of light sweeps across it.
  */
 export function Hero() {
   const ref = useRef<HTMLElement>(null);
 
-  // Pointer spotlight position, and a normalised offset (-0.5…0.5) that pulls the aurora toward the pointer.
+  // Pointer spotlight position, set on the spotlight layer only (smoothed there by a CSS
+  // transition) so a pointer move never restyles the rest of the hero.
   useEffect(() => {
     const el = ref.current;
-    if (!el) return;
+    const spot = el?.querySelector<HTMLElement>("[data-spot]");
+    if (!el || !spot) return;
     const onMove = (e: PointerEvent) => {
       const r = el.getBoundingClientRect();
-      el.style.setProperty("--mx", `${e.clientX - r.left}px`);
-      el.style.setProperty("--my", `${e.clientY - r.top}px`);
-      el.style.setProperty("--px", ((e.clientX - r.left) / r.width - 0.5).toFixed(3));
-      el.style.setProperty("--py", ((e.clientY - r.top) / r.height - 0.5).toFixed(3));
+      spot.style.setProperty("--spot-x", `${e.clientX - r.left}px`);
+      spot.style.setProperty("--spot-y", `${e.clientY - r.top}px`);
     };
     el.addEventListener("pointermove", onMove, { passive: true });
     return () => el.removeEventListener("pointermove", onMove);
@@ -63,13 +63,12 @@ export function Hero() {
   return (
     <section ref={ref} className={styles.hero} aria-labelledby="home-title">
       <div className={styles.bg} aria-hidden="true">
+        {/* Green at half strength; the light roams the whole hero */}
         <span className={styles.aurora} data-aurora>
-          <i />
-          <i />
-          <i />
+          <Aurora green={0.5} />
         </span>
         <span className={styles.grid} />
-        <span className={styles.spot} />
+        <span className={styles.spot} data-spot />
         <span className={styles.vignette} />
       </div>
       <span className={styles.grain} aria-hidden="true" />

@@ -371,3 +371,14 @@
     gap: 1rem;
   }
 }
+
+@media (max-width: 575.98px) {
+  .arch {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: 6px 4px;
+  }
+
+  .toothNum {
+    font-size: 0.6875rem;
+  }
+}

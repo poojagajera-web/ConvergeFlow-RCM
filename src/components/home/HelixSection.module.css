@@ -123,7 +123,7 @@
 
 .chipNum {
   font-family: var(--font-mono);
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   font-weight: 400;
   letter-spacing: 0.1em;
   color: var(--text-3);
@@ -385,15 +385,14 @@
     stroke-width: 3;
     stroke-dasharray: 10 140;
     stroke-dashoffset: 12;
-    filter: drop-shadow(0 0 6px var(--mint)) drop-shadow(0 0 14px rgba(63, 214, 195, 0.8));
+    filter: drop-shadow(0 0 6px var(--mint));
   }
 
   .cometTail {
-    stroke: rgba(143, 240, 226, 0.45);
-    stroke-width: 5;
+    stroke: rgba(143, 240, 226, 0.28);
+    stroke-width: 6;
     stroke-dasharray: 34 140;
     stroke-dashoffset: 36;
-    filter: blur(3px);
   }
 
   @keyframes comet {
@@ -424,7 +423,6 @@
     stroke-width: 2.5;
     stroke-linecap: round;
     stroke-dasharray: 3 340;
-    filter: drop-shadow(0 0 5px var(--mint));
     animation: flow 3.6s linear infinite;
     transition: opacity 700ms var(--ease-out);
   }
@@ -644,5 +642,12 @@
   .cometTail,
   .coreDisc {
     animation: none;
+  }
+}
+
+/* Small phones: one stage per row so names never overflow their chip */
+@media (max-width: 419.98px) {
+  .col {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

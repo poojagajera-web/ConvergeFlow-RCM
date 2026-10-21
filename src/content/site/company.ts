@@ -592,7 +592,7 @@ export const COMPANY_PAGES: SitePage[] = [
     cta: {
       title: "Prefer to talk first?",
       accent: "Contact Hari directly.",
-      body: `Email ${CONTACT.email} or call ${CONTACT.phone}.`,
+      body: `Email ${CONTACT.email} or call ${CONTACT.phone.replace(/ /g, "\u00a0")}.`,
       actions: [{ label: "Contact the team", href: "/contact/" }, { label: "See the services", href: "/services/" }],
     },
   },

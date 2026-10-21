@@ -17,7 +17,7 @@ function Crystal() {
   ];
   return (
     <svg className={styles.crystal} viewBox="0 0 200 200" aria-hidden="true">
-      <g className={styles.crystalSpin}>
+      <g>
         {edges.map(([a, b], i) => (
           <line key={i} x1={nodes[a][0]} y1={nodes[a][1]} x2={nodes[b][0]} y2={nodes[b][1]} />
         ))}

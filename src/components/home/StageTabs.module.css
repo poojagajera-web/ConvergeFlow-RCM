@@ -1,11 +1,15 @@
+/* Clip sideways only, so hover shadows can spill above and below the cards */
 .section {
   position: relative;
   padding-block: var(--section-y);
-  overflow: hidden;
+  overflow-x: clip;
 }
 
 .pin {
   display: grid;
+  /* one column the width of the screen: the viewport only clips (it is not a scroll box),
+     so without this the column would grow to the full width of the card row */
+  grid-template-columns: minmax(0, 1fr);
   align-content: center;
   gap: clamp(2rem, 1rem + 2.5vw, 3.5rem);
 }
@@ -86,9 +90,10 @@
 }
 
 /* ---------- Track ---------- */
-/* Vertical room so the hover lift and entrance offsets are never clipped */
+/* Clips the sliding track sideways only: the hover lift and glow are never cut */
 .viewport {
-  overflow: hidden;
+  overflow-x: clip;
+  overflow-y: visible;
   padding-block: 1.25rem 2.5rem;
   margin-block: -1.25rem -2.5rem;
 }
@@ -139,7 +144,7 @@ a.card:hover {
   transform: translateY(-8px);
 }
 
-/* Photo, duotoned toward the brand teal, with a dark wash at the bottom */
+/* The photo in its original colours (green duotone on hover), with a dark wash only at the bottom behind the text */
 .media {
   position: absolute;
   inset: 0;
@@ -175,9 +180,7 @@ a.card:hover {
   position: absolute;
   inset: 0;
   z-index: 1;
-  background:
-    linear-gradient(to top, rgba(3, 8, 7, 0.96) 18%, rgba(3, 8, 7, 0.55) 55%, rgba(3, 8, 7, 0.25)),
-    radial-gradient(80% 50% at 50% 0%, rgba(63, 214, 195, 0.18), transparent 70%);
+  background: linear-gradient(to top, rgba(3, 8, 7, 0.94) 0%, rgba(3, 8, 7, 0.78) 20%, rgba(3, 8, 7, 0.35) 38%, transparent 55%);
 }
 
 a.card:hover .img {
@@ -203,18 +206,21 @@ a.card:hover .media::before {
   padding: 0.3125rem 0.75rem;
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 999px;
-  background: rgba(3, 8, 7, 0.45);
+  background: rgba(3, 8, 7, 0.62);
   font-family: var(--font-display);
   font-size: 0.75rem;
   font-weight: 500;
   color: var(--white);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
 }
 
 .num {
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
+  padding: 0.3125rem 0.625rem;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  background: rgba(3, 8, 7, 0.62);
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 600;
   color: var(--mint);
 }
 

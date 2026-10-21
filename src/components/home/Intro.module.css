@@ -41,14 +41,13 @@
   }
 }
 
+/* The whole drawing turns as one GPU layer (rotating the group inside the SVG repainted every glowing node each frame) */
 .crystal {
   position: absolute;
   width: min(80%, 26rem);
   overflow: visible;
-}
-
-.crystalSpin {
-  transform-origin: 100px 100px;
+  filter: drop-shadow(0 0 3px rgba(143, 240, 226, 0.55));
+  will-change: transform;
   animation: spin 40s linear infinite;
 }
 
@@ -59,7 +58,6 @@
 
 .crystal circle {
   fill: #e9fffb;
-  filter: drop-shadow(0 0 4px var(--mint));
   animation: twinkle 3s var(--ease-in-out) infinite;
 }
 

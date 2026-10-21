@@ -1,13 +1,13 @@
-/* Pointer position, registered so it can be smoothed with a transition */
-@property --mx {
+/* Pointer position on the spotlight layer, registered so it can be smoothed with a transition */
+@property --spot-x {
   syntax: "<length>";
-  inherits: true;
+  inherits: false;
   initial-value: -999px;
 }
 
-@property --my {
+@property --spot-y {
   syntax: "<length>";
-  inherits: true;
+  inherits: false;
   initial-value: -999px;
 }
 
@@ -26,7 +26,6 @@
   overflow: clip;
   isolation: isolate;
   background: var(--bg);
-  transition: --mx 450ms var(--ease-out), --my 450ms var(--ease-out);
 }
 
 /* ---------- Background ---------- */
@@ -36,119 +35,11 @@
   z-index: -2;
 }
 
-/* Aurora: slow drifting blobs of light behind the headline */
+/* Holds the roaming light (see fx/Aurora); the intro fades and settles it in */
 .aurora {
   position: absolute;
-  inset: -25% -10% 35%;
-  filter: blur(80px);
-}
-
-/*
- * Each colour roams its own looping path (transform), and leans toward the
- * pointer (translate, eased by its transition) by a different amount, so the
- * green and blue drift past each other.
- */
-.aurora i {
-  position: absolute;
-  border-radius: 50%;
-  mix-blend-mode: screen;
-  translate: calc(var(--px, 0) * var(--pull-x)) calc(var(--py, 0) * var(--pull-y));
-  transition: translate 1.8s var(--ease-out);
-  animation: roam-a 18s var(--ease-in-out) infinite;
-}
-
-.aurora i:nth-child(1) {
-  --pull-x: 160px;
-  --pull-y: 90px;
-  left: 8%;
-  top: 18%;
-  width: 46%;
-  height: 60%;
-  background: radial-gradient(closest-side, rgba(17, 185, 168, 0.55), transparent);
-}
-
-.aurora i:nth-child(2) {
-  --pull-x: -200px;
-  --pull-y: -110px;
-  right: 6%;
-  top: 6%;
-  width: 44%;
-  height: 56%;
-  background: radial-gradient(closest-side, rgba(40, 120, 200, 0.34), transparent);
-  animation-name: roam-b;
-  animation-duration: 22s;
-}
-
-.aurora i:nth-child(3) {
-  --pull-x: 260px;
-  --pull-y: 140px;
-  left: 36%;
-  top: 30%;
-  width: 30%;
-  height: 42%;
-  background: radial-gradient(closest-side, rgba(143, 240, 226, 0.32), transparent);
-  animation-name: roam-c;
-  animation-duration: 14s;
-}
-
-/* Green: sweeps right and back along a loose loop */
-@keyframes roam-a {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-
-  30% {
-    transform: translate(34%, 12%) scale(1.12);
-  }
-
-  60% {
-    transform: translate(18%, -14%) scale(0.94);
-  }
-
-  80% {
-    transform: translate(-10%, 8%) scale(1.06);
-  }
-}
-
-/* Blue: crosses the other way */
-@keyframes roam-b {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1.05);
-  }
-
-  35% {
-    transform: translate(-38%, 18%) scale(0.92);
-  }
-
-  65% {
-    transform: translate(-16%, 30%) scale(1.15);
-  }
-
-  85% {
-    transform: translate(8%, 6%) scale(1);
-  }
-}
-
-/* Mint core: a smaller, quicker orbit */
-@keyframes roam-c {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-
-  25% {
-    transform: translate(-30%, -16%) scale(1.15);
-  }
-
-  50% {
-    transform: translate(10%, -26%) scale(0.9);
-  }
-
-  75% {
-    transform: translate(32%, 10%) scale(1.1);
-  }
+  inset: 0;
+  isolation: isolate;
 }
 
 /* Faint square grid, strongest at the top centre */
@@ -170,14 +61,15 @@
   inset: 0;
   background-image: radial-gradient(rgba(143, 240, 226, 0.6) 1px, transparent 1.6px);
   background-size: 26px 26px;
-  mask-image: radial-gradient(240px circle at var(--mx) var(--my), #000, transparent 75%);
-  -webkit-mask-image: radial-gradient(240px circle at var(--mx) var(--my), #000, transparent 75%);
+  mask-image: radial-gradient(240px circle at var(--spot-x) var(--spot-y), #000, transparent 75%);
+  -webkit-mask-image: radial-gradient(240px circle at var(--spot-x) var(--spot-y), #000, transparent 75%);
+  transition: --spot-x 450ms var(--ease-out), --spot-y 450ms var(--ease-out);
 }
 
 .vignette {
   position: absolute;
   inset: 0;
-  background: radial-gradient(130% 90% at 50% 35%, transparent 55%, rgba(3, 8, 7, 0.85) 100%);
+  background: radial-gradient(140% 100% at 50% 45%, transparent 62%, rgba(3, 8, 7, 0.6) 100%);
 }
 
 /* Film grain */
@@ -186,8 +78,7 @@
   inset: 0;
   z-index: 0;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E");
-  opacity: 0.07;
-  mix-blend-mode: overlay;
+  opacity: 0.035;
   pointer-events: none;
 }
 
@@ -213,14 +104,12 @@
   gap: 0.5rem;
   padding: 0.3125rem 0.3125rem 0.3125rem 0.5rem;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.035);
+  background: rgba(9, 18, 17, 0.7);
   font-family: var(--font-display);
   font-size: 0.8125rem;
   font-weight: 500;
   color: var(--text);
   isolation: isolate;
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
   transition: background var(--dur) var(--ease-out);
 }
 
@@ -484,13 +373,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .aurora i,
   .line,
   .pill::before {
     animation: none;
-  }
-
-  .aurora i {
-    translate: none;
   }
 }

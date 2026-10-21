@@ -31,6 +31,20 @@ export function ParticleSphere({ count = 1100, className = "" }: { count?: numbe
     let last = 0;
     const TAU = Math.PI * 2;
 
+    // One pre-drawn round dot per colour, stamped with drawImage: far cheaper per frame
+    // than building and filling a path for each of the particles.
+    const sprite = (color: string) => {
+      const c = document.createElement("canvas");
+      c.width = c.height = 32;
+      const g = c.getContext("2d")!;
+      g.fillStyle = color;
+      g.beginPath();
+      g.arc(16, 16, 15, 0, TAU);
+      g.fill();
+      return c;
+    };
+    const DOT = { bright: sprite("#eafffb"), front: sprite("#8ff0e2"), back: sprite("#11b9a8") };
+
     // Fibonacci sphere points
     const pts = Array.from({ length: count }, (_, i) => {
       const y = 1 - (i / (count - 1)) * 2;
@@ -74,10 +88,7 @@ export function ParticleSphere({ count = 1100, className = "" }: { count?: numbe
         const glow = band * band * (3 - 2 * band);
         const radius = (0.45 + depth * 0.85 + glow * 0.7) * 0.5 * 1.6;
         ctx.globalAlpha = Math.min(1, 0.08 + depth * 0.7 + glow * 0.4);
-        ctx.fillStyle = glow > 0.35 ? "#eafffb" : depth > 0.6 ? "#8ff0e2" : "#11b9a8";
-        ctx.beginPath();
-        ctx.arc(sx, sy, radius, 0, TAU);
-        ctx.fill();
+        ctx.drawImage(glow > 0.35 ? DOT.bright : depth > 0.6 ? DOT.front : DOT.back, sx - radius, sy - radius, radius * 2, radius * 2);
       }
       ctx.globalAlpha = 1;
     };
