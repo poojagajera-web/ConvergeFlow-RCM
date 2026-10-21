@@ -1,10 +1,10 @@
-import { ContentPage, pageMetadata } from "@/components/content/ContentPage";
-import { getPage } from "@/content/pages";
+import { SitePage, metadataFor } from "@/components/site/SitePage";
+import { getSitePage } from "@/content/site";
 
-const page = getPage("/demo/")!;
+const page = getSitePage("/demo/")!;
 
-export const metadata = pageMetadata(page);
+export const metadata = metadataFor(page.seo, page.route);
 
 export default function DemoPage() {
-  return <ContentPage page={page} />;
+  return <SitePage page={page} />;
 }

@@ -1,64 +1,85 @@
 /* =========================================================================
-   ConvergeFlow — design tokens & global foundations
-   Palette is sampled from the logo: navy wordmark #17324D, the "Flow"
-   teal ramp #028579 → #11B9A8 and the C-mark teal #008F80.
+   ConvergeFlow — design tokens & global foundations (V4, "glow" edition)
+   A near-black ground lit by the brand teal ramp (#028579 → #11B9A8) and a
+   mint glow (#8FF0E2). Headings are light-weight Plus Jakarta Sans with a
+   soft glow; body copy is Google Sans.
    ========================================================================= */
 
 :root {
-  --cta-overlap-size: clamp(32px, 24px + 3vw, 64px);
-  /* Brand */
-  --navy-950: #071422;
-  --navy-900: #0a1a2b;
-  --navy-850: #0d2134;
-  --navy-800: #112a40;
-  --navy-700: #17324d; /* logo wordmark */
-  --navy-500: #3d5873;
-  --navy-300: #8fa3b6;
-  --navy-200: #b9c7d3;
 
+  /* Ground */
+  --bg: #030807;
+  --bg-2: #060d0d;
+  --bg-3: #0a1515;
+  --bg-4: #0e1c1c;
+
+  /* Brand teal ramp + glow */
   --teal-800: #02574f;
-  --teal-ink: #02736a; /* teal for text on light grounds (AA on paper) */
-  --teal-600: #028579; /* "F" of Flow */
-  --teal-mark: #008f80; /* C-mark */
+  --teal-700: #026b61;
+  --teal-600: #028579;
   --teal-500: #0ca394;
-  --teal-400: #11b9a8; /* "w" of Flow */
-  --teal-200: #9fded6;
-  --teal-100: #d9f0ec;
-  --teal-50: #edf6f4;
+  --teal-400: #11b9a8;
+  --teal-300: #3fd6c3;
+  --mint: #8ff0e2;
+  --glow: rgba(63, 214, 195, 0.55);
+  --glow-soft: rgba(17, 185, 168, 0.18);
+  --amber: #f2b45a;
+  --rose: #ff8a8a;
 
-  --amber-500: #d98a1c; /* exceptions / attention only */
-  --amber-100: #f8ead3;
-
-  /* Neutrals */
-  --paper: #f4f6f5;
-  --paper-2: #e9eeec;
+  /* Text */
   --white: #ffffff;
-  --ink: #0e2133;
-  --ink-2: #44586a;
-  --ink-3: #66798a;
-  --line: rgba(23, 50, 77, 0.14);
-  --line-strong: rgba(23, 50, 77, 0.26);
-  --line-dark: rgba(185, 199, 211, 0.14);
-  --line-dark-strong: rgba(185, 199, 211, 0.26);
-  --on-dark: #eaf0f4;
-  --on-dark-2: #a9b9c7;
+  --text: #eef6f5;
+  --text-2: #a6b7b5;
+  --text-3: #6f817f;
 
-  /* Typography */
+  /* Surfaces & strokes (glass) */
+  --surface: rgba(255, 255, 255, 0.025);
+  --surface-2: rgba(255, 255, 255, 0.05);
+  --surface-3: rgba(255, 255, 255, 0.08);
+  --stroke: rgba(255, 255, 255, 0.08);
+  --stroke-2: rgba(255, 255, 255, 0.14);
+  --stroke-3: rgba(255, 255, 255, 0.22);
+  --stroke-glow: rgba(143, 240, 226, 0.35);
+
+  /* Legacy aliases still read by a few components */
+  --navy-950: var(--bg);
+  --navy-900: var(--bg-2);
+  --navy-850: var(--bg-3);
+  --navy-800: var(--bg-4);
+  --navy-700: var(--text);
+  --ink: var(--text);
+  --ink-2: var(--text-2);
+  --ink-3: var(--text-3);
+  --on-dark: var(--text);
+  --on-dark-2: var(--text-2);
+  --line: var(--stroke);
+  --line-strong: var(--stroke-2);
+  --line-dark: var(--stroke);
+  --line-dark-strong: var(--stroke-2);
+  --teal-ink: var(--mint);
+  --teal-50: rgba(17, 185, 168, 0.1);
+  --teal-100: rgba(17, 185, 168, 0.16);
+  --teal-200: #9fded6;
+  --paper: var(--bg);
+  --paper-2: var(--bg-2);
+  --paper-3: var(--bg-3);
+
+  /* Type */
   --font-display: var(--font-jakarta), "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-body: var(--font-gsans), "Google Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* Small labels and numbers use the display face (no monospace anywhere) */
+  --font-mono: var(--font-jakarta), "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
 
-  --fs-display: clamp(2.5rem, 1.2rem + 4.4vw, 5.75rem);
-  --fs-h2: clamp(2rem, 1.2rem + 2.6vw, 3.75rem);
+  --fs-display: clamp(2.75rem, 1.2rem + 5.4vw, 6.5rem);
+  --fs-h2: clamp(2.125rem, 1.25rem + 3vw, 4.25rem);
   --fs-h3: clamp(1.375rem, 1.1rem + 0.8vw, 1.875rem);
   --fs-h4: clamp(1.125rem, 1.02rem + 0.35vw, 1.3125rem);
-  --fs-lede: clamp(1.0625rem, 0.98rem + 0.35vw, 1.3125rem);
+  --fs-lede: clamp(1.0625rem, 0.98rem + 0.35vw, 1.25rem);
   --fs-body: clamp(1rem, 0.97rem + 0.12vw, 1.0625rem);
   --fs-small: 0.9375rem;
-  --fs-label: 0.8125rem;
-  --fs-stat: clamp(2.75rem, 1.6rem + 3.4vw, 5rem);
+  --fs-label: 0.75rem;
 
-  --lh-tight: 1.04;
-  --lh-heading: 1.1;
+  --lh-heading: 1.08;
   --lh-body: 1.62;
 
   /* Space */
@@ -72,20 +93,15 @@
   --space-8: 4rem;
   --space-9: 6rem;
   --gutter: clamp(1rem, 0.6rem + 1.2vw, 2rem);
-  --section-y: 60px;
-  --head-gap: 40px;
+  --section-y: 72px;
+  --head-gap: 44px;
   --header-h: 76px;
 
   /* Shape */
-  --radius-sm: 6px;
-  --radius: 10px;
-  --radius-lg: 16px;
-  --radius-xl: 22px;
-
-  /* Elevation */
-  --shadow-1: 0 1px 2px rgba(10, 26, 43, 0.06), 0 1px 1px rgba(10, 26, 43, 0.04);
-  --shadow-2: 0 12px 32px -12px rgba(10, 26, 43, 0.18), 0 2px 6px rgba(10, 26, 43, 0.06);
-  --shadow-3: 0 40px 80px -32px rgba(4, 14, 24, 0.55), 0 8px 24px -8px rgba(4, 14, 24, 0.35);
+  --radius-sm: 8px;
+  --radius: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
 
   /* Motion */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
@@ -93,19 +109,21 @@
   --dur-fast: 180ms;
   --dur: 320ms;
   --dur-slow: 640ms;
+
+  color-scheme: dark;
 }
 
 @media (min-width: 768px) {
   :root {
-    --section-y: 80px;
-    --head-gap: 48px;
+    --section-y: 96px;
+    --head-gap: 56px;
   }
 }
 
 @media (min-width: 992px) {
   :root {
-    --section-y: 100px;
-    --head-gap: 64px;
+    --section-y: 128px;
+    --head-gap: 72px;
   }
 }
 
@@ -119,13 +137,14 @@
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  background: var(--bg);
 }
 
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--paper);
-  color: var(--ink);
+  background: var(--bg);
+  color: var(--text);
   font-family: var(--font-body);
   font-size: var(--fs-body);
   line-height: var(--lh-body);
@@ -162,9 +181,9 @@ h3,
 h4,
 h5 {
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 500;
   line-height: var(--lh-heading);
-  letter-spacing: -0.025em;
+  letter-spacing: -0.03em;
   text-wrap: balance;
 }
 
@@ -174,7 +193,8 @@ p {
 
 img,
 svg,
-video {
+video,
+canvas {
   display: block;
   max-width: 100%;
 }
@@ -197,14 +217,14 @@ button {
 }
 
 ::selection {
-  background: var(--teal-600);
-  color: var(--white);
+  background: var(--teal-500);
+  color: var(--bg);
 }
 
 :focus-visible {
-  outline: 2px solid var(--teal-500);
+  outline: 2px solid var(--mint);
   outline-offset: 3px;
-  border-radius: 4px;
+  border-radius: 6px;
 }
 
 /* ---------- Layout ---------- */
@@ -226,9 +246,9 @@ button {
   left: 12px;
   z-index: 200;
   padding: 0.75rem 1rem;
-  border-radius: var(--radius);
+  border-radius: 999px;
   background: var(--white);
-  color: var(--navy-700);
+  color: var(--bg);
   font-family: var(--font-display);
   font-weight: 600;
   transform: translateY(-160%);
@@ -255,209 +275,359 @@ button {
   border: 0;
 }
 
-/* ---------- Shared typographic roles ---------- */
-.eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-family: var(--font-display);
-  font-size: var(--fs-label);
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--teal-ink);
-}
-
-/* The ConvergeFlow C-mark leads every eyebrow (navy ring on light grounds, white on dark). */
-.eyebrow::before {
-  content: "";
-  flex-shrink: 0;
-  width: 1.6em;
-  height: 1.6em;
-  margin-right: -0.125rem;
-  background: url("/assets/logos/convergeflow-mark-onlight.png") center / contain no-repeat;
-}
-
-.on-dark .eyebrow::before {
-  background-image: url("/assets/logos/convergeflow-mark.png");
-}
-
-.eyebrow-index {
-  font-variant-numeric: tabular-nums;
-  color: var(--ink-3);
-}
-
-.eyebrow::after {
-  content: "";
-  width: 2.5rem;
-  height: 1px;
-  background: currentColor;
-  opacity: 0.5;
-}
-
-@media (max-width: 575.98px) {
-  .eyebrow::after {
-    display: none;
-  }
-}
-
-.on-dark .eyebrow {
-  color: var(--teal-400);
-}
-
-.on-dark .eyebrow-index {
-  color: var(--on-dark-2);
-}
-
-.title-xl {
-  font-size: var(--fs-h2);
-  font-weight: 700;
-  letter-spacing: -0.032em;
-  line-height: 1.06;
-}
-
-.lede {
-  font-size: var(--fs-lede);
-  line-height: 1.55;
-  color: var(--ink-2);
-  max-width: 38rem;
-}
-
-.on-dark .lede {
-  color: var(--on-dark-2);
-}
-
-.accent {
-  color: var(--teal-ink);
-}
-
-.on-dark .accent {
-  color: var(--teal-400);
-}
-
-.mono {
-  font-family: ui-monospace, "SFMono-Regular", "Cascadia Mono", Menlo, Consolas, monospace;
-  font-size: 0.8125rem;
-  letter-spacing: 0;
+.section {
+  position: relative;
+  padding-block: var(--section-y);
 }
 
 .num {
   font-variant-numeric: tabular-nums;
 }
 
-/* ---------- Buttons ---------- */
-.btn {
-  --btn-bg: var(--teal-600);
-  --btn-fg: var(--white);
-  --btn-bg-hover: var(--navy-700);
+.mono {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0;
+}
+
+/* ---------- Typographic roles ---------- */
+
+/* Eyebrow chip: the ConvergeFlow C-mark, then a short label */
+/* Eyebrow pill: the C-mark, a short label and a single light streak travelling
+   around a near-invisible border (no outer glow). */
+@property --eb-spin {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.eyebrow {
   position: relative;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  min-height: 52px;
-  padding: 0 1.375rem;
-  border: 1px solid transparent;
-  border-radius: var(--radius);
-  background: var(--btn-bg);
-  color: var(--btn-fg);
-  font-family: var(--font-display);
-  font-size: 1rem;
-  font-weight: 650;
-  letter-spacing: -0.01em;
-  white-space: nowrap;
-  overflow: hidden;
+  gap: 0.5rem;
+  padding: 0.375rem 0.875rem 0.375rem 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 999px;
+  background: rgba(8, 18, 17, 0.72);
   isolation: isolate;
-  transition: color var(--dur) var(--ease-out), border-color var(--dur) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+  font-variant-numeric: tabular-nums;
+  font-family: var(--font-display);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
 }
 
-.btn::before {
+.eyebrow::before {
+  content: "";
+  flex-shrink: 0;
+  width: 1.375rem;
+  height: 1.375rem;
+  background: url("/assets/logos/convergeflow-mark.png") center / contain no-repeat;
+}
+
+/* The streak: a conic gradient with a long fading tail, masked to a 1px ring */
+.eyebrow::after {
   content: "";
   position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: var(--btn-bg-hover);
-  transform: scaleY(0);
-  transform-origin: bottom;
-  transition: transform 420ms var(--ease-out);
+  inset: -1px;
+  padding: 1px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--eb-spin),
+    transparent 0deg,
+    transparent 190deg,
+    rgba(143, 240, 226, 0.12) 250deg,
+    rgba(143, 240, 226, 0.55) 320deg,
+    rgba(214, 255, 249, 1) 352deg,
+    transparent 360deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  animation: eb-spin 4.5s linear infinite;
+  pointer-events: none;
 }
 
-.btn:hover::before {
-  transform: scaleY(1);
+@keyframes eb-spin {
+  to {
+    --eb-spin: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eyebrow::after {
+    animation: none;
+    --eb-spin: 300deg;
+  }
+}
+
+/* Accent words inside headings: glowing mint. (Solid colour rather than
+   background-clip so word-split animations keep painting correctly.) */
+.serif-accent,
+.accent-text {
+  font-style: normal;
+  color: var(--mint);
+  text-shadow: 0 0 22px rgba(63, 214, 195, 0.45), 0 0 60px rgba(17, 185, 168, 0.25);
+}
+
+/* Headline glow */
+.glow-text {
+  text-shadow: 0 0 24px rgba(143, 240, 226, 0.28), 0 0 64px rgba(17, 185, 168, 0.18);
+}
+
+.lede {
+  max-width: 38rem;
+  font-size: var(--fs-lede);
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+/* Section heading block */
+.site-head {
+  display: grid;
+  gap: var(--space-5);
+  margin-bottom: var(--head-gap);
+}
+
+.site-head-main {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-5);
+}
+
+.site-title {
+  max-width: 18ch;
+  font-size: var(--fs-h2);
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -0.045em;
+  color: var(--white);
+  text-wrap: balance;
+  text-shadow: 0 0 40px rgba(143, 240, 226, 0.12);
+}
+
+.site-intro {
+  max-width: 38rem;
+  font-size: var(--fs-lede);
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+.site-head[data-align="center"] {
+  justify-items: center;
+  text-align: center;
+}
+
+.site-head[data-align="center"] .site-head-main {
+  justify-items: center;
+}
+
+.site-head[data-align="center"] .site-title {
+  max-width: 20ch;
+}
+
+.site-head[data-align="center"] .site-intro {
+  margin-inline: auto;
+}
+
+@media (min-width: 992px) {
+  .site-head[data-align="split"] {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: end;
+    column-gap: var(--gutter);
+  }
+
+  .site-head[data-align="split"] .site-intro {
+    padding-bottom: 0.4rem;
+  }
+}
+
+/* While the loading screen is up, the page underneath does not scroll. */
+html.is-loading {
+  overflow: hidden;
+}
+
+/* ---------- Buttons ---------- */
+
+/*
+ * Glass pill with a glowing disc on the left (after eatnaked.co). On hover the
+ * disc shrinks to a white dot, its glow fades and the label rolls down while
+ * a copy drops in from above. Primary is mint, secondary is neutral glass.
+ */
+.btn {
+  --btn-ease: cubic-bezier(0.625, 0.05, 0, 1);
+  --btn-disc: 40px;
+  --btn-pad: 6px;
+  --btn-tint: rgba(143, 240, 226, 0.11);
+  --btn-edge: rgba(143, 240, 226, 0.26);
+  --btn-disc-bg: var(--mint);
+  --btn-disc-fg: #03100e;
+  --btn-glow: var(--mint);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.875rem;
+  min-height: 52px;
+  padding: var(--btn-pad) 1.5rem var(--btn-pad) var(--btn-pad);
+  overflow: hidden;
+  border: 1px solid var(--btn-edge);
+  border-radius: 999px;
+  background: var(--btn-tint);
+  color: var(--white);
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  isolation: isolate;
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  transition: border-color 600ms var(--btn-ease), background 600ms var(--btn-ease), translate 200ms var(--ease-out);
+}
+
+.btn-secondary {
+  --btn-tint: rgba(255, 255, 255, 0.06);
+  --btn-edge: rgba(255, 255, 255, 0.14);
+  --btn-disc-bg: rgba(255, 255, 255, 0.14);
+  --btn-disc-fg: var(--white);
+  --btn-glow: rgba(255, 255, 255, 0.5);
+}
+
+/* A soft bloom bleeding from the disc into the pill */
+.btn-glow {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--btn-pad) + var(--btn-disc) * 0.62);
+  z-index: -1;
+  width: calc(var(--btn-disc) * 1.15);
+  height: calc(var(--btn-disc) * 1.15);
+  margin: calc(var(--btn-disc) * -0.575) 0 0 calc(var(--btn-disc) * -0.575);
+  border-radius: 50%;
+  background: var(--btn-glow);
+  filter: blur(16px);
+  opacity: 0.55;
+  pointer-events: none;
+  transition: opacity 600ms var(--btn-ease);
+}
+
+.btn-secondary .btn-glow {
+  opacity: 0.18;
+}
+
+.btn-icon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: var(--btn-disc);
+  height: var(--btn-disc);
+  border-radius: 50%;
+  background-color: var(--btn-disc-bg);
+  color: var(--btn-disc-fg);
+  transition: transform 600ms var(--btn-ease), background-color 600ms var(--btn-ease);
+}
+
+.btn-icon svg {
+  width: 1.0625rem;
+  height: 1.0625rem;
+  transition: transform 600ms var(--btn-ease);
+}
+
+/* The label and its copy, stacked in a clipping window */
+.btn-label {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  line-height: 1.35;
+}
+
+.btn-label > span {
+  display: block;
+  transition: transform 600ms var(--btn-ease);
+}
+
+.btn-label > span + span {
+  position: absolute;
+  inset: 0;
+  transform: translateY(-100%);
+}
+
+.btn-plain {
+  padding-inline: 1.5rem;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover {
+    --btn-tint: rgba(143, 240, 226, 0.17);
+    --btn-edge: rgba(143, 240, 226, 0.45);
+  }
+
+  .btn-secondary:hover {
+    --btn-tint: rgba(255, 255, 255, 0.1);
+    --btn-edge: rgba(255, 255, 255, 0.26);
+  }
+
+  .btn:hover .btn-icon {
+    background-color: var(--white);
+    transform: scale(0.2);
+  }
+
+  .btn:hover .btn-icon svg {
+    transform: scale(0) rotate(45deg);
+  }
+
+  .btn:hover .btn-glow {
+    opacity: 0;
+  }
+
+  .btn:hover .btn-label > span {
+    transform: translateY(100%);
+  }
+
+  .btn:hover .btn-label > span + span {
+    transform: none;
+  }
+}
+
+.btn:focus-visible {
+  --btn-edge: var(--mint);
 }
 
 .btn:active {
-  transform: translateY(1px);
+  translate: 0 1px;
 }
 
-.btn-arrow {
-  display: inline-grid;
-  place-items: center;
-  width: 1.25rem;
-  height: 1.25rem;
-  overflow: hidden;
+/* Compact size (header) */
+.btn-sm {
+  --btn-disc: 32px;
+  --btn-pad: 5px;
+  gap: 0.625rem;
+  min-height: 44px;
+  padding-right: 1.125rem;
+  font-size: 0.875rem;
 }
 
-.btn-arrow svg {
-  grid-area: 1 / 1;
-  width: 1.125rem;
-  height: 1.125rem;
-  transition: transform 420ms var(--ease-out);
+.btn-sm .btn-icon svg {
+  width: 0.9375rem;
+  height: 0.9375rem;
 }
 
-.btn-arrow svg + svg {
-  transform: translateX(-140%);
-}
-
-.btn:hover .btn-arrow svg:first-child {
-  transform: translateX(140%);
-}
-
-.btn:hover .btn-arrow svg + svg {
-  transform: none;
+.btn[disabled] {
+  cursor: not-allowed;
+  opacity: 0.55;
 }
 
 /* Small phones: long labels wrap instead of forcing their row wider than the screen. */
 @media (max-width: 419.98px) {
   .btn {
     white-space: normal;
-    text-align: center;
-    padding-block: 0.75rem;
+    text-align: left;
     line-height: 1.25;
   }
-}
-
-.btn-secondary {
-  --btn-bg: transparent;
-  --btn-fg: var(--navy-700);
-  --btn-bg-hover: var(--navy-700);
-  border-color: var(--line-strong);
-}
-
-.btn-secondary:hover {
-  --btn-fg: var(--white);
-  border-color: var(--navy-700);
-}
-
-/* Green buttons keep white text everywhere; on dark grounds the hover goes
-   deeper rather than lighter so white text stays AA-legible. */
-.on-dark .btn-primary,
-.btn-primary.is-bright {
-  --btn-bg: var(--teal-600);
-  --btn-fg: var(--white);
-  --btn-bg-hover: var(--teal-800);
-  box-shadow: 0 0 0 1px rgba(17, 185, 168, 0.35), 0 10px 30px -12px rgba(17, 185, 168, 0.55);
-}
-
-.on-dark .btn-secondary {
-  --btn-fg: var(--on-dark);
-  --btn-bg-hover: var(--on-dark);
-  border-color: var(--line-dark-strong);
-}
-
-.on-dark .btn-secondary:hover {
-  --btn-fg: var(--navy-950);
-  border-color: var(--on-dark);
 }
 
 .link-arrow {
@@ -465,8 +635,8 @@ button {
   align-items: center;
   gap: 0.5rem;
   font-family: var(--font-display);
-  font-weight: 650;
-  color: var(--teal-ink);
+  font-weight: 600;
+  color: var(--mint);
   background-image: linear-gradient(currentColor, currentColor);
   background-size: 0% 1px;
   background-position: 0 100%;
@@ -478,45 +648,33 @@ button {
   background-size: 100% 1px;
 }
 
-.on-dark .link-arrow {
-  color: var(--teal-400);
+/* Inline links inside body copy */
+.text-link {
+  color: var(--mint);
+  text-decoration: underline;
+  text-decoration-color: rgba(143, 240, 226, 0.35);
+  text-underline-offset: 3px;
 }
 
-/* ---------- Section rhythm ---------- */
-.section {
-  position: relative;
-  padding-block: var(--section-y);
+.text-link:hover {
+  text-decoration-color: currentColor;
 }
 
-.section-dark {
-  background: var(--navy-900);
-  color: var(--on-dark);
+/* ---------- Glass surfaces ---------- */
+.glass {
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.015));
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
 }
 
-.section-head {
-  display: grid;
-  gap: var(--space-5);
-  margin-bottom: var(--head-gap);
-}
-
-@media (min-width: 992px) {
-  .section-head.is-split {
-    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-    align-items: end;
-    column-gap: var(--gutter);
-  }
-
-  .section-head.is-split.is-top {
-    align-items: start;
-  }
-
-  .section-head.is-split.is-top .section-head-aside {
-    padding-top: 2.25rem;
-  }
-
-  .section-head.is-split .section-head-aside {
-    padding-bottom: 0.4rem;
-  }
+/* Faint square grid used behind several sections */
+.grid-bg {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 72px 72px;
 }
 
 /* ---------- Motion foundations ----------
@@ -565,26 +723,17 @@ html.lenis body {
   overflow: clip;
 }
 
-/* SplitText line masks keep descenders visible */
+/* SplitText masks keep descenders visible */
 .split-line-mask {
   padding-bottom: 0.08em;
   margin-bottom: -0.08em;
 }
 
-/* Inline links inside approved body copy */
-.text-link {
-  color: var(--teal-ink);
-  text-decoration: underline;
-  text-decoration-color: rgba(2, 133, 121, 0.35);
-  text-underline-offset: 3px;
+.word-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
 }
 
-.text-link:hover {
-  text-decoration-color: currentColor;
-}
-
-/* When a page ends with the overlapping CTA card, the footer content still starts
-   120px below the footer top (the card overlaps part of that space). */
-body:has([data-cta-overlap]) > footer {
-  padding-top: calc(var(--cta-overlap-size) + clamp(40px, 30px + 2vw, 56px));
-}

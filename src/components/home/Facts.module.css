@@ -1,0 +1,258 @@
+.section {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* The drifting light fades out toward the section's top and bottom so it blends with its neighbours */
+.aurora {
+  mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent);
+}
+
+/* ---------- Editorial statement ---------- */
+.head {
+  display: grid;
+  gap: var(--space-6);
+  margin-bottom: clamp(3rem, 2rem + 4vw, 6rem);
+}
+
+@media (min-width: 992px) {
+  .head {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 9fr);
+    align-items: start;
+    column-gap: var(--gutter);
+  }
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  padding-top: 0.75rem;
+}
+
+@media (min-width: 992px) {
+  .tags {
+    display: grid;
+    gap: 0.25rem;
+  }
+}
+
+.tags li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.tags li::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--mint);
+  box-shadow: 0 0 10px var(--mint);
+}
+
+.statement {
+  max-width: 24ch;
+  font-size: clamp(2rem, 1.1rem + 3.2vw, 4.25rem);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: -0.045em;
+  color: var(--white);
+  text-wrap: pretty;
+}
+
+.accent {
+  color: var(--mint);
+  text-shadow: 0 0 30px rgba(63, 214, 195, 0.35);
+}
+
+/* ---------- Numbered cards ---------- */
+.cards {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.75rem;
+  perspective: 1400px;
+}
+
+@media (min-width: 640px) {
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1100px) {
+  .cards {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.card {
+  --mx: 50%;
+  --my: 0%;
+  position: relative;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: 0.5rem;
+  min-height: clamp(20rem, 16rem + 10vw, 27rem);
+  padding: 1.5rem;
+  overflow: hidden;
+  border: 1px solid var(--stroke);
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(10, 20, 20, 0.62), rgba(5, 11, 11, 0.5));
+  isolation: isolate;
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  /* hover lift uses `translate` so it never fights the GSAP entrance (which owns `transform`) */
+  transition: border-color 600ms var(--ease-out), translate 700ms var(--ease-out), box-shadow 700ms var(--ease-out);
+}
+
+/* White sheet that floods the card from the pointer on hover, and drains back toward it on leave */
+.fill {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(165deg, #ffffff 0%, #f2fbf9 55%, #dff4ef 100%);
+  clip-path: circle(0px at var(--mx) var(--my));
+  transition: clip-path 750ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* Soft light that follows the pointer */
+.glow {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(320px circle at var(--mx) var(--my), rgba(63, 214, 195, 0.16), transparent 70%);
+  opacity: 0;
+  transition: opacity 500ms var(--ease-out);
+}
+
+/* A mint line drawing along the top edge */
+.edge {
+  position: absolute;
+  top: 0;
+  left: 1.5rem;
+  right: 1.5rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--teal-400) 30%, var(--teal-400) 70%, transparent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 700ms var(--ease-out);
+}
+
+.card:hover {
+  border-color: rgba(255, 255, 255, 0.9);
+  translate: 0 -6px;
+  box-shadow: 0 30px 60px -28px rgba(143, 240, 226, 0.45);
+}
+
+.card:hover .fill {
+  clip-path: circle(150% at var(--mx) var(--my));
+}
+
+.card:hover .glow {
+  opacity: 1;
+}
+
+.card:hover .edge {
+  transform: scaleX(1);
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.num {
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-3);
+  transition: color 500ms var(--ease-out);
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--stroke-2);
+  border-radius: 12px;
+  color: var(--text-2);
+  transition: color 500ms var(--ease-out), border-color 500ms var(--ease-out), background 500ms var(--ease-out), rotate 600ms var(--ease-out);
+}
+
+.icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.label {
+  margin-top: 0.75rem;
+  font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.625rem);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: var(--white);
+  transition: color 500ms var(--ease-out);
+}
+
+.value {
+  align-self: end;
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 2.4rem + 3.4vw, 6rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.06em;
+  color: rgba(238, 246, 245, 0.82);
+  transition: color 500ms var(--ease-out);
+}
+
+.detail {
+  max-width: 22rem;
+  font-size: var(--fs-small);
+  line-height: 1.55;
+  color: var(--text-2);
+  transition: color 500ms var(--ease-out);
+}
+
+.card:hover .num {
+  color: var(--teal-600);
+}
+
+.card:hover .icon {
+  border-color: transparent;
+  background: var(--teal-500);
+  color: #ffffff;
+  rotate: -8deg;
+}
+
+.card:hover .label {
+  color: #03100e;
+}
+
+.card:hover .value {
+  color: var(--teal-600);
+}
+
+.card:hover .detail {
+  color: #3d4f4c;
+}
+
+/* Text darkens just behind the white flood, so it never sits dark on dark */
+.card:hover :is(.num, .label, .value, .detail) {
+  transition-delay: 120ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fill {
+    transition-duration: 1ms;
+  }
+}

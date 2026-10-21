@@ -48,7 +48,9 @@ export function SmoothScroll() {
       if (lenisInstance || reduceQuery.matches) return;
       const lenis = new Lenis({
         autoRaf: false,
-        lerp: 0.11,
+        // Slightly heavier glide for a premium, weighted feel.
+        lerp: 0.08,
+        wheelMultiplier: 0.95,
         smoothWheel: true,
         anchors: { offset: headerOffset() },
         allowNestedScroll: true,

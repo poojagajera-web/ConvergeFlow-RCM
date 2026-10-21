@@ -1,0 +1,648 @@
+.section {
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.glow {
+  position: absolute;
+  left: 50%;
+  top: 30%;
+  z-index: -1;
+  width: 80vw;
+  aspect-ratio: 1.6;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(17, 185, 168, 0.14), transparent);
+  translate: -50% 0;
+}
+
+/* ---------- Scene: chips · globe · chips ---------- */
+.scene {
+  position: relative;
+  display: grid;
+  gap: var(--space-5);
+}
+
+.links {
+  display: none;
+}
+
+.col {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.625rem;
+}
+
+.chip {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0.875rem;
+  border: 1px solid var(--stroke-2);
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(14, 28, 28, 0.9), rgba(4, 10, 10, 0.9));
+  transition: border-color 800ms var(--ease-in-out), box-shadow 800ms var(--ease-in-out), background 800ms var(--ease-in-out), translate 800ms var(--ease-in-out);
+}
+
+/* The lit stage: the chip glows as its stream fires */
+.chip[data-active] {
+  border-color: rgba(143, 240, 226, 0.6);
+  background: linear-gradient(180deg, rgba(18, 44, 42, 0.95), rgba(5, 14, 13, 0.95));
+  box-shadow: 0 0 34px -8px rgba(63, 214, 195, 0.75), inset 0 1px 0 rgba(200, 255, 247, 0.12);
+}
+
+.chip:has(.chipLink:focus-visible) {
+  outline: 2px solid var(--mint);
+  outline-offset: 3px;
+}
+
+.chipLink {
+  outline: none;
+}
+
+/* The whole chip is the link's hit area */
+.chipLink::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.chipArrow {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: var(--mint);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
+  translate: -6px 0;
+  transition: opacity 400ms var(--ease-out), translate 400ms var(--ease-out);
+}
+
+.chip:hover .chipArrow,
+.chip:has(.chipLink:focus-visible) .chipArrow {
+  opacity: 1;
+  translate: 0 0;
+}
+
+.chipIcon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--stroke-glow);
+  border-radius: 12px;
+  background: linear-gradient(150deg, rgba(17, 185, 168, 0.4), rgba(17, 185, 168, 0.05));
+  color: var(--mint);
+  transition: background 800ms var(--ease-in-out), color 800ms var(--ease-in-out), border-color 800ms var(--ease-in-out), rotate 800ms var(--ease-in-out);
+}
+
+.chip[data-active] .chipIcon {
+  border-color: transparent;
+  background: var(--mint);
+  color: var(--bg);
+  rotate: -8deg;
+}
+
+.chipIcon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.chipText {
+  display: grid;
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--white);
+}
+
+.chipNum {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: var(--text-3);
+  transition: color 800ms var(--ease-in-out);
+}
+
+.chip[data-active] .chipNum {
+  color: var(--mint);
+}
+
+.chipPort {
+  display: none;
+}
+
+/* Globe */
+.globeWrap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: min(100%, 26rem);
+  aspect-ratio: 1;
+  margin-inline: auto;
+}
+
+.halo {
+  position: absolute;
+  inset: 4%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(63, 214, 195, 0.25), rgba(17, 185, 168, 0.06) 60%, transparent);
+  filter: blur(10px);
+  animation: breathe 5s var(--ease-in-out) infinite alternate;
+}
+
+@keyframes breathe {
+  to {
+    transform: scale(1.08);
+    opacity: 0.7;
+  }
+}
+
+/* Instrument ticks circling the globe */
+@property --tk {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.ticks {
+  --tk: 0deg;
+  position: absolute;
+  inset: 7%;
+  border-radius: 50%;
+  /* a light sweeping round the dial, shown only through the tick marks */
+  background:
+    conic-gradient(from var(--tk), transparent 0 72%, rgba(200, 255, 247, 0.9) 100%),
+    rgba(143, 240, 226, 0.22);
+  -webkit-mask:
+    repeating-conic-gradient(from 0deg, #000 0 0.7deg, transparent 0.7deg 6deg),
+    radial-gradient(closest-side, transparent calc(100% - 8px), #000 calc(100% - 7px), #000 calc(100% - 1px), transparent);
+  -webkit-mask-composite: source-in;
+  mask:
+    repeating-conic-gradient(from 0deg, #000 0 0.7deg, transparent 0.7deg 6deg),
+    radial-gradient(closest-side, transparent calc(100% - 8px), #000 calc(100% - 7px), #000 calc(100% - 1px), transparent);
+  mask-composite: intersect;
+  animation: dial 7s linear infinite;
+}
+
+@keyframes dial {
+  to {
+    --tk: 360deg;
+  }
+}
+
+.orbit {
+  position: absolute;
+  inset: 2%;
+  border: 1px solid rgba(143, 240, 226, 0.14);
+  border-radius: 50%;
+  transform: rotateX(72deg);
+}
+
+.orbit::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent 0 85%, rgba(143, 240, 226, 0.9) 97%, transparent 100%);
+  -webkit-mask: radial-gradient(closest-side, transparent calc(100% - 2px), #000 calc(100% - 1px));
+  mask: radial-gradient(closest-side, transparent calc(100% - 2px), #000 calc(100% - 1px));
+  animation: spin 5s linear infinite;
+}
+
+.orbit[data-o="2"] {
+  inset: -6%;
+  transform: rotateX(72deg) rotateY(18deg);
+  border-style: dashed;
+}
+
+.orbit[data-o="2"]::after {
+  animation-duration: 8s;
+  animation-direction: reverse;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.globe {
+  position: absolute;
+  inset: 0;
+}
+
+.core {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 17%;
+  aspect-ratio: 1;
+}
+
+.corePulse {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(143, 240, 226, 0.55);
+  border-radius: 50%;
+  animation: ping 3.4s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+}
+
+.corePulse[data-d="2"] {
+  animation-delay: -1.7s;
+}
+
+@keyframes ping {
+  from {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+
+  to {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+/* Flash as the active stream's comet reaches the core */
+/* Flash as the active stream's comet reaches the core (one run per stage, in step with .comet) */
+.coreFlash {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(200, 255, 247, 0.6), rgba(143, 240, 226, 0.22) 60%, transparent);
+  opacity: 0;
+  animation: coreFlash 3s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+}
+
+@keyframes coreFlash {
+  0%,
+  46% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  52% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+
+  85%,
+  100% {
+    opacity: 0;
+    transform: scale(2.3);
+  }
+}
+
+/* The mark on a white disc, glowing softly */
+.coreDisc {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 32%, #ffffff 0%, #f3fbfa 62%, #e2f3f0 100%);
+  box-shadow:
+    0 0 0 4px rgba(143, 240, 226, 0.16),
+    0 0 36px 4px rgba(63, 214, 195, 0.55);
+  animation: coreGlow 3.2s ease-in-out infinite alternate;
+}
+
+@keyframes coreGlow {
+  to {
+    box-shadow:
+      0 0 0 7px rgba(143, 240, 226, 0.1),
+      0 0 54px 10px rgba(63, 214, 195, 0.7);
+  }
+}
+
+.coreMark {
+  width: 64%;
+  aspect-ratio: 1;
+  background: url("/assets/logos/convergeflow-mark-onlight.png") center / contain no-repeat;
+}
+
+/* ---------- Desktop: chips on both sides, streams into the core ---------- */
+@media (min-width: 992px) {
+  .scene {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+    align-items: stretch;
+    gap: 0;
+    height: 35rem;
+  }
+
+  .links {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .wire,
+  .wireHot,
+  .flow {
+    fill: none;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .wire {
+    stroke-width: 1;
+  }
+
+  /* The lit stream brightens over its resting wire */
+  .wireHot {
+    stroke-width: 1.5;
+    opacity: 0;
+    transition: opacity 1s var(--ease-in-out);
+  }
+
+  .link[data-active] .wireHot {
+    opacity: 1;
+  }
+
+  .link[data-active] .flow {
+    opacity: 0;
+  }
+
+  /* A comet glides down the lit stream into the core, trailing a soft tail */
+  .comet,
+  .cometTail {
+    fill: none;
+    stroke-linecap: round;
+    animation: comet 3s cubic-bezier(0.45, 0, 0.2, 1) infinite;
+  }
+
+  .comet {
+    stroke: #f2fffd;
+    stroke-width: 3;
+    stroke-dasharray: 10 140;
+    stroke-dashoffset: 12;
+    filter: drop-shadow(0 0 6px var(--mint)) drop-shadow(0 0 14px rgba(63, 214, 195, 0.8));
+  }
+
+  .cometTail {
+    stroke: rgba(143, 240, 226, 0.45);
+    stroke-width: 5;
+    stroke-dasharray: 34 140;
+    stroke-dashoffset: 36;
+    filter: blur(3px);
+  }
+
+  @keyframes comet {
+    0% {
+      stroke-dashoffset: 36;
+      opacity: 0;
+    }
+
+    8% {
+      opacity: 1;
+    }
+
+    48% {
+      stroke-dashoffset: -100;
+      opacity: 1;
+    }
+
+    54%,
+    100% {
+      stroke-dashoffset: -100;
+      opacity: 0;
+    }
+  }
+
+  /* Bright packets travelling toward the core */
+  .flow {
+    stroke: #eafffb;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-dasharray: 3 340;
+    filter: drop-shadow(0 0 5px var(--mint));
+    animation: flow 3.6s linear infinite;
+    transition: opacity 700ms var(--ease-out);
+  }
+
+  @keyframes flow {
+    from {
+      stroke-dashoffset: 343;
+    }
+
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  .col {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: 0;
+    width: 92%;
+  }
+
+  .col[data-col="r"] {
+    justify-self: end;
+  }
+
+  .chip {
+    padding: 0.875rem 1rem;
+  }
+
+  /* Connection port where the stream leaves the chip */
+  .chipPort {
+    position: absolute;
+    top: 50%;
+    display: block;
+    width: 9px;
+    height: 9px;
+    margin-top: -4.5px;
+    border: 1px solid var(--mint);
+    border-radius: 50%;
+    background: var(--bg);
+    box-shadow: 0 0 10px var(--mint);
+    transition: background 800ms var(--ease-in-out), box-shadow 800ms var(--ease-in-out);
+  }
+
+  .chip[data-active] .chipPort {
+    background: var(--mint);
+    box-shadow: 0 0 0 4px rgba(143, 240, 226, 0.18), 0 0 16px var(--mint);
+  }
+
+  .chip[data-side="l"]:hover {
+    translate: 4px 0;
+  }
+
+  .chip[data-side="r"]:hover {
+    translate: -4px 0;
+  }
+
+  .chip[data-side="l"] .chipPort {
+    right: -5px;
+  }
+
+  .chip[data-side="r"] .chipPort {
+    left: -5px;
+  }
+
+  .globeWrap {
+    position: relative;
+    z-index: 1;
+    width: min(100%, 30rem);
+    align-self: center;
+  }
+
+  .ticks {
+    inset: 4%;
+  }
+}
+
+/* ---------- Specialist teams ---------- */
+.roles {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  margin-top: clamp(2.5rem, 1.5rem + 3vw, 4rem);
+}
+
+@media (min-width: 768px) {
+  .roles {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.role {
+  --mx: 50%;
+  --my: 0%;
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 0.5rem;
+  padding: 1.5rem;
+  overflow: hidden;
+  border: 1px solid var(--stroke);
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01));
+  isolation: isolate;
+  /* hover lift uses `translate` so it never fights the GSAP entrance (which owns `transform`) */
+  transition: border-color 500ms var(--ease-out), background 500ms var(--ease-out), translate 600ms var(--ease-out);
+}
+
+.role:hover {
+  border-color: rgba(143, 240, 226, 0.28);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.015));
+  translate: 0 -4px;
+}
+
+/* A mint line drawing along the top edge */
+.roleEdge {
+  position: absolute;
+  top: 0;
+  left: 1.5rem;
+  right: 1.5rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--mint) 30%, var(--mint) 70%, transparent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 700ms var(--ease-out);
+}
+
+.role:hover .roleEdge {
+  transform: scaleX(1);
+}
+
+.roleTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.roleNum {
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-3);
+  transition: color 500ms var(--ease-out);
+}
+
+.role:hover .roleNum {
+  color: var(--mint);
+}
+
+.roleSpot {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(280px circle at var(--mx) var(--my), rgba(63, 214, 195, 0.16), transparent 70%);
+  opacity: 0;
+  transition: opacity var(--dur) var(--ease-out);
+}
+
+.role:hover .roleSpot {
+  opacity: 1;
+}
+
+.roleIcon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 0.5rem;
+  border: 1px solid var(--stroke-glow);
+  border-radius: 16px;
+  background: linear-gradient(150deg, rgba(17, 185, 168, 0.45), rgba(17, 185, 168, 0.05));
+  color: var(--mint);
+  box-shadow: 0 0 26px -6px rgba(63, 214, 195, 0.7);
+  transition: background 500ms var(--ease-out), color 500ms var(--ease-out), border-color 500ms var(--ease-out), rotate 600ms var(--ease-out);
+}
+
+.role:hover .roleIcon {
+  border-color: transparent;
+  background: var(--mint);
+  color: var(--bg);
+  rotate: -8deg;
+}
+
+.roleIcon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.roleTitle {
+  font-family: var(--font-display);
+  font-size: var(--fs-h4);
+  font-weight: 500;
+  color: var(--white);
+}
+
+.roleBody {
+  font-size: var(--fs-small);
+  line-height: 1.55;
+  color: var(--text-2);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticks,
+  .coreFlash,
+  .comet,
+  .cometTail,
+  .coreDisc {
+    animation: none;
+  }
+}

@@ -1,24 +1,25 @@
 /**
- * Site navigation, generated from the SEO package's Navigation Specification
- * (content/rcm-revision-2026-10-15). Only routes that exist in this build are
- * exposed as links; deferred destinations stay hidden rather than leading to
- * empty pages.
+ * Site navigation (V2): Services, Who We Help, How It Works, Resources,
+ * with Request a Demo and Client Login as separate actions. Only built routes
+ * are linked; the conditional OpenDental page is held until approved.
  */
-import nav from "./generated/navigation.json";
-import pages from "./generated/pages.json";
+import { BUILT_ROUTES } from "./site";
+import { JOURNEY } from "./site/services";
 
-export type NavLink = { label: string; href: string };
+export type NavLink = { label: string; href: string; note?: string };
+export type NavColumn = { label: string; links: NavLink[] };
 export type NavGroup = {
   label: string;
-  /** Overview route when it is built; otherwise the category is a menu only. */
   href?: string;
-  children: NavLink[];
+  intro?: { title: string; body: string; overview?: string };
+  columns: NavColumn[];
 };
 
 /** Existing product login — never rebuilt or redirected by the marketing site. */
-export const LOGIN_URL = nav.utility.find((u) => u.label === "Login")?.url ?? "/";
+export const LOGIN_URL = "https://beta-convergflow.supermia.ai/login";
+export const LOGIN_LABEL = "Client Login";
 
-export const BUILT_ROUTES = new Set<string>(["/", ...pages.map((p) => p.route)]);
+export const DEMO_LINK: NavLink = { label: "Request a Demo", href: "/demo/" };
 
 const normalize = (href: string) => {
   const [path] = href.split("#");
@@ -28,37 +29,71 @@ const normalize = (href: string) => {
 
 /** True for hashes, external URLs and internal routes this build serves. */
 export function isLive(href: string) {
-  if (href.startsWith("#") || /^https?:/.test(href) || href.startsWith("mailto:")) return true;
+  if (href.startsWith("#") || /^(https?:|mailto:|tel:)/.test(href)) return true;
   return BUILT_ROUTES.has(normalize(href));
 }
 
 /** The href to render, or null when the destination is not published yet. */
 export function liveHref(href: string): string | null {
-  if (!isLive(href)) return null;
-  return href;
+  return isLive(href) ? href : null;
 }
 
-/** Friendlier labels than the long-form spec where the menu needs them short. */
-const SHORT: Record<string, string> = {
-  "/services/claims-submission/": "Claims Submission",
-  "/services/ar-management/": "AR Management and Reporting",
-};
+const live = (links: NavLink[]) => links.filter((l) => isLive(l.href));
 
-export const MAIN_NAV: NavGroup[] = nav.primary.map((item) => ({
-  label: item.label,
-  href: isLive(item.url) ? item.url : undefined,
-  children: (item.children ?? []).filter((c) => isLive(c.url)).map((c) => ({ label: SHORT[c.url] ?? c.label, href: c.url })),
-}));
+export const MAIN_NAV: NavGroup[] = [
+  {
+    label: "Services",
+    href: "/services/",
+    intro: {
+      title: "Managed RCM, from coverage to account closure.",
+      body: "Eight stages, one accountable team. Choose the stages in your agreed scope.",
+      overview: "All services",
+    },
+    columns: JOURNEY.map((g) => ({ label: g.title, links: live(g.stages.map((s) => ({ label: s.label, href: s.href, note: s.body }))) })),
+  },
+  {
+    label: "Who We Help",
+    intro: { title: "Built for the practices that do the care.", body: "Dental practices, DSOs and groups, and medical practices, each with its own scope." },
+    columns: [
+      {
+        label: "Practices",
+        links: live([
+          { label: "Dental practices", href: "/industries/dental/", note: "Dental billing, fully managed, from the chair to a closed account." },
+          { label: "DSOs & groups", href: "/industries/dso/", note: "Location and central responsibilities agreed up front." },
+          { label: "Medical practices", href: "/industries/medical/", note: "From verified coverage to a reconciled account." },
+        ]),
+      },
+    ],
+  },
+  {
+    label: "How It Works",
+    href: "/how-it-works/",
+    intro: { title: "An operating model you can see.", body: "Scope, owners and reporting agreed before we start.", overview: "How it works" },
+    columns: [
+      {
+        label: "Delivery",
+        links: live([
+          { label: "Service delivery", href: "/how-it-works/", note: "Onboarding, day-to-day work, exceptions and reporting." },
+          { label: "Technology", href: "/technology/", note: "Workflow technology supporting the specialists, starting with OpenDental." },
+          { label: "OpenDental", href: "/technology/opendental/", note: "Supported connection, data and setup." },
+          { label: "Security & data handling", href: "/technology/security/", note: "Access, credentials, evidence and documentation." },
+        ]),
+      },
+    ],
+  },
+  { label: "Resources", href: "/resources/", columns: [] },
+];
 
-export const DEMO_LINK: NavLink = { label: "Schedule a Demo", href: "/demo/" };
-
-export const COMPANY_LINKS: NavLink[] = [
+export const COMPANY_LINKS: NavLink[] = live([
   { label: "About", href: "/about/" },
   { label: "Why ConvergeFlow", href: "/why-convergeflow/" },
-  { label: "How It Works", href: "/how-it-works/" },
   { label: "Pricing", href: "/pricing/" },
-  { label: "Resources", href: "/resources/" },
   { label: "Contact", href: "/contact/" },
-].filter((l) => isLive(l.href));
+  { label: "Resources", href: "/resources/" },
+]);
 
-export const groupByLabel = (label: string) => MAIN_NAV.find((g) => g.label === label);
+export const SERVICE_LINKS: NavLink[] = live([{ label: "All services", href: "/services/" }, ...JOURNEY.flatMap((g) => g.stages.map((s) => ({ label: s.label, href: s.href })))]);
+
+export const AUDIENCE_LINKS: NavLink[] = MAIN_NAV[1].columns[0].links;
+
+export const DELIVERY_LINKS: NavLink[] = MAIN_NAV[2].columns[0].links;

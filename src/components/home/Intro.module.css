@@ -1,0 +1,110 @@
+.section {
+  overflow: hidden;
+}
+
+.layout {
+  display: grid;
+  gap: var(--space-8);
+  margin-top: clamp(2.5rem, 1.5rem + 4vw, 6rem);
+}
+
+@media (min-width: 992px) {
+  .layout {
+    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+    align-items: center;
+    column-gap: clamp(3rem, 1rem + 5vw, 8rem);
+  }
+}
+
+/* ---------- Crystal + statement ---------- */
+.visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: clamp(20rem, 14rem + 18vw, 32rem);
+}
+
+.halo {
+  position: absolute;
+  width: 70%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(143, 240, 226, 0.22), rgba(17, 185, 168, 0.08) 55%, transparent);
+  filter: blur(10px);
+  animation: breathe 6s var(--ease-in-out) infinite alternate;
+}
+
+@keyframes breathe {
+  to {
+    transform: scale(1.12);
+    opacity: 0.7;
+  }
+}
+
+.crystal {
+  position: absolute;
+  width: min(80%, 26rem);
+  overflow: visible;
+}
+
+.crystalSpin {
+  transform-origin: 100px 100px;
+  animation: spin 40s linear infinite;
+}
+
+.crystal line {
+  stroke: rgba(143, 240, 226, 0.4);
+  stroke-width: 0.6;
+}
+
+.crystal circle {
+  fill: #e9fffb;
+  filter: drop-shadow(0 0 4px var(--mint));
+  animation: twinkle 3s var(--ease-in-out) infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes twinkle {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.big {
+  position: relative;
+  max-width: 14ch;
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 1.1rem + 3.6vw, 4.75rem);
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: -0.05em;
+  text-align: center;
+  color: var(--white);
+  text-shadow: 0 0 30px rgba(3, 8, 7, 0.9), 0 0 40px rgba(143, 240, 226, 0.15);
+}
+
+/* ---------- Copy ---------- */
+.copy {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-5);
+}
+
+.title {
+  font-size: clamp(1.75rem, 1.2rem + 1.6vw, 2.625rem);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+  color: var(--white);
+}
+
+.body {
+  font-size: var(--fs-lede);
+  line-height: 1.6;
+  color: var(--text);
+}

@@ -1,0 +1,319 @@
+.section {
+  position: relative;
+}
+
+.layout {
+  display: grid;
+  gap: var(--space-7);
+}
+
+@media (min-width: 992px) {
+  .layout {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-items: start;
+    column-gap: clamp(2.5rem, 1rem + 5vw, 7rem);
+  }
+
+  .sticky {
+    position: sticky;
+    top: calc(var(--header-h) + 2.5rem);
+  }
+}
+
+/* ---------- Sticky panel ---------- */
+.sticky {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-5);
+}
+
+
+
+.title {
+  max-width: 12ch;
+  font-size: clamp(2.25rem, 1.2rem + 3.4vw, 4.5rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: var(--white);
+}
+
+.intro {
+  max-width: 26rem;
+  color: var(--text-2);
+}
+
+/* Floating glass orb */
+.orbStage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: min(100%, 22rem);
+  aspect-ratio: 1;
+  margin-block: var(--space-2);
+  perspective: 900px;
+}
+
+.orb {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 80%;
+  aspect-ratio: 1;
+  transform-style: preserve-3d;
+  animation: bob 6s var(--ease-in-out) infinite alternate;
+}
+
+@keyframes bob {
+  to {
+    translate: 0 -12px;
+  }
+}
+
+.halo {
+  position: absolute;
+  inset: -20%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(63, 214, 195, 0.35), rgba(17, 185, 168, 0.08) 60%, transparent);
+  filter: blur(10px);
+}
+
+.ring {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(143, 240, 226, 0.35);
+  border-radius: 50%;
+  transform: rotateX(70deg);
+  animation: spinA 9s linear infinite;
+}
+
+.ring::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
+  border-radius: 50%;
+  background: #eafffb;
+  box-shadow: 0 0 14px var(--mint);
+}
+
+.ring[data-r="2"] {
+  inset: 6%;
+  border-color: rgba(143, 240, 226, 0.25);
+  transform: rotateY(68deg) rotateZ(20deg);
+  animation-name: spinB;
+  animation-duration: 12s;
+}
+
+.ring[data-r="3"] {
+  inset: -8%;
+  border-style: dashed;
+  border-color: rgba(143, 240, 226, 0.18);
+  transform: rotateX(60deg) rotateY(-30deg);
+  animation-name: spinC;
+  animation-duration: 16s;
+}
+
+@keyframes spinA {
+  to {
+    transform: rotateX(70deg) rotateZ(360deg);
+  }
+}
+
+@keyframes spinB {
+  to {
+    transform: rotateY(68deg) rotateZ(380deg);
+  }
+}
+
+@keyframes spinC {
+  to {
+    transform: rotateX(60deg) rotateY(-30deg) rotateZ(-360deg);
+  }
+}
+
+.sphere {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 54%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 1px solid rgba(200, 255, 247, 0.55);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(220, 255, 250, 0.55), transparent 35%),
+    radial-gradient(circle at 70% 80%, rgba(17, 185, 168, 0.7), transparent 55%),
+    radial-gradient(circle at 50% 50%, rgba(10, 60, 56, 0.9), rgba(3, 8, 7, 0.95) 75%);
+  box-shadow: 0 0 80px 10px rgba(63, 214, 195, 0.35), inset 0 0 40px rgba(143, 240, 226, 0.35), inset -10px -20px 40px rgba(0, 0, 0, 0.6);
+}
+
+/* The mark sits on a white disc */
+.mark {
+  position: relative;
+  z-index: 1;
+  width: 58%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: url("/assets/logos/convergeflow-mark-onlight.png") center / 66% no-repeat, #ffffff;
+  box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.12), 0 0 40px rgba(143, 240, 226, 0.7), inset 0 -6px 14px rgba(3, 40, 36, 0.18);
+}
+
+.gloss {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, 0.22) 48%, transparent 60%);
+  animation: gloss 5s var(--ease-in-out) infinite;
+}
+
+@keyframes gloss {
+  from {
+    transform: translateX(-80%);
+  }
+
+  60%,
+  to {
+    transform: translateX(80%);
+  }
+}
+
+.shadow {
+  position: absolute;
+  bottom: 2%;
+  width: 50%;
+  height: 8%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(17, 185, 168, 0.35), transparent);
+  filter: blur(6px);
+}
+
+@media (max-width: 991.98px) {
+  .orbStage {
+    display: none;
+  }
+}
+
+/* ---------- Editorial list ---------- */
+.list {
+  display: grid;
+}
+
+.row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  gap: 0.5rem 1rem;
+  padding: clamp(1.5rem, 1rem + 1.5vw, 2.25rem) 0.75rem;
+  transition: background 500ms var(--ease-out);
+}
+
+@media (min-width: 768px) {
+  .row {
+    grid-template-columns: 3.5rem minmax(0, 5fr) minmax(0, 6fr);
+    align-items: start;
+  }
+}
+
+.rule {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(143, 240, 226, 0.5), rgba(255, 255, 255, 0.1) 40%, rgba(255, 255, 255, 0.1));
+}
+
+.row:first-child::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.row:hover {
+  background: linear-gradient(90deg, rgba(17, 185, 168, 0.1), transparent 70%);
+}
+
+.num {
+  padding-top: 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--text-3);
+  transition: color 400ms var(--ease-out);
+}
+
+.rowTitle {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.75rem);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: var(--white);
+  transition: gap 500ms var(--ease-out), color 400ms var(--ease-out);
+}
+
+.rowIcon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 0;
+  height: 36px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--mint);
+  color: var(--bg);
+  opacity: 0;
+  transition: width 500ms var(--ease-out), opacity 400ms var(--ease-out);
+}
+
+.rowIcon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.rowBody {
+  grid-column: 2;
+  max-width: 28rem;
+  color: var(--text-2);
+  transition: color 400ms var(--ease-out);
+}
+
+@media (min-width: 768px) {
+  .rowBody {
+    grid-column: 3;
+    padding-top: 0.25rem;
+  }
+}
+
+.row:hover .num {
+  color: var(--mint);
+}
+
+.row:hover .rowTitle {
+  gap: 0.75rem;
+  color: var(--mint);
+}
+
+.row:hover .rowIcon {
+  width: 36px;
+  opacity: 1;
+}
+
+.row:hover .rowBody {
+  color: var(--text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orb,
+  .ring,
+  .gloss {
+    animation: none;
+  }
+}

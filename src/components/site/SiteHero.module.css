@@ -1,0 +1,383 @@
+.hero {
+  position: relative;
+  padding-top: calc(var(--header-h) + env(safe-area-inset-top, 0px) + clamp(2.5rem, 1rem + 5vw, 6rem));
+  padding-bottom: clamp(6rem, 3rem + 8vw, 11rem);
+  overflow: clip;
+  isolation: isolate;
+  background: var(--bg);
+}
+
+.bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 88px 88px;
+  mask-image: radial-gradient(70% 60% at 50% 40%, #000, transparent 80%);
+  -webkit-mask-image: radial-gradient(70% 60% at 50% 40%, #000, transparent 80%);
+}
+
+/* Glowing horizon: the top edge of a huge circle */
+.horizon {
+  position: absolute;
+  left: 50%;
+  bottom: calc(-1 * (220vw - clamp(70px, 6vw, 130px)));
+  width: 220vw;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--bg) 97%, transparent 100%);
+  box-shadow:
+    0 -1px 0 rgba(200, 255, 247, 0.85),
+    0 -4px 16px rgba(143, 240, 226, 0.6),
+    0 -40px 140px rgba(17, 185, 168, 0.35);
+  transform: translateX(-50%);
+  transform-origin: 50% 0;
+}
+
+.tokens {
+  z-index: 0;
+}
+
+.layout {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(3rem, 2rem + 3vw, 4.5rem);
+}
+
+.copy {
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  gap: var(--space-5);
+  min-width: 0;
+}
+
+.title {
+  max-width: 16ch;
+  font-size: clamp(2.5rem, 1.2rem + 4.2vw, 5.5rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: var(--white);
+  text-shadow: 0 0 26px rgba(143, 240, 226, 0.25), 0 0 70px rgba(17, 185, 168, 0.15);
+}
+
+.lead {
+  max-width: 38rem;
+  font-size: var(--fs-lede);
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  margin-top: var(--space-2);
+}
+
+.facts li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-2);
+}
+
+.factIcon {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--stroke-glow);
+  border-radius: 50%;
+  color: var(--mint);
+}
+
+.factIcon svg {
+  width: 12px;
+  height: 12px;
+}
+
+@media (max-width: 479.98px) {
+  .actions,
+  .actions > * {
+    width: 100%;
+  }
+}
+
+/* Centred (no visual) */
+.hero[data-centered] .copy {
+  justify-items: center;
+  text-align: center;
+}
+
+.hero[data-centered] .title {
+  max-width: 18ch;
+  font-size: clamp(2.75rem, 1.2rem + 5vw, 6.25rem);
+}
+
+.hero[data-centered] .lead {
+  margin-inline: auto;
+}
+
+.hero[data-centered] .actions,
+.hero[data-centered] .facts {
+  justify-content: center;
+}
+
+/* ---------- Visuals ---------- */
+.visual {
+  position: relative;
+  min-width: 0;
+}
+
+.docStage {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  padding: 1.5rem 0;
+}
+
+/* Orbit rings behind the document */
+.orbit {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(120%, 34rem);
+  aspect-ratio: 1;
+  margin: calc(min(120%, 34rem) / -2) 0 0 calc(min(120%, 34rem) / -2);
+  border: 1px solid rgba(143, 240, 226, 0.12);
+  border-radius: 50%;
+  animation: spin 18s linear infinite;
+}
+
+.orbit::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
+  border-radius: 50%;
+  background: var(--mint);
+  box-shadow: 0 0 14px var(--mint);
+}
+
+.orbit[data-r="2"] {
+  width: min(90%, 26rem);
+  margin: calc(min(90%, 26rem) / -2) 0 0 calc(min(90%, 26rem) / -2);
+  border-style: dashed;
+  animation-duration: 12s;
+  animation-direction: reverse;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.doc {
+  position: relative;
+  z-index: 2;
+  transform: perspective(1000px) rotateY(-10deg) rotateX(4deg);
+}
+
+.sheetBack {
+  position: absolute;
+  top: 3rem;
+  left: 50%;
+  width: min(100%, 24rem);
+  height: 76%;
+  border: 1px solid var(--stroke);
+  border-radius: 20px;
+  background: linear-gradient(170deg, rgba(14, 30, 29, 0.6), rgba(4, 10, 10, 0.6));
+  transform: translateX(-42%) rotate(6deg);
+}
+
+.photoStage {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  padding: 1rem 0 0;
+}
+
+.polaroid {
+  width: min(100%, 32rem);
+}
+
+.sticky {
+  position: absolute;
+  top: -0.5rem;
+  right: -0.5rem;
+  z-index: 3;
+}
+
+.proof {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: 0.5rem;
+  width: min(100%, 28rem);
+  margin-top: 1.25rem;
+}
+
+.proof li {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.625rem 0.875rem;
+  border: 1px solid var(--stroke-2);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  font-size: 0.875rem;
+  color: var(--text);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.proof svg {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  padding: 3px;
+  border-radius: 50%;
+  background: var(--teal-500);
+  color: var(--bg);
+}
+
+.formStage {
+  position: relative;
+  z-index: 2;
+  scroll-margin-top: calc(var(--header-h) + 1rem);
+}
+
+.contactStage {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  padding: 1rem 0 2rem;
+}
+
+.contactCard {
+  --mx: 50%;
+  --my: 0%;
+  position: relative;
+  display: grid;
+  gap: 0.5rem;
+  width: min(100%, 28rem);
+  padding: 2rem;
+  overflow: hidden;
+  border: 1px solid rgba(143, 240, 226, 0.4);
+  border-radius: 24px;
+  background: linear-gradient(170deg, rgba(14, 30, 29, 0.96), rgba(4, 10, 10, 0.96));
+  box-shadow: 0 0 60px -14px rgba(63, 214, 195, 0.5), 0 40px 80px -40px rgba(0, 0, 0, 0.95);
+}
+
+.contactGlow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(300px circle at var(--mx) var(--my), rgba(63, 214, 195, 0.18), transparent 70%);
+  pointer-events: none;
+}
+
+.contactKicker {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mint);
+}
+
+.contactName {
+  margin-bottom: 0.5rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 1.4rem + 1vw, 2.25rem);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  color: var(--white);
+}
+
+.contactLine {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  min-height: 44px;
+  color: var(--text);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.contactLine:hover {
+  color: var(--mint);
+}
+
+.contactLine svg {
+  width: 20px;
+  height: 20px;
+  color: var(--mint);
+}
+
+.contactSeal {
+  position: absolute;
+  right: 1.5rem;
+  top: 1.5rem;
+  width: 52px;
+  height: 52px;
+  border: 1px solid var(--stroke-glow);
+  border-radius: 16px;
+  background:
+    url("/assets/logos/convergeflow-mark.png") center / 64% no-repeat,
+    linear-gradient(160deg, rgba(17, 185, 168, 0.3), rgba(3, 8, 7, 0.9));
+  box-shadow: 0 0 30px -6px rgba(63, 214, 195, 0.7);
+}
+
+.contactNote {
+  margin-top: 1rem;
+}
+
+@media (min-width: 1100px) {
+  .layout {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: center;
+    column-gap: clamp(3rem, 1rem + 4vw, 6rem);
+  }
+
+  .hero[data-visual-kind="form"] .layout {
+    grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+    align-items: start;
+  }
+
+  .hero[data-centered] .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 575.98px) {
+  .sticky {
+    top: -0.75rem;
+    right: 0;
+    max-width: 12rem;
+  }
+
+  .doc {
+    transform: none;
+  }
+}

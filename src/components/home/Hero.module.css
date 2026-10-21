@@ -1,0 +1,496 @@
+/* Pointer position, registered so it can be smoothed with a transition */
+@property --mx {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: -999px;
+}
+
+@property --my {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: -999px;
+}
+
+@property --ang {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.hero {
+  position: relative;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  min-height: max(100svh, 44rem);
+  padding-top: calc(var(--header-h) + env(safe-area-inset-top, 0px) + clamp(1.5rem, 1rem + 3vw, 3.5rem));
+  overflow: clip;
+  isolation: isolate;
+  background: var(--bg);
+  transition: --mx 450ms var(--ease-out), --my 450ms var(--ease-out);
+}
+
+/* ---------- Background ---------- */
+.bg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+}
+
+/* Aurora: slow drifting blobs of light behind the headline */
+.aurora {
+  position: absolute;
+  inset: -25% -10% 35%;
+  filter: blur(80px);
+}
+
+/*
+ * Each colour roams its own looping path (transform), and leans toward the
+ * pointer (translate, eased by its transition) by a different amount, so the
+ * green and blue drift past each other.
+ */
+.aurora i {
+  position: absolute;
+  border-radius: 50%;
+  mix-blend-mode: screen;
+  translate: calc(var(--px, 0) * var(--pull-x)) calc(var(--py, 0) * var(--pull-y));
+  transition: translate 1.8s var(--ease-out);
+  animation: roam-a 18s var(--ease-in-out) infinite;
+}
+
+.aurora i:nth-child(1) {
+  --pull-x: 160px;
+  --pull-y: 90px;
+  left: 8%;
+  top: 18%;
+  width: 46%;
+  height: 60%;
+  background: radial-gradient(closest-side, rgba(17, 185, 168, 0.55), transparent);
+}
+
+.aurora i:nth-child(2) {
+  --pull-x: -200px;
+  --pull-y: -110px;
+  right: 6%;
+  top: 6%;
+  width: 44%;
+  height: 56%;
+  background: radial-gradient(closest-side, rgba(40, 120, 200, 0.34), transparent);
+  animation-name: roam-b;
+  animation-duration: 22s;
+}
+
+.aurora i:nth-child(3) {
+  --pull-x: 260px;
+  --pull-y: 140px;
+  left: 36%;
+  top: 30%;
+  width: 30%;
+  height: 42%;
+  background: radial-gradient(closest-side, rgba(143, 240, 226, 0.32), transparent);
+  animation-name: roam-c;
+  animation-duration: 14s;
+}
+
+/* Green: sweeps right and back along a loose loop */
+@keyframes roam-a {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  30% {
+    transform: translate(34%, 12%) scale(1.12);
+  }
+
+  60% {
+    transform: translate(18%, -14%) scale(0.94);
+  }
+
+  80% {
+    transform: translate(-10%, 8%) scale(1.06);
+  }
+}
+
+/* Blue: crosses the other way */
+@keyframes roam-b {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1.05);
+  }
+
+  35% {
+    transform: translate(-38%, 18%) scale(0.92);
+  }
+
+  65% {
+    transform: translate(-16%, 30%) scale(1.15);
+  }
+
+  85% {
+    transform: translate(8%, 6%) scale(1);
+  }
+}
+
+/* Mint core: a smaller, quicker orbit */
+@keyframes roam-c {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  25% {
+    transform: translate(-30%, -16%) scale(1.15);
+  }
+
+  50% {
+    transform: translate(10%, -26%) scale(0.9);
+  }
+
+  75% {
+    transform: translate(32%, 10%) scale(1.1);
+  }
+}
+
+/* Faint square grid, strongest at the top centre */
+.grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 84px 84px;
+  background-position: center top;
+  mask-image: radial-gradient(70% 60% at 50% 30%, #000, transparent 80%);
+  -webkit-mask-image: radial-gradient(70% 60% at 50% 30%, #000, transparent 80%);
+}
+
+/* A lit dot grid that appears around the pointer */
+.spot {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(143, 240, 226, 0.6) 1px, transparent 1.6px);
+  background-size: 26px 26px;
+  mask-image: radial-gradient(240px circle at var(--mx) var(--my), #000, transparent 75%);
+  -webkit-mask-image: radial-gradient(240px circle at var(--mx) var(--my), #000, transparent 75%);
+}
+
+.vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(130% 90% at 50% 35%, transparent 55%, rgba(3, 8, 7, 0.85) 100%);
+}
+
+/* Film grain */
+.grain {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E");
+  opacity: 0.07;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+/* ---------- Copy ---------- */
+.copy {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: var(--space-5);
+  padding-bottom: clamp(1rem, 0.5rem + 2vw, 2.5rem);
+  text-align: center;
+}
+
+/* Announcement pill with a light running around its border */
+.pill {
+  position: relative;
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3125rem 0.3125rem 0.3125rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.035);
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text);
+  isolation: isolate;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  transition: background var(--dur) var(--ease-out);
+}
+
+.pill::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  padding: 1px;
+  border-radius: inherit;
+  background: conic-gradient(from var(--ang), rgba(255, 255, 255, 0.14) 0 68%, rgba(143, 240, 226, 0.95) 84%, rgba(255, 255, 255, 0.14) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  animation: ang 5s linear infinite;
+}
+
+@keyframes ang {
+  to {
+    --ang: 360deg;
+  }
+}
+
+.pill:hover {
+  background: rgba(143, 240, 226, 0.08);
+}
+
+.pillMark {
+  width: 1.375rem;
+  height: 1.375rem;
+  background: url("/assets/logos/convergeflow-mark.png") center / contain no-repeat;
+}
+
+.pillSep {
+  width: 1px;
+  height: 0.875rem;
+  background: var(--stroke-3);
+}
+
+.pillDim {
+  color: var(--text-2);
+}
+
+.pillGo {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--mint);
+  color: var(--bg);
+  transition: transform var(--dur) var(--ease-out);
+}
+
+.pillGo svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.pill:hover .pillGo {
+  transform: translateX(2px);
+}
+
+/* Headline: two lines, each painted with a gradient that a band of light sweeps across */
+.title {
+  font-size: clamp(2.75rem, 0.9rem + 6.4vw, 7.75rem);
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: -0.058em;
+  filter: drop-shadow(0 0 30px rgba(143, 240, 226, 0.22));
+}
+
+.line {
+  --c: #ffffff;
+  --s: #8ff0e2;
+  display: block;
+  /* room for descenders inside the clipped background */
+  padding-bottom: 0.24em;
+  margin-bottom: -0.24em;
+  background-image: linear-gradient(100deg, var(--c) 0 40%, var(--s) 50%, var(--c) 60% 100%);
+  background-size: 280% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-wrap: balance;
+  animation: shine 9s var(--ease-in-out) 3.2s infinite;
+}
+
+.lineAccent {
+  --c: #8ff0e2;
+  --s: #ffffff;
+  animation-delay: 3.5s;
+}
+
+@keyframes shine {
+  0% {
+    background-position: 100% 0;
+  }
+
+  22%,
+  100% {
+    background-position: 0% 0;
+  }
+}
+
+.lead {
+  max-width: 44rem;
+  font-size: var(--fs-lede);
+  line-height: 1.6;
+  color: var(--text-2);
+  text-shadow: 0 0 18px rgba(3, 8, 7, 0.95), 0 0 4px rgba(3, 8, 7, 0.9);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.points {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 1.5rem;
+}
+
+.points li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-2);
+  text-shadow: 0 0 14px rgba(3, 8, 7, 0.95);
+}
+
+.pointIcon {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--stroke-glow);
+  border-radius: 50%;
+  color: var(--mint);
+}
+
+.pointIcon svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* ---------- Bottom bar ---------- */
+.bar {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 1rem clamp(1.25rem, 1rem + 1vw, 2rem);
+}
+
+.metaLeft,
+.metaRight {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  color: var(--text-2);
+}
+
+.metaRight {
+  justify-self: end;
+}
+
+.metaRight span {
+  color: var(--text-3);
+}
+
+.metaRight svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  animation: nudge 1.8s var(--ease-in-out) infinite;
+}
+
+@keyframes nudge {
+  50% {
+    transform: translateY(4px);
+  }
+}
+
+.liveDot {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--mint);
+  box-shadow: 0 0 12px var(--mint);
+}
+
+.liveDot::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: 1px solid var(--mint);
+  border-radius: 50%;
+  animation: ping 2.4s var(--ease-out) infinite;
+}
+
+@keyframes ping {
+  from {
+    transform: scale(0.6);
+    opacity: 1;
+  }
+
+  to {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+/* ---------- Small screens ---------- */
+@media (max-width: 767.98px) {
+  .metaRight {
+    display: none;
+  }
+
+  .bar {
+    justify-content: center;
+  }
+
+  .points {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media (max-width: 479.98px) {
+  .actions,
+  .actions > * {
+    width: 100%;
+  }
+
+  .pillSep,
+  .pillDim {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora i,
+  .line,
+  .pill::before {
+    animation: none;
+  }
+
+  .aurora i {
+    translate: none;
+  }
+}

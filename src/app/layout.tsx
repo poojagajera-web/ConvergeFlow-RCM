@@ -1,9 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Google_Sans, Plus_Jakarta_Sans } from "next/font/google";
 import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
+import { Preloader } from "@/components/layout/Preloader";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
-import { HOME_META } from "@/content/home";
+import { HOME_META } from "@/content/site/home";
 import { ROBOTS, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
@@ -28,7 +28,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#0a1a2b",
+  themeColor: "#030807",
 };
 
 export const metadata: Metadata = {
@@ -56,12 +56,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <a className="skip-link" href="#main">
           Skip to content
         </a>
+        <Preloader />
         <SmoothScroll />
         <Header />
-        <main id="main" tabIndex={-1}>
-          {children}
-        </main>
-        <Footer />
+        {/* Each page renders its own <main id="main"> and footer (the footer carries the page's call to action). */}
+        {children}
       </body>
     </html>
   );

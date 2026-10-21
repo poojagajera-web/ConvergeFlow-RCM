@@ -1,0 +1,295 @@
+.section {
+  position: relative;
+  padding-block: var(--section-y);
+  overflow: hidden;
+}
+
+.pin {
+  display: grid;
+  align-content: center;
+  gap: clamp(2rem, 1rem + 2.5vw, 3.5rem);
+}
+
+/* ---------- Head ---------- */
+.head {
+  display: grid;
+  gap: var(--space-5);
+}
+
+@media (min-width: 992px) {
+  .head {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+    align-items: end;
+    column-gap: var(--gutter);
+  }
+}
+
+
+
+/* eyebrow + title stack */
+.head > div:first-child {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-5);
+}
+
+.title {
+  max-width: 14ch;
+  font-size: clamp(2.25rem, 1.2rem + 3.6vw, 4.75rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: var(--white);
+}
+
+.side {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-4);
+  color: var(--text-2);
+}
+
+.progress {
+  display: none;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.count {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--text-3);
+}
+
+.count b {
+  font-weight: 400;
+  color: var(--mint);
+}
+
+.bar {
+  position: relative;
+  flex: 1;
+  height: 2px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.bar i {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--teal-400), var(--mint));
+  box-shadow: 0 0 10px var(--mint);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+/* ---------- Track ---------- */
+/* Vertical room so the hover lift and entrance offsets are never clipped */
+.viewport {
+  overflow: hidden;
+  padding-block: 1.25rem 2.5rem;
+  margin-block: -1.25rem -2.5rem;
+}
+
+/* positioned so card offsetLeft is measured from the track */
+.track {
+  position: relative;
+  display: flex;
+  gap: 1rem;
+  padding-inline: 5vw;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.track::-webkit-scrollbar {
+  display: none;
+}
+
+@media (min-width: 1500px) {
+  .track {
+    padding-inline: calc((100vw - 1440px) / 2);
+  }
+}
+
+.item {
+  flex: 0 0 min(80vw, 22rem);
+  scroll-snap-align: center;
+}
+
+.card {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: clamp(26rem, 20rem + 14vw, 34rem);
+  padding: 1.25rem;
+  overflow: hidden;
+  border: 1px solid var(--stroke);
+  border-radius: 26px;
+  background: var(--bg-3);
+  isolation: isolate;
+  transition: border-color 500ms var(--ease-out), transform 600ms var(--ease-out), box-shadow 600ms var(--ease-out);
+}
+
+a.card:hover {
+  border-color: rgba(143, 240, 226, 0.5);
+  box-shadow: 0 40px 80px -40px rgba(17, 185, 168, 0.55);
+  transform: translateY(-8px);
+}
+
+/* Photo, duotoned toward the brand teal, with a dark wash at the bottom */
+.media {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.img {
+  position: absolute;
+  inset: 0 -10%;
+  transition: transform 900ms var(--ease-out);
+}
+
+.img img {
+  object-fit: cover;
+  filter: none;
+  transition: filter 700ms var(--ease-out);
+}
+
+.media::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(160deg, rgba(17, 185, 168, 0.55), rgba(2, 40, 36, 0.4));
+  mix-blend-mode: color;
+  opacity: 0;
+  transition: opacity 700ms var(--ease-out);
+}
+
+.media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(to top, rgba(3, 8, 7, 0.96) 18%, rgba(3, 8, 7, 0.55) 55%, rgba(3, 8, 7, 0.25)),
+    radial-gradient(80% 50% at 50% 0%, rgba(63, 214, 195, 0.18), transparent 70%);
+}
+
+a.card:hover .img {
+  transform: scale(1.06);
+}
+
+/* Green duotone on hover */
+a.card:hover .img img {
+  filter: grayscale(1) contrast(1.1) brightness(0.75);
+}
+
+a.card:hover .media::before {
+  opacity: 1;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.group {
+  padding: 0.3125rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  background: rgba(3, 8, 7, 0.45);
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--white);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.num {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--mint);
+}
+
+.bottom {
+  position: relative;
+  display: grid;
+  align-content: end;
+  gap: 0.5rem;
+  padding-right: 3.5rem;
+}
+
+.cardTitle {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 1.25rem + 0.8vw, 2rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  color: var(--white);
+}
+
+.cardBody {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--text-2);
+}
+
+.go {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--mint);
+  color: var(--bg);
+  box-shadow: 0 0 24px -4px rgba(143, 240, 226, 0.6);
+  transition: transform 500ms var(--ease-out);
+}
+
+.go svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+a.card:hover .go {
+  transform: rotate(45deg);
+}
+
+/* ---------- Pinned (desktop) ---------- */
+.section[data-live] {
+  padding-block: 0;
+}
+
+.section[data-live] .pin {
+  min-height: 100vh;
+  padding-top: calc(var(--header-h) + 1.5rem);
+  padding-bottom: 2rem;
+}
+
+.section[data-live] .progress {
+  display: flex;
+}
+
+.section[data-live] .track {
+  overflow: visible;
+  scroll-snap-type: none;
+}
+
+.section[data-live] .item {
+  flex-basis: clamp(20rem, 16rem + 8vw, 26rem);
+}

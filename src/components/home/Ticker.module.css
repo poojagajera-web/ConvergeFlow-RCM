@@ -1,0 +1,89 @@
+.section {
+  display: grid;
+  gap: 0.625rem;
+  padding-block: 1.25rem;
+  border-block: 1px solid var(--stroke);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.015), transparent);
+  overflow: hidden;
+}
+
+.track {
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+
+.belt {
+  display: flex;
+  width: max-content;
+  animation: belt 60s linear infinite;
+}
+
+.track[data-dir="rev"] .belt {
+  animation-direction: reverse;
+  animation-duration: 70s;
+}
+
+.track:hover .belt {
+  animation-play-state: paused;
+}
+
+.row {
+  display: flex;
+  flex-shrink: 0;
+  gap: 0.625rem;
+  padding-right: 0.625rem;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.5rem 0.875rem;
+  border: 1px solid var(--stroke);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.025);
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  white-space: nowrap;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--mint);
+  box-shadow: 0 0 10px var(--mint);
+}
+
+.dot[data-tone="work"] {
+  background: var(--amber);
+  box-shadow: 0 0 10px var(--amber);
+}
+
+.label {
+  color: var(--text);
+}
+
+.status {
+  padding: 0.125rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(143, 240, 226, 0.1);
+  color: var(--mint);
+}
+
+.status[data-tone="work"] {
+  background: rgba(242, 180, 90, 0.12);
+  color: var(--amber);
+}
+
+@keyframes belt {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .belt {
+    animation: none;
+  }
+}

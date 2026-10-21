@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, type FormEvent, type ReactNode } from "react";
-import { DEMO, FORM_NOTICE, LOCATION_OPTIONS, PRACTICE_TYPES } from "@/content/home";
+import { DEMO_FORM, FORM_NOTICE, LOCATION_OPTIONS, PRACTICE_TYPES } from "@/content/site/forms";
 import { Button } from "@/components/ui/Button";
 import styles from "./DemoForm.module.css";
 
@@ -26,6 +26,7 @@ const CONTROLS: Record<string, { name: string; type?: string; autoComplete?: str
   "Number of locations": { name: "locations", kind: "select", options: LOCATION_OPTIONS },
   "Primary PMS or EHR": { name: "pmsEhr", full: true },
   "Biggest revenue-cycle challenge": { name: "challenge", kind: "textarea", full: true },
+  "What would you like to discuss?": { name: "challenge", kind: "textarea", full: true },
 };
 
 /**
@@ -33,7 +34,7 @@ const CONTROLS: Record<string, { name: string; type?: string; autoComplete?: str
  * submits and never shows a success state; the notice explains why. When an
  * approved endpoint exists, enable submit and confirm only on backend acceptance.
  */
-export function DemoForm({ title, intro, fields = DEMO.fields ?? [], submit = DEMO.submit ?? "Schedule My Demo", privacy = DEMO.privacy }: Props) {
+export function DemoForm({ title, intro, fields = DEMO_FORM.fields, submit = DEMO_FORM.submit, privacy = DEMO_FORM.privacy }: Props) {
   const id = useId();
   const onSubmit = (e: FormEvent<HTMLFormElement>) => e.preventDefault();
 

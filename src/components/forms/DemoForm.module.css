@@ -3,10 +3,14 @@
   display: grid;
   gap: var(--space-5);
   padding: clamp(1.5rem, 1rem + 2vw, 2.75rem);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-xl);
-  background: var(--white);
-  box-shadow: var(--shadow-2);
+  border: 1px solid rgba(143, 240, 226, 0.3);
+  border-radius: 28px;
+  background:
+    radial-gradient(80% 50% at 100% 0%, rgba(17, 185, 168, 0.16), transparent 70%),
+    linear-gradient(170deg, rgba(14, 30, 29, 0.94), rgba(4, 10, 10, 0.94));
+  box-shadow: 0 0 60px -20px rgba(63, 214, 195, 0.45), 0 40px 80px -40px rgba(0, 0, 0, 0.95);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
 }
 
 .head {
@@ -17,11 +21,12 @@
 .title {
   font-size: var(--fs-h3);
   letter-spacing: -0.03em;
-  color: var(--navy-700);
+  font-weight: 500;
+  color: var(--white);
 }
 
 .sub {
-  color: var(--ink-2);
+  color: var(--text-2);
 }
 
 .grid {
@@ -37,8 +42,8 @@
 .field label {
   font-family: var(--font-display);
   font-size: 0.875rem;
-  font-weight: 650;
-  color: var(--navy-700);
+  font-weight: 500;
+  color: var(--text);
 }
 
 .field input,
@@ -48,27 +53,33 @@
   padding: 0 0.875rem;
   border: 1px solid var(--line-strong);
   border-radius: var(--radius);
-  background: var(--paper);
+  background: rgba(255, 255, 255, 0.03);
   font-size: 1rem;
-  color: var(--ink);
+  color: var(--text);
   transition: border-color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
 }
 
-.field input::placeholder {
-  color: #7a8b9a;
+.field input::placeholder,
+.field textarea::placeholder {
+  color: var(--text-3);
+}
+
+.field select option {
+  background: var(--bg-3);
+  color: var(--text);
 }
 
 .field input:hover,
 .field select:hover {
-  border-color: var(--navy-300);
+  border-color: var(--stroke-3);
 }
 
 .field input:focus,
 .field select:focus {
   outline: none;
-  border-color: var(--teal-600);
-  background: var(--white);
-  box-shadow: 0 0 0 3px rgba(2, 133, 121, 0.18);
+  border-color: var(--mint);
+  background: rgba(143, 240, 226, 0.05);
+  box-shadow: 0 0 0 3px rgba(63, 214, 195, 0.18);
 }
 
 .field[data-invalid] input {
@@ -92,8 +103,8 @@
   width: 8px;
   height: 8px;
   margin-top: -6px;
-  border-right: 1.5px solid var(--navy-500);
-  border-bottom: 1.5px solid var(--navy-500);
+  border-right: 1.5px solid var(--text-2);
+  border-bottom: 1.5px solid var(--text-2);
   transform: rotate(45deg);
   pointer-events: none;
 }
@@ -103,11 +114,16 @@
   padding-right: 2.5rem;
 }
 
+/* Full width: the disc stays left and the label centres in the pill */
 .submit {
   width: 100%;
+  padding-right: calc(var(--btn-disc) + var(--btn-pad) * 2);
   white-space: normal;
   text-align: center;
-  padding-block: 0.875rem;
+}
+
+.submit :global(.btn-label) {
+  flex: 1;
 }
 
 .privacy {
@@ -182,27 +198,27 @@
   padding: 0.75rem 0.875rem;
   border: 1px solid var(--line-strong);
   border-radius: var(--radius);
-  background: var(--paper);
+  background: rgba(255, 255, 255, 0.03);
   font: inherit;
   font-size: 1rem;
-  color: var(--ink);
+  color: var(--text);
   resize: vertical;
   transition: border-color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
 }
 
 .field textarea:hover {
-  border-color: var(--navy-300);
+  border-color: var(--stroke-3);
 }
 
 .field textarea:focus {
   outline: none;
-  border-color: var(--teal-600);
-  background: var(--white);
-  box-shadow: 0 0 0 3px rgba(2, 133, 121, 0.18);
+  border-color: var(--mint);
+  background: rgba(143, 240, 226, 0.05);
+  box-shadow: 0 0 0 3px rgba(63, 214, 195, 0.18);
 }
 
 .field select:invalid {
-  color: #6b7c8c;
+  color: var(--text-3);
 }
 
 .optional {
@@ -221,12 +237,12 @@
   align-items: flex-start;
   gap: 0.625rem;
   padding: 0.875rem 1rem;
-  border: 1px solid #e8d7a8;
+  border: 1px solid rgba(242, 180, 90, 0.35);
   border-radius: var(--radius);
-  background: #fdf8ea;
+  background: rgba(242, 180, 90, 0.08);
   font-size: 0.9375rem;
   line-height: 1.5;
-  color: #5c4a14;
+  color: #f6d9a8;
 }
 
 .notice svg {

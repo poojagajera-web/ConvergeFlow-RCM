@@ -1,0 +1,327 @@
+.section {
+  position: relative;
+  padding-block: var(--section-y);
+  overflow: hidden;
+}
+
+.pin {
+  display: grid;
+  align-content: center;
+  gap: clamp(1.5rem, 1rem + 2vw, 3rem);
+}
+
+.head {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-4);
+  text-align: center;
+}
+
+.heading {
+  max-width: 20ch;
+  font-size: clamp(2rem, 1.2rem + 2.8vw, 3.75rem);
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -0.045em;
+  color: var(--white);
+}
+
+.body {
+  max-width: 40rem;
+  font-size: var(--fs-small);
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+/* ---------- Scene (mobile first: vertical timeline) ---------- */
+.scene {
+  position: relative;
+}
+
+.horizonGlow,
+.floor,
+.path {
+  display: none;
+}
+
+.cols {
+  position: relative;
+  display: grid;
+  gap: 1rem;
+}
+
+.col {
+  position: relative;
+  padding-left: 2.25rem;
+}
+
+/* Mobile: the pillar is a glowing line down the left */
+.pillar {
+  position: absolute;
+  left: 0.5rem;
+  top: 0;
+  bottom: -1rem;
+  width: 2px;
+}
+
+.col:last-child .pillar {
+  bottom: 50%;
+}
+
+.beam {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, var(--mint), rgba(17, 185, 168, 0.15));
+  box-shadow: 0 0 12px rgba(143, 240, 226, 0.5);
+}
+
+.dot {
+  position: absolute;
+  top: 1.5rem;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  margin-left: -7px;
+  border-radius: 50%;
+  background: #eafffb;
+  box-shadow: 0 0 0 4px rgba(143, 240, 226, 0.2), 0 0 20px 4px rgba(63, 214, 195, 0.7);
+}
+
+.base {
+  display: none;
+}
+
+.card {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 0.75rem;
+  row-gap: 0.25rem;
+  padding: 1rem 1.125rem;
+  border: 1px solid rgba(143, 240, 226, 0.3);
+  border-radius: 18px;
+  background: linear-gradient(170deg, rgba(16, 34, 33, 0.92), rgba(4, 10, 10, 0.94));
+  box-shadow: 0 0 40px -16px rgba(63, 214, 195, 0.55), 0 24px 50px -24px rgba(0, 0, 0, 0.9);
+}
+
+.cardIcon {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--stroke-glow);
+  border-radius: 12px;
+  background: linear-gradient(150deg, rgba(17, 185, 168, 0.4), rgba(17, 185, 168, 0.05));
+  color: var(--mint);
+}
+
+.cardIcon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.cardNum {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+}
+
+.cardTitle {
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: 500;
+  color: var(--white);
+}
+
+.cardBody {
+  grid-column: 1 / -1;
+  margin-top: 0.375rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--text-2);
+}
+
+/* ---------- Desktop: pillars on a 3D floor ---------- */
+@media (min-width: 992px) {
+  .scene {
+    height: clamp(30rem, 22rem + 14vw, 38rem);
+    perspective: 1000px;
+  }
+
+  .horizonGlow {
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    top: 46%;
+    display: block;
+    height: 30%;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(17, 185, 168, 0.3), transparent);
+    filter: blur(30px);
+  }
+
+  /* Full-bleed floor: wider than the viewport because perspective narrows its far edge */
+  .floor {
+    position: absolute;
+    /* centred with a margin, not `translate` (the minifier drops it beside `transform`) */
+    left: 50%;
+    width: 170vw;
+    margin-left: -85vw;
+    bottom: 0;
+    display: block;
+    height: 62%;
+    overflow: hidden;
+    background-image:
+      linear-gradient(to right, rgba(143, 240, 226, 0.28) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(143, 240, 226, 0.28) 1px, transparent 1px);
+    background-size: 64px 64px;
+    background-position: center top;
+    transform: rotateX(72deg);
+    transform-origin: 50% 100%;
+    mask-image: linear-gradient(to top, transparent 0%, #000 12%, #000 30%, transparent 95%);
+    -webkit-mask-image: linear-gradient(to top, transparent 0%, #000 12%, #000 30%, transparent 95%);
+  }
+
+  /* A light band sweeping across the floor */
+  .scan {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 30%;
+    background: linear-gradient(90deg, transparent, rgba(143, 240, 226, 0.35), transparent);
+    animation: scan 6s var(--ease-in-out) infinite;
+  }
+
+  @keyframes scan {
+    from {
+      left: -30%;
+    }
+
+    to {
+      left: 100%;
+    }
+  }
+
+  .path {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .pathGlow,
+  .pathLine {
+    fill: none;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .pathGlow {
+    stroke: rgba(143, 240, 226, 0.15);
+    stroke-width: 8;
+    filter: blur(4px);
+  }
+
+  .pathLine {
+    stroke: var(--mint);
+    stroke-width: 1.5;
+    filter: drop-shadow(0 0 6px var(--mint));
+  }
+
+  .cols {
+    position: absolute;
+    inset: 0;
+    display: block;
+  }
+
+  .col {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(var(--x) - 12.5%);
+    width: 25%;
+    padding: 0;
+  }
+
+  .pillar {
+    position: absolute;
+    left: 50%;
+    top: auto;
+    bottom: 12%;
+    width: 2px;
+    height: var(--h);
+    margin-left: -1px;
+    transform-origin: 50% 100%;
+  }
+
+  .col:last-child .pillar {
+    bottom: 12%;
+  }
+
+  /* Light pillar: a bright core with a wide soft glow */
+  .beam {
+    background: linear-gradient(to top, rgba(143, 240, 226, 0.1), var(--mint));
+    box-shadow: 0 0 14px rgba(143, 240, 226, 0.6);
+  }
+
+  .beam::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 60px;
+    margin-left: -30px;
+    background: linear-gradient(to top, rgba(63, 214, 195, 0), rgba(63, 214, 195, 0.25));
+    filter: blur(14px);
+  }
+
+  .dot {
+    top: -8px;
+    width: 16px;
+    height: 16px;
+    margin-left: -8px;
+    animation: beat 2.4s var(--ease-in-out) infinite;
+  }
+
+  @keyframes beat {
+    50% {
+      box-shadow: 0 0 0 8px rgba(143, 240, 226, 0.12), 0 0 30px 8px rgba(63, 214, 195, 0.8);
+    }
+  }
+
+  .base {
+    position: absolute;
+    bottom: -14px;
+    left: 50%;
+    display: block;
+    width: 120px;
+    height: 28px;
+    margin-left: -60px;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(63, 214, 195, 0.55), transparent);
+  }
+
+  .card {
+    position: absolute;
+    left: 50%;
+    bottom: calc(12% + var(--h) + 1.5rem);
+    width: min(15.5rem, 94%);
+    translate: -50% 0;
+  }
+
+  /* While pinned the stage builds up; without motion everything is shown. */
+  .section[data-live] {
+    padding-block: 0;
+  }
+
+  .section[data-live] .pin {
+    min-height: 100vh;
+    padding-top: calc(var(--header-h) + 1rem);
+    padding-bottom: 1rem;
+  }
+}
