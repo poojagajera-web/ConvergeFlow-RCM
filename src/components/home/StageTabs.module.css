@@ -62,7 +62,7 @@
 
 .count {
   font-family: var(--font-mono);
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   color: var(--text-3);
 }
 
@@ -208,7 +208,7 @@ a.card:hover .media::before {
   border-radius: 999px;
   background: rgba(3, 8, 7, 0.62);
   font-family: var(--font-display);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   font-weight: 500;
   color: var(--white);
 }
@@ -219,7 +219,7 @@ a.card:hover .media::before {
   border-radius: 999px;
   background: rgba(3, 8, 7, 0.62);
   font-family: var(--font-display);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   font-weight: 600;
   color: var(--mint);
 }

@@ -113,7 +113,7 @@
 
 .cardIndex {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   color: var(--text-3);
 }
 
@@ -176,7 +176,7 @@
   border-radius: 50%;
   background: var(--bg);
   font-family: var(--font-mono);
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   color: var(--mint);
   box-shadow: 0 0 0 6px var(--bg), 0 0 24px -4px rgba(63, 214, 195, 0.5);
   transition: background var(--dur) var(--ease-out), color var(--dur) var(--ease-out);
@@ -309,7 +309,7 @@
 
 .handoffLabel {
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
+  font-size: 0.875rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text-3);
@@ -553,7 +553,7 @@
 
 .table thead th {
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
+  font-size: 0.875rem;
   font-weight: 400;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -804,7 +804,7 @@
   padding-bottom: var(--space-3);
   border-bottom: 1px solid var(--stroke-2);
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
+  font-size: 0.875rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--mint);
@@ -880,7 +880,7 @@
   border-radius: 999px;
   background: rgba(17, 185, 168, 0.16);
   font-family: var(--font-display);
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -925,7 +925,7 @@
 
 .journeyKicker span {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   color: var(--mint);
 }
 
@@ -967,7 +967,7 @@ a.journeyLink:hover {
   border: 1px solid var(--stroke-glow);
   border-radius: 50%;
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   color: var(--mint);
   transition: background var(--dur) var(--ease-out), color var(--dur) var(--ease-out);
 }
@@ -1068,7 +1068,7 @@ a.journeyLink:hover .journeyArrow {
 
 .stageNum {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   color: var(--mint);
 }
 
@@ -1179,7 +1179,7 @@ a.journeyLink:hover .journeyArrow {
 
 .coverKicker {
   font-family: var(--font-mono);
-  font-size: 0.5625rem;
+  font-size: 0.875rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--mint);
@@ -1221,7 +1221,7 @@ a.journeyLink:hover .journeyArrow {
 
 .downloadMeta {
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
+  font-size: 0.875rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text-3);
@@ -1281,7 +1281,7 @@ a.journeyLink:hover .journeyArrow {
 
 .relatedKicker {
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
+  font-size: 0.875rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--mint);

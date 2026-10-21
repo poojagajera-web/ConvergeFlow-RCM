@@ -252,7 +252,7 @@
 }
 
 .kicker {
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   color: var(--text-3);
 }
 
@@ -293,7 +293,7 @@
 
 .nextHead {
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
+  font-size: 0.875rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text-3);
@@ -345,7 +345,7 @@
   border-radius: 50%;
   background: #061413;
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   color: var(--mint);
 }
 

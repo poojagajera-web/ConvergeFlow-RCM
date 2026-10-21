@@ -59,7 +59,7 @@
 
 .count {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text-3);
@@ -160,7 +160,7 @@
 
 .index {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   letter-spacing: 0.08em;
   color: var(--text-3);
   transition: color var(--dur) var(--ease-out);

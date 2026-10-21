@@ -28,12 +28,9 @@
   border-radius: 0.35em;
 }
 
+/* On phones the hero text spans the full width, so the drifting labels would sit on top of it */
 @media (max-width: 767.98px) {
-  .token:nth-child(n + 5) {
+  .layer {
     display: none;
-  }
-
-  .token {
-    font-size: calc(0.75rem + var(--d) * 0.3rem);
   }
 }

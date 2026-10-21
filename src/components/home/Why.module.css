@@ -243,7 +243,7 @@
 .num {
   padding-top: 0.25rem;
   font-family: var(--font-mono);
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   color: var(--text-3);
   transition: color 400ms var(--ease-out);
 }

@@ -20,7 +20,7 @@ import styles from "./SiteHero.module.css";
 
 /** Decorative shorthand drifting behind inner-page heroes. */
 const TOKENS: Token[] = [
-  { text: "837D", x: 4, y: 18, depth: 0.7, rotate: -6, boxed: true },
+  { text: "837D", x: 33, y: 9, depth: 0.7, rotate: -6, boxed: true },
   { text: "ERA", x: 46, y: 12, depth: 0.35 },
   { text: "CDT", x: 3, y: 78, depth: 0.5 },
   { text: "COB", x: 52, y: 86, depth: 0.6, rotate: 8, boxed: true },

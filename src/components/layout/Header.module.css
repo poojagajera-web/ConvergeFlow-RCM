@@ -231,7 +231,7 @@
   padding: 0 0.75rem 0.625rem;
   border-bottom: 1px solid var(--stroke);
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
+  font-size: 0.875rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--text-3);
@@ -275,7 +275,7 @@
 
 .megaIndex {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   color: var(--mint);
 }
 
@@ -291,7 +291,7 @@
   display: -webkit-box;
   margin-top: 0.125rem;
   overflow: hidden;
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   line-height: 1.45;
   color: var(--text-3);
   -webkit-box-orient: vertical;
