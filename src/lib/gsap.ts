@@ -8,6 +8,9 @@ import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger, SplitText, ScrambleTextPlugin, TextPlugin, DrawSVGPlugin);
   gsap.defaults({ ease: "expo.out", duration: 1.1 });
+  // Shared intros animate optional parts (tabs, photos, proof chips) that only some pages have;
+  // an absent part is expected, so GSAP shouldn't warn about it.
+  gsap.config({ nullTargetWarn: false });
 }
 
 /** Breakpoint conditions shared by every animated component. */
