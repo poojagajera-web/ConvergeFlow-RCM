@@ -97,3 +97,8 @@ export const SERVICE_LINKS: NavLink[] = live([{ label: "All services", href: "/s
 export const AUDIENCE_LINKS: NavLink[] = MAIN_NAV[1].columns[0].links;
 
 export const DELIVERY_LINKS: NavLink[] = MAIN_NAV[2].columns[0].links;
+
+/** The menu group (other than Services) whose menu lists this route: Who We Help or How It Works. */
+export function navGroupFor(route: string): NavGroup | null {
+  return MAIN_NAV.find((g) => g.label !== "Services" && g.columns.some((c) => c.links.some((l) => l.href === route))) ?? null;
+}

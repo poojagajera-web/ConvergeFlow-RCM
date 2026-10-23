@@ -27,7 +27,7 @@ export const AUDIENCE_PAGES: SitePage[] = [
       actions: [DEMO, { label: "Download the dental brochure", href: "/resources/" }],
       visual: {
         kind: "photo",
-        photo: { src: "/assets/photos/dentist-patient.jpg", alt: "Dentist explaining treatment to a patient in the chair", caption: "From the chair…" },
+        photo: { src: "/assets/photos/v2/audience-dental.jpg", alt: "Dentist explaining a treatment with a tooth model to a patient in the chair", caption: "From the chair…" },
         note: "…to a closed account",
         chips: ["Benefits verified before treatment begins", "CDT-accurate claims matched to the record", "Balances resolved with a documented owner"],
       },
@@ -41,6 +41,7 @@ export const AUDIENCE_PAGES: SitePage[] = [
       },
       {
         kind: "stages",
+        layout: "cycle",
         eyebrow: "The dental revenue cycle",
         title: "Four stages,",
         accent: "one accountable team.",
@@ -150,7 +151,7 @@ export const AUDIENCE_PAGES: SitePage[] = [
       actions: [DEMO, { label: "Dental billing scope", href: "/industries/dental/" }],
       visual: {
         kind: "photo",
-        photo: { src: "/assets/photos/billing-review.jpg", alt: "Two team members reviewing billing documents together", caption: "Shared review" },
+        photo: { src: "/assets/photos/v2/audience-dso.jpg", alt: "Operations team of a dental group reviewing reports together at a long table", caption: "Shared review" },
         note: "Owners agreed up front",
       },
     },
@@ -239,13 +240,14 @@ export const AUDIENCE_PAGES: SitePage[] = [
       actions: [DEMO, { label: "Explore services", href: "/services/" }],
       visual: {
         kind: "photo",
-        photo: { src: "/assets/photos/specialist-headset.jpg", alt: "Revenue cycle specialist working with a headset at her desk", caption: "Specialists own the work" },
+        photo: { src: "/assets/photos/v2/audience-medical.jpg", alt: "Medical billing specialist with a headset at her desk as a physician walks past", caption: "Specialists own the work" },
         note: "People behind the automation",
       },
     },
     sections: [
       {
         kind: "stages",
+        layout: "flow",
         eyebrow: "Supported medical service scope",
         title: "Three stages,",
         accent: "worked end to end.",

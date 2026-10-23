@@ -7,11 +7,45 @@ import { SmartLink } from "@/components/ui/SmartLink";
 import { ButtonLink } from "@/components/ui/Button";
 import { getLenis } from "@/components/motion/SmoothScroll";
 import { DEMO_LINK, LOGIN_LABEL, LOGIN_URL, MAIN_NAV, type NavGroup, type NavLink } from "@/content/navigation";
+import { Icon } from "@/components/site/Icon";
+import { STAGE_ICONS } from "@/components/services/stageMeta";
+import { STAGES } from "@/content/site/services";
+import type { IconName } from "@/content/site/types";
 import styles from "./Header.module.css";
 
 const hasMenu = (g: NavGroup) => g.columns.some((c) => c.links.length > 0);
 const DROPDOWNS = MAIN_NAV.filter(hasMenu);
+
+/** An icon for each menu link: the stage icons for services, then the audiences and the delivery pages. */
+const LINK_ICONS: Record<string, IconName> = {
+  ...Object.fromEntries(STAGES.map((st, i) => [st.href, STAGE_ICONS[i]])),
+  "/industries/dental/": "tooth",
+  "/industries/dso/": "building",
+  "/industries/medical/": "steth",
+  "/how-it-works/": "route",
+  "/technology/": "link",
+  "/technology/opendental/": "layers",
+  "/technology/security/": "lock",
+};
 type MenuKey = string;
+
+/** An up-right arrow, for the links in the mega menu. */
+function ArrowUpRight() {
+  return (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M4.5 11.5 11.5 4.5M6 4.5h5.5V10" />
+    </svg>
+  );
+}
+
+/** A right arrow, for the overview and footer links. */
+function ArrowRight() {
+  return (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M3 8h9.5M8.5 4l4 4-4 4" />
+    </svg>
+  );
+}
 
 function Chevron() {
   return (
@@ -159,6 +193,7 @@ export function Header() {
                   <button
                     type="button"
                     className={styles.navItem}
+                    data-current={inGroup(group, pathname) || undefined}
                     aria-expanded={open === group.label}
                     aria-controls={`${id}-${slug(group.label)}`}
                     data-menu-trigger={group.label}
@@ -171,7 +206,7 @@ export function Header() {
                 </li>
               ) : group.href ? (
                 <li key={group.label}>
-                  <SmartLink href={group.href} className={styles.navItem} onClick={close}>
+                  <SmartLink href={group.href} className={styles.navItem} data-current={inGroup(group, pathname) || undefined} aria-current={pathname === group.href ? "page" : undefined} onClick={close}>
                     {group.label}
                   </SmartLink>
                 </li>
@@ -181,8 +216,10 @@ export function Header() {
         </nav>
 
         <div className={styles.actions}>
-          <a href={LOGIN_URL} className={styles.login}>
+          {/* opens in a new tab, so the site stays open behind it */}
+          <a href={LOGIN_URL} className={styles.login} target="_blank" rel="noopener">
             {LOGIN_LABEL}
+            <span className="visually-hidden"> (opens in a new tab)</span>
           </a>
           <ButtonLink href={DEMO_LINK.href} size="sm" className={styles.cta} onClick={close}>
             {DEMO_LINK.label}
@@ -217,38 +254,68 @@ export function Header() {
             onMouseLeave={closeWithIntent}
           >
             <div className={`container ${styles.megaInner}`}>
-              <div className={styles.megaIntro}>
-                <p className="eyebrow">{group.label}</p>
-                {intro && <p className={styles.megaTitle}>{intro.title}</p>}
-                {intro && <p className={styles.megaBody}>{intro.body}</p>}
-                {group.href && (
-                  <SmartLink href={group.href} className="link-arrow" onClick={close}>
-                    {intro?.overview ?? `All ${group.label.toLowerCase()}`} <span aria-hidden="true">→</span>
+              <div className={styles.megaPanel}>
+                <div className={styles.megaIntro}>
+                  <span className={styles.megaGlow} aria-hidden="true" />
+                  <p className={styles.megaKicker}>{group.label}</p>
+                  {intro && <p className={styles.megaTitle}>{intro.title}</p>}
+                  {intro && <p className={styles.megaBody}>{intro.body}</p>}
+                  <p className={styles.megaCount} aria-hidden="true">
+                    <b>{String(columns.reduce((t, c) => t + c.links.length, 0)).padStart(2, "0")}</b>
+                    {group.label === "Services" ? "stages" : "pages"}
+                  </p>
+                  {/* the overview link, unless a link below already goes there (How It Works) */}
+                  {group.href && !columns.some((c) => c.links.some((l) => l.href === group.href)) && (
+                    <SmartLink href={group.href} className={styles.megaOverview} onClick={close}>
+                      {intro?.overview ?? `All ${group.label.toLowerCase()}`}
+                      <span className={styles.megaArrow} aria-hidden="true">
+                        <ArrowRight />
+                      </span>
+                    </SmartLink>
+                  )}
+                </div>
+                <div className={styles.megaCols} data-cols={columns.length}>
+                  {columns.map((col, ci) => (
+                    <div key={col.label} className={styles.megaCol}>
+                      <p className={styles.megaColLabel}>
+                        {columns.length > 1 && <span>{String(ci + 1).padStart(2, "0")}</span>}
+                        {col.label}
+                      </p>
+                      <ul className={styles.megaList}>
+                        {col.links.map((link) => {
+                          n += 1;
+                          return (
+                            <li key={link.href} style={{ "--i": n } as React.CSSProperties}>
+                              <SmartLink href={link.href} className={styles.megaLink} aria-current={link.href === pathname ? "page" : undefined} onClick={close}>
+                                <span className={styles.megaIcon} aria-hidden="true">
+                                  <Icon name={LINK_ICONS[link.href] ?? "check"} />
+                                </span>
+                                <span className={styles.megaText}>
+                                  <span className={styles.megaLabel}>{link.label}</span>
+                                  {link.note && <span className={styles.megaNote}>{link.note}</span>}
+                                </span>
+                                {/* two arrows: on hover the first flies out up-right and the second slides in */}
+                                <span className={styles.megaGo} aria-hidden="true">
+                                  <ArrowUpRight />
+                                  <ArrowUpRight />
+                                </span>
+                              </SmartLink>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+                <div className={styles.megaFoot}>
+                  <p>Not sure where to start? We&rsquo;ll walk through your workflow.</p>
+                  <SmartLink href={DEMO_LINK.href} className={styles.megaFootLink} onClick={close}>
+                    {DEMO_LINK.label}
+                    <span className={styles.megaArrow} aria-hidden="true">
+                      <ArrowRight />
+                    </span>
                   </SmartLink>
-                )}
-              </div>
-              <div className={styles.megaCols} data-cols={columns.length}>
-                {columns.map((col) => (
-                  <div key={col.label} className={styles.megaCol}>
-                    <p className={styles.megaColLabel}>{col.label}</p>
-                    <ul className={styles.megaList}>
-                      {col.links.map((link) => {
-                        n += 1;
-                        return (
-                          <li key={link.href} style={{ "--i": n } as React.CSSProperties}>
-                            <SmartLink href={link.href} className={styles.megaLink} onClick={close}>
-                              <span className={`${styles.megaIndex} num`}>{String(n).padStart(2, "0")}</span>
-                              <span>
-                                <span className={styles.megaLabel}>{link.label}</span>
-                                {link.note && <span className={styles.megaNote}>{link.note}</span>}
-                              </span>
-                            </SmartLink>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </div>
-                ))}
+                </div>
               </div>
             </div>
           </div>
@@ -259,15 +326,23 @@ export function Header() {
         <div className={`container ${styles.sheetInner}`}>
           {MAIN_NAV.map((group) =>
             hasMenu(group) ? (
-              <MobileGroup key={group.label} group={group} onNavigate={() => setMobileOpen(false)} />
+              <MobileGroup key={group.label} group={group} pathname={pathname} onNavigate={() => setMobileOpen(false)} />
             ) : group.href ? (
-              <SmartLink key={group.label} href={group.href} className={styles.sheetLink} onClick={() => setMobileOpen(false)}>
+              <SmartLink
+                key={group.label}
+                href={group.href}
+                className={styles.sheetLink}
+                data-current={inGroup(group, pathname) || undefined}
+                aria-current={pathname === group.href ? "page" : undefined}
+                onClick={() => setMobileOpen(false)}
+              >
                 {group.label}
               </SmartLink>
             ) : null,
           )}
-          <a href={LOGIN_URL} className={styles.sheetLink}>
+          <a href={LOGIN_URL} className={styles.sheetLink} target="_blank" rel="noopener">
             {LOGIN_LABEL}
+            <span className="visually-hidden"> (opens in a new tab)</span>
           </a>
           <div className={`${styles.sheetCta} on-dark`}>
             <ButtonLink href={DEMO_LINK.href} onClick={() => setMobileOpen(false)}>
@@ -280,8 +355,10 @@ export function Header() {
   );
 }
 
-function MobileGroup({ group, onNavigate }: { group: NavGroup; onNavigate: () => void }) {
-  const [expanded, setExpanded] = useState(false);
+function MobileGroup({ group, pathname, onNavigate }: { group: NavGroup; pathname: string; onNavigate: () => void }) {
+  const current = inGroup(group, pathname);
+  // the current page's group starts open
+  const [expanded, setExpanded] = useState(current);
   const id = useId();
   const links: NavLink[] = [
     ...(group.href ? [{ label: group.intro?.overview ?? `All ${group.label.toLowerCase()}`, href: group.href }] : []),
@@ -289,14 +366,21 @@ function MobileGroup({ group, onNavigate }: { group: NavGroup; onNavigate: () =>
   ];
   return (
     <div className={styles.group}>
-      <button type="button" className={styles.sheetLink} aria-expanded={expanded} aria-controls={id} onClick={() => setExpanded((v) => !v)}>
+      <button
+        type="button"
+        className={styles.sheetLink}
+        data-current={current || undefined}
+        aria-expanded={expanded}
+        aria-controls={id}
+        onClick={() => setExpanded((v) => !v)}
+      >
         {group.label}
         <span className={styles.plus} aria-hidden="true" />
       </button>
       <ul id={id} className={styles.groupList} hidden={!expanded}>
         {links.map((link) => (
           <li key={link.href}>
-            <SmartLink href={link.href} onClick={onNavigate}>
+            <SmartLink href={link.href} aria-current={link.href === pathname ? "page" : undefined} onClick={onNavigate}>
               {link.label}
             </SmartLink>
           </li>
@@ -304,6 +388,12 @@ function MobileGroup({ group, onNavigate }: { group: NavGroup; onNavigate: () =>
       </ul>
     </div>
   );
+}
+
+/** True when the current page is the group's own page or one of the pages in its menu. */
+function inGroup(group: NavGroup, pathname: string) {
+  if (group.href && (pathname === group.href || pathname.startsWith(group.href))) return true;
+  return group.columns.some((c) => c.links.some((l) => l.href === pathname));
 }
 
 function slug(label: string) {

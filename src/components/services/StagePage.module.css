@@ -1,0 +1,1182 @@
+/* =================================================================== hero */
+.hero {
+  position: relative;
+  display: grid;
+  align-content: center;
+  padding: calc(var(--header-h) + env(safe-area-inset-top, 0px) + clamp(1.5rem, 1rem + 2.5vw, 3rem)) 0 clamp(5rem, 3rem + 6vw, 9rem);
+  overflow: clip;
+  isolation: isolate;
+  background: var(--bg);
+}
+
+@media (min-width: 1100px) {
+  .hero {
+    min-height: max(92svh, 44rem);
+  }
+}
+
+.heroBg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+}
+
+.heroAurora {
+  position: absolute;
+  inset: 0;
+  isolation: isolate;
+}
+
+.heroGrid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 84px 84px;
+  mask-image: radial-gradient(70% 60% at 30% 35%, #000, transparent 80%);
+  -webkit-mask-image: radial-gradient(70% 60% at 30% 35%, #000, transparent 80%);
+}
+
+.heroLayout {
+  display: grid;
+  gap: clamp(3rem, 2rem + 3vw, 4.5rem);
+  align-items: center;
+}
+
+@media (min-width: 1100px) {
+  .heroLayout {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    column-gap: clamp(2.5rem, 1rem + 4vw, 5.5rem);
+  }
+}
+
+.heroCopy {
+  position: relative;
+  display: grid;
+  justify-items: start;
+  gap: var(--space-5);
+  isolation: isolate;
+}
+
+/* ---------- The stage number, outlined, behind the copy ---------- */
+@property --sweep {
+  syntax: "<percentage>";
+  inherits: true;
+  initial-value: -40%;
+}
+
+.bigNum {
+  position: absolute;
+  top: clamp(-2.5rem, -1rem - 1.5vw, -1rem);
+  left: clamp(-1rem, -1vw, -0.25rem);
+  z-index: -1;
+  display: flex;
+  font-family: var(--font-display);
+  font-size: clamp(7rem, 4rem + 9vw, 13.5rem);
+  font-weight: 600;
+  line-height: 0.8;
+  letter-spacing: -0.07em;
+  pointer-events: none;
+  user-select: none;
+  animation: sweep 7s var(--ease-in-out) 3s infinite;
+}
+
+.digit {
+  position: relative;
+  display: block;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(143, 240, 226, 0.22);
+  background: linear-gradient(180deg, rgba(143, 240, 226, 0.13) 0%, rgba(143, 240, 226, 0.02) 70%, transparent);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* A band of light running through the outline */
+.digit::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(200, 255, 247, 0.9);
+  -webkit-mask-image: linear-gradient(100deg, transparent calc(var(--sweep) - 12%), #000 var(--sweep), transparent calc(var(--sweep) + 12%));
+  mask-image: linear-gradient(100deg, transparent calc(var(--sweep) - 12%), #000 var(--sweep), transparent calc(var(--sweep) + 12%));
+  filter: drop-shadow(0 0 8px rgba(143, 240, 226, 0.7));
+}
+
+@keyframes sweep {
+  0% {
+    --sweep: -40%;
+  }
+
+  45%,
+  100% {
+    --sweep: 140%;
+  }
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.625rem;
+  margin-top: clamp(3rem, 1.75rem + 3.5vw, 5.5rem);
+}
+
+.stageChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3125rem 0.875rem 0.3125rem 0.3125rem;
+  border: 1px solid rgba(143, 240, 226, 0.3);
+  border-radius: 999px;
+  background: rgba(9, 24, 22, 0.85);
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--mint);
+}
+
+.stageChip i {
+  font-style: normal;
+  color: var(--text-3);
+}
+
+.stageChipIcon {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--mint);
+  color: #03100e;
+}
+
+.stageChipIcon svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Headline: two lines painted with a gradient that a band of light sweeps across */
+.heroTitle {
+  max-width: 15ch;
+  font-size: clamp(2.5rem, 1rem + 4.4vw, 5.25rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.055em;
+  filter: drop-shadow(0 0 30px rgba(143, 240, 226, 0.22));
+}
+
+.line {
+  --c: #ffffff;
+  --s: #8ff0e2;
+  display: block;
+  padding-bottom: 0.2em;
+  margin-bottom: -0.2em;
+  background-image: linear-gradient(100deg, var(--c) 0 40%, var(--s) 50%, var(--c) 60% 100%);
+  background-size: 280% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-wrap: balance;
+  animation: shine 9s var(--ease-in-out) 3.2s infinite;
+}
+
+.lineAccent {
+  --c: #8ff0e2;
+  --s: #ffffff;
+  animation-delay: 3.5s;
+}
+
+@keyframes shine {
+  0% {
+    background-position: 100% 0;
+  }
+
+  22%,
+  100% {
+    background-position: 0% 0;
+  }
+}
+
+.heroLead {
+  max-width: 36rem;
+  font-size: var(--fs-lede);
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+@media (max-width: 479.98px) {
+  .heroActions,
+  .heroActions > * {
+    width: 100%;
+  }
+}
+
+/* ---------- Photo, seal and document ---------- */
+.heroVisual {
+  perspective: 1400px;
+}
+
+.stack {
+  position: relative;
+  width: min(100%, 34rem);
+  margin-inline: auto;
+  padding: 3.5rem 0 clamp(5rem, 3rem + 5vw, 7.5rem);
+  transform-style: preserve-3d;
+}
+
+/* soft light behind the group */
+.halo {
+  position: absolute;
+  top: 10%;
+  right: -10%;
+  width: 90%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(63, 214, 195, 0.28), rgba(40, 120, 200, 0.08) 60%, transparent);
+  pointer-events: none;
+}
+
+.photoCard {
+  position: relative;
+  width: 80%;
+  margin-left: auto;
+  aspect-ratio: 4 / 4.9;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 32px;
+  box-shadow:
+    0 0 0 8px rgba(143, 240, 226, 0.05),
+    0 50px 90px -30px rgba(0, 0, 0, 0.9),
+    0 0 80px -30px rgba(63, 214, 195, 0.5);
+  isolation: isolate;
+}
+
+.photoImg {
+  position: absolute;
+  inset: 0;
+}
+
+.photoImg img {
+  object-fit: cover;
+}
+
+.photoShade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(to top, rgba(3, 8, 7, 0.8) 0%, rgba(3, 8, 7, 0.1) 35%, transparent 55%),
+    linear-gradient(to bottom, rgba(3, 8, 7, 0.35), transparent 25%);
+}
+
+.photoTag {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: calc(100% - 2rem);
+  padding: 0.375rem 0.875rem 0.375rem 0.375rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  background: rgba(3, 8, 7, 0.75);
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--white);
+}
+
+.photoTag b {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--mint);
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #03100e;
+}
+
+/* the eight stages along the foot of the photo (right of the docked document) */
+.photoBar {
+  position: absolute;
+  left: 40%;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 0.3125rem;
+}
+
+.photoBar i {
+  height: 4px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.photoBar i[data-done] {
+  background: rgba(143, 240, 226, 0.6);
+}
+
+.photoBar i[data-on] {
+  background: #ffffff;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.85);
+}
+
+/* ---------- The seal ---------- */
+.seal {
+  position: absolute;
+  top: 0.75rem;
+  left: 6%;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 136px;
+  height: 136px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(9, 22, 21, 0.96) 58%, rgba(9, 22, 21, 0.9));
+  box-shadow: 0 0 0 1px rgba(143, 240, 226, 0.25), 0 24px 50px -20px rgba(0, 0, 0, 0.9), 0 0 40px -10px rgba(63, 214, 195, 0.5);
+}
+
+.sealRing {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  animation: spin 26s linear infinite;
+}
+
+.sealRing text {
+  font-family: var(--font-display);
+  /* 136px for a 120 viewBox: 12.5 → about 14.2px on screen */
+  font-size: 12.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  fill: var(--mint);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.sealCore {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: linear-gradient(140deg, var(--mint), var(--teal-500));
+  color: #03100e;
+  box-shadow: 0 0 0 6px rgba(143, 240, 226, 0.12), 0 0 30px rgba(143, 240, 226, 0.5);
+}
+
+.sealCore svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* ---------- The document, docked over the photo's lower left ---------- */
+.docCard {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 2;
+  width: min(62%, 20.5rem);
+  filter: drop-shadow(0 40px 50px rgba(0, 0, 0, 0.7));
+}
+
+@media (max-width: 639.98px) {
+  .stack {
+    padding: 0;
+  }
+
+  .halo,
+  .seal {
+    display: none;
+  }
+
+  .photoCard {
+    width: 100%;
+    aspect-ratio: 4 / 3.4;
+  }
+
+  .photoBar {
+    left: 1.25rem;
+  }
+
+  .docCard {
+    position: relative;
+    width: 94%;
+    margin: -3rem auto 0;
+  }
+}
+
+/* ================================================= stage navigator (white) */
+.nav {
+  --ink: #03100e;
+  --ink-2: #3d4f4c;
+  --ink-3: #6b7c79;
+  --t-700: #026b61;
+  --t-600: #028579;
+  position: relative;
+  z-index: 1;
+  margin-top: clamp(-6rem, -4vw, -2.5rem);
+}
+
+.navPanel {
+  --p: 0;
+  position: relative;
+  padding: clamp(1.25rem, 0.75rem + 2vw, 2.5rem);
+  overflow: hidden;
+  border-radius: clamp(24px, 1.5vw + 14px, 34px);
+  background: linear-gradient(180deg, #ffffff, #f2faf8);
+  color: var(--ink);
+  box-shadow: 0 40px 100px -40px rgba(63, 214, 195, 0.45), 0 30px 60px -30px rgba(0, 0, 0, 0.6);
+}
+
+.navHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  margin-bottom: clamp(1rem, 0.5rem + 1.5vw, 1.75rem);
+}
+
+.navKicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--t-700);
+}
+
+.navKicker span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--t-600);
+  box-shadow: 0 0 0 4px rgba(2, 133, 121, 0.15);
+}
+
+.navAll {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 40px;
+  padding: 0 1rem;
+  border-radius: 999px;
+  background: var(--ink);
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #ffffff;
+  transition: background 300ms var(--ease-out);
+}
+
+.navAll:hover {
+  background: var(--t-600);
+}
+
+.navAll svg,
+.linkKicker svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.navPhases,
+.navTrack {
+  display: none;
+}
+
+/* Small screens: eight segments */
+.navBar {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 0.3125rem;
+}
+
+.navBar i {
+  height: 5px;
+  border-radius: 5px;
+  background: rgba(3, 16, 14, 0.08);
+}
+
+.navBar i[data-done] {
+  background: rgba(2, 133, 121, 0.4);
+}
+
+.navBar i[data-on] {
+  background: var(--t-600);
+  box-shadow: 0 0 10px rgba(2, 133, 121, 0.5);
+}
+
+@media (min-width: 1100px) {
+  .navBar {
+    display: none;
+  }
+
+  .navPhases {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    margin-bottom: 1rem;
+  }
+
+  .navPhases span {
+    position: relative;
+    grid-column: span var(--span);
+    padding-bottom: 0.75rem;
+    font-family: var(--font-display);
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-align: center;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .navPhases span::after {
+    content: "";
+    position: absolute;
+    left: 7%;
+    right: 7%;
+    bottom: 0;
+    height: 8px;
+    border: 1.5px solid rgba(3, 16, 14, 0.12);
+    border-bottom: 0;
+    border-radius: 8px 8px 0 0;
+  }
+
+  .navPhases span[data-on] {
+    color: var(--t-700);
+  }
+
+  .navPhases span[data-on]::after {
+    border-color: rgba(2, 133, 121, 0.55);
+  }
+
+  .navTrack {
+    position: relative;
+    display: block;
+  }
+
+  .navLine {
+    position: absolute;
+    top: 25px;
+    left: calc(100% / 16);
+    right: calc(100% / 16);
+    height: 3px;
+    border-radius: 3px;
+    background: rgba(3, 16, 14, 0.08);
+  }
+
+  .navLine i {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #3fd6c3, var(--t-600));
+    box-shadow: 0 0 12px rgba(17, 185, 168, 0.5);
+    transform: scaleX(var(--p));
+    transform-origin: left;
+  }
+
+  .navNodes {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+
+  .navNode {
+    display: grid;
+    justify-items: center;
+    align-content: start;
+    gap: 0.375rem;
+    padding: 0 0.25rem;
+    text-align: center;
+  }
+
+  .navDot {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    margin-bottom: 0.25rem;
+    border: 1px solid rgba(3, 16, 14, 0.1);
+    border-radius: 50%;
+    background: #ffffff;
+    color: var(--ink-3);
+    box-shadow: 0 8px 20px -10px rgba(3, 16, 14, 0.35);
+    transition: border-color 300ms var(--ease-out), color 300ms var(--ease-out), scale 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .navDot svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .navNum {
+    font-family: var(--font-display);
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--ink-3);
+  }
+
+  .navLabel {
+    max-width: 10rem;
+    font-family: var(--font-display);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--ink-2);
+    transition: color 300ms var(--ease-out);
+  }
+
+  li[data-state="done"] .navDot {
+    border-color: rgba(2, 133, 121, 0.35);
+    background: #effaf7;
+    color: var(--t-600);
+  }
+
+  li[data-state="done"] .navNum {
+    color: var(--t-600);
+  }
+
+  li[data-state="on"] .navDot {
+    border-color: transparent;
+    background: linear-gradient(140deg, #3fd6c3, var(--t-600));
+    color: #ffffff;
+    box-shadow: 0 14px 30px -10px rgba(2, 133, 121, 0.7), 0 0 0 6px rgba(63, 214, 195, 0.18);
+    scale: 1.12;
+  }
+
+  li[data-state="on"] .navDot::after {
+    content: "";
+    position: absolute;
+    inset: -8px;
+    border: 2px solid rgba(17, 185, 168, 0.45);
+    border-radius: 50%;
+    animation: ring 1.8s var(--ease-out) infinite;
+  }
+
+  @keyframes ring {
+    from {
+      opacity: 1;
+      transform: scale(0.85);
+    }
+
+    to {
+      opacity: 0;
+      transform: scale(1.45);
+    }
+  }
+
+  li[data-state="on"] .navNum {
+    color: var(--t-600);
+  }
+
+  li[data-state="on"] .navLabel {
+    color: var(--ink);
+  }
+
+  a.navNode:hover .navDot {
+    border-color: rgba(2, 133, 121, 0.55);
+    color: var(--t-600);
+    scale: 1.08;
+  }
+
+  a.navNode:hover .navLabel {
+    color: var(--t-700);
+  }
+
+  a.navNode:focus-visible .navDot {
+    outline: 2px solid var(--t-600);
+    outline-offset: 4px;
+  }
+}
+
+/* ======================================== cards that turn light on hover */
+.cards {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.875rem;
+  margin-top: clamp(2.5rem, 1.5rem + 3vw, 4rem);
+  perspective: 1400px;
+}
+
+@media (min-width: 640px) {
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1100px) {
+  .cards[data-cols="3"] {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .cards[data-cols="4"] {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.card {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 0.75rem;
+  padding: clamp(1.25rem, 1rem + 0.8vw, 1.875rem);
+  overflow: hidden;
+  border: 1px solid var(--stroke);
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(12, 22, 21, 0.82), rgba(6, 12, 12, 0.72));
+  isolation: isolate;
+  /* the hover lift uses `translate` so it never fights the GSAP entrance (which owns `transform`) */
+  transition: border-color 600ms var(--ease-out), translate 700ms var(--ease-out), box-shadow 700ms var(--ease-out);
+}
+
+.cards .card {
+  grid-row: span 3;
+  grid-template-rows: subgrid;
+  min-height: clamp(15rem, 12rem + 5vw, 18rem);
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cardIcon {
+  display: grid;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  border: 1px solid var(--stroke-glow);
+  border-radius: 15px;
+  background: linear-gradient(150deg, rgba(17, 185, 168, 0.32), rgba(17, 185, 168, 0.04));
+  color: var(--mint);
+  transition: background 500ms var(--ease-out), color 500ms var(--ease-out), border-color 500ms var(--ease-out), rotate 600ms var(--ease-out);
+}
+
+.cardIcon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.cardNum {
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-3);
+  transition: color 500ms var(--ease-out);
+}
+
+.cardTitle {
+  align-self: end;
+  margin-top: 1.25rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.625rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: var(--white);
+  transition: color 500ms var(--ease-out);
+}
+
+.cardBody {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--text-2);
+  transition: color 500ms var(--ease-out);
+}
+
+.card:hover {
+  border-color: rgba(255, 255, 255, 0.9);
+  translate: 0 -6px;
+  box-shadow: 0 30px 60px -28px rgba(143, 240, 226, 0.45);
+}
+
+.card:hover .cardIcon {
+  border-color: transparent;
+  background: var(--teal-500);
+  color: #ffffff;
+  rotate: -8deg;
+}
+
+.card:hover .cardNum {
+  color: var(--teal-600);
+}
+
+.card:hover :is(.cardTitle, .linkTitle) {
+  color: #03100e;
+}
+
+.card:hover :is(.cardBody, .linkBody) {
+  color: #3d4f4c;
+}
+
+.card:hover :is(.linkKicker, .linkNum) {
+  color: var(--teal-600);
+}
+
+/* Text darkens just behind the white flood */
+.card:hover :is(.cardNum, .cardTitle, .cardBody, .linkKicker, .linkNum, .linkTitle, .linkBody) {
+  transition-delay: 120ms;
+}
+
+/* ===================================================== steps (white panel) */
+.stepsSection {
+  --ink: #03100e;
+  --ink-2: #3d4f4c;
+  --t-700: #026b61;
+  --t-600: #028579;
+}
+
+.stepsPanel {
+  position: relative;
+  padding: clamp(1.75rem, 1rem + 3vw, 3.75rem);
+  overflow: hidden;
+  border-radius: clamp(26px, 1.5vw + 16px, 40px);
+  background: linear-gradient(180deg, #ffffff 0%, #f4fbf9 100%);
+  color: var(--ink);
+  box-shadow: 0 50px 120px -40px rgba(63, 214, 195, 0.4), 0 30px 60px -30px rgba(0, 0, 0, 0.6);
+  isolation: isolate;
+}
+
+.stepsGlow {
+  position: absolute;
+  inset: -30% -10% auto;
+  z-index: -1;
+  height: 90%;
+  background:
+    radial-gradient(40% 50% at 15% 30%, rgba(63, 214, 195, 0.16), transparent 70%),
+    radial-gradient(35% 45% at 85% 20%, rgba(40, 120, 200, 0.08), transparent 70%);
+  pointer-events: none;
+}
+
+.stepsHead {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-4);
+  max-width: 44rem;
+  margin-bottom: clamp(2rem, 1rem + 3vw, 3.5rem);
+}
+
+.lightKicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.375rem 0.875rem 0.375rem 0.5rem;
+  border: 1px solid rgba(2, 133, 121, 0.22);
+  border-radius: 999px;
+  background: rgba(2, 133, 121, 0.06);
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--t-700);
+}
+
+.lightKicker span {
+  width: 22px;
+  height: 22px;
+  background: url("/assets/logos/convergeflow-mark-onlight.png") center / contain no-repeat;
+}
+
+.lightTitle {
+  font-size: clamp(2rem, 1.1rem + 2.6vw, 3.5rem);
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: -0.05em;
+  color: var(--ink);
+}
+
+.lightAccent {
+  background: linear-gradient(100deg, var(--t-600), #11b9a8 60%, #3fd6c3);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.lightIntro {
+  font-size: var(--fs-lede);
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+.steps {
+  --fill: 0;
+  position: relative;
+  display: grid;
+  gap: 1.5rem;
+}
+
+/* vertical line through the numbers (small screens) */
+.stepsLine {
+  position: absolute;
+  top: 1.5rem;
+  bottom: 1.5rem;
+  left: 23px;
+  width: 2px;
+  background: linear-gradient(to bottom, #3fd6c3, var(--t-600)) 0 0 / 100% calc(var(--fill) * 100%) no-repeat, rgba(3, 16, 14, 0.08);
+}
+
+.step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  column-gap: 1rem;
+  row-gap: 0.375rem;
+}
+
+.stepNum {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(140deg, #3fd6c3, var(--t-600));
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #ffffff;
+  box-shadow: 0 12px 24px -10px rgba(2, 133, 121, 0.7), 0 0 0 5px #ffffff;
+}
+
+.stepTitle {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.stepBody {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+/* Wide screens: the steps side by side, the line running through their numbers */
+@media (min-width: 900px) {
+  .steps {
+    grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+    gap: clamp(1rem, 0.5rem + 1.5vw, 2rem);
+  }
+
+  .stepsLine {
+    top: 27px;
+    bottom: auto;
+    left: 28px;
+    right: calc(100% / var(--n) - 28px);
+    width: auto;
+    height: 2px;
+    background: linear-gradient(90deg, #3fd6c3, var(--t-600)) 0 0 / calc(var(--fill) * 100%) 100% no-repeat, rgba(3, 16, 14, 0.08);
+  }
+
+  .step {
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    gap: 0.625rem;
+  }
+
+  .stepNum {
+    grid-row: auto;
+    width: 56px;
+    height: 56px;
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+  }
+}
+
+/* ================================================ previous / next stage */
+.linksGrid {
+  display: grid;
+  gap: 0.875rem;
+  perspective: 1400px;
+}
+
+@media (min-width: 900px) {
+  .linksGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  }
+}
+
+.prev,
+.next {
+  min-height: 15rem;
+  color: inherit;
+}
+
+.prev:focus-visible,
+.next:focus-visible {
+  outline: 2px solid var(--mint);
+  outline-offset: 3px;
+}
+
+.linkKicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--mint);
+  transition: color 500ms var(--ease-out);
+}
+
+.linkNum {
+  margin-top: auto;
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 1.75rem + 2vw, 3.75rem);
+  font-weight: 500;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  color: var(--text-3);
+  transition: color 500ms var(--ease-out);
+}
+
+.linkTitle {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2.25rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  color: var(--white);
+  transition: color 500ms var(--ease-out);
+}
+
+.linkBody {
+  max-width: 30rem;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--text-2);
+  transition: color 500ms var(--ease-out);
+}
+
+.next {
+  border-color: rgba(143, 240, 226, 0.3);
+  background: linear-gradient(140deg, rgba(17, 185, 168, 0.18), rgba(6, 14, 13, 0.9) 55%);
+}
+
+@media (min-width: 640px) {
+  .next {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+    align-items: stretch;
+    column-gap: 1.5rem;
+  }
+}
+
+.nextText {
+  display: grid;
+  align-content: start;
+  gap: 0.75rem;
+  height: 100%;
+}
+
+/* the next stage's icon on a lit tile */
+.nextPhoto {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 12rem;
+  overflow: hidden;
+  border: 1px solid var(--stroke-glow);
+  border-radius: 18px;
+  background:
+    radial-gradient(60% 60% at 50% 40%, rgba(143, 240, 226, 0.3), transparent 70%),
+    linear-gradient(150deg, rgba(17, 185, 168, 0.28), rgba(6, 14, 13, 0.6));
+  color: var(--mint);
+  transition: background 700ms var(--ease-out), color 700ms var(--ease-out);
+}
+
+.nextPhoto svg {
+  width: clamp(3.5rem, 2.5rem + 3vw, 5.5rem);
+  height: auto;
+  filter: drop-shadow(0 0 24px rgba(143, 240, 226, 0.6));
+  transition: scale 900ms var(--ease-out), rotate 900ms var(--ease-out);
+}
+
+.nextPhoto > span {
+  position: absolute;
+  right: 1rem;
+  bottom: 0.75rem;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 1.5rem + 2vw, 3.5rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: rgba(143, 240, 226, 0.35);
+}
+
+.next:hover .nextPhoto {
+  background:
+    radial-gradient(60% 60% at 50% 40%, rgba(255, 255, 255, 0.6), transparent 70%),
+    linear-gradient(150deg, var(--teal-500), #0b6f64);
+  color: #ffffff;
+}
+
+.next:hover .nextPhoto svg {
+  scale: 1.08;
+  rotate: -6deg;
+}
+
+.prev,
+.nextText {
+  grid-template-rows: auto 1fr auto auto;
+}
+
+.prev {
+  display: grid;
+  align-content: stretch;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sealRing,
+  .bigNum,
+  .line,
+  li[data-state="on"] .navDot::after {
+    animation: none;
+  }
+}
+
+/* section wrappers */
+.cardsSection,
+.links {
+  position: relative;
+}

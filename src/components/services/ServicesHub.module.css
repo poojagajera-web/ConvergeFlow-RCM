@@ -1,0 +1,528 @@
+/* =================================================================== hero */
+.hero {
+  position: relative;
+  display: grid;
+  align-content: center;
+  padding-top: calc(var(--header-h) + env(safe-area-inset-top, 0px) + clamp(1.75rem, 1rem + 3vw, 3.5rem));
+  overflow: clip;
+  isolation: isolate;
+  background: var(--bg);
+}
+
+.hero {
+  padding-bottom: clamp(5rem, 3rem + 6vw, 9rem);
+}
+
+@media (min-width: 768px) {
+  .hero {
+    min-height: max(92svh, 44rem);
+  }
+}
+
+.heroBg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+}
+
+.heroAurora {
+  position: absolute;
+  inset: 0;
+  isolation: isolate;
+}
+
+.heroGrid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 84px 84px;
+  background-position: center top;
+  mask-image: radial-gradient(70% 60% at 50% 30%, #000, transparent 80%);
+  -webkit-mask-image: radial-gradient(70% 60% at 50% 30%, #000, transparent 80%);
+}
+
+.heroVignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(140% 100% at 50% 45%, transparent 62%, rgba(3, 8, 7, 0.6) 100%);
+}
+
+.heroCopy {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: var(--space-5);
+  text-align: center;
+}
+
+/* Headline: two lines painted with a gradient that a band of light sweeps across (as on the home page) */
+.heroTitle {
+  max-width: 16ch;
+  font-size: clamp(2.5rem, 0.8rem + 5.6vw, 6.5rem);
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: -0.055em;
+  filter: drop-shadow(0 0 30px rgba(143, 240, 226, 0.22));
+}
+
+.line {
+  --c: #ffffff;
+  --s: #8ff0e2;
+  display: block;
+  padding-bottom: 0.24em;
+  margin-bottom: -0.24em;
+  background-image: linear-gradient(100deg, var(--c) 0 40%, var(--s) 50%, var(--c) 60% 100%);
+  background-size: 280% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-wrap: balance;
+  animation: shine 9s var(--ease-in-out) 3.2s infinite;
+}
+
+.lineAccent {
+  --c: #8ff0e2;
+  --s: #ffffff;
+  animation-delay: 3.5s;
+}
+
+@keyframes shine {
+  0% {
+    background-position: 100% 0;
+  }
+
+  22%,
+  100% {
+    background-position: 0% 0;
+  }
+}
+
+.heroLead {
+  max-width: 46rem;
+  font-size: var(--fs-lede);
+  line-height: 1.6;
+  color: var(--text-2);
+  text-shadow: 0 0 18px rgba(3, 8, 7, 0.95);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.heroFacts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 1.5rem;
+}
+
+.heroFacts li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-2);
+}
+
+.factIcon {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--stroke-glow);
+  border-radius: 50%;
+  color: var(--mint);
+}
+
+.factIcon svg {
+  width: 12px;
+  height: 12px;
+}
+
+@media (max-width: 479.98px) {
+  .heroActions,
+  .heroActions > * {
+    width: 100%;
+  }
+
+  .heroFacts {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+/* =============================================== cards that turn light on hover */
+.card {
+  --mx: 50%;
+  --my: 0%;
+  position: relative;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: 0.75rem;
+  min-height: clamp(17rem, 14rem + 6vw, 21rem);
+  padding: clamp(1.25rem, 1rem + 0.6vw, 1.625rem);
+  overflow: hidden;
+  border: 1px solid var(--stroke);
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(12, 22, 21, 0.82), rgba(6, 12, 12, 0.72));
+  isolation: isolate;
+  /* the hover lift uses `translate` so it never fights the GSAP entrance (which owns `transform`) */
+  transition: border-color 600ms var(--ease-out), translate 700ms var(--ease-out), box-shadow 700ms var(--ease-out);
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cardNum {
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-3);
+  transition: color 500ms var(--ease-out);
+}
+
+.cardIcon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid var(--stroke-glow);
+  border-radius: 14px;
+  background: linear-gradient(150deg, rgba(17, 185, 168, 0.32), rgba(17, 185, 168, 0.04));
+  color: var(--mint);
+  transition: background 500ms var(--ease-out), color 500ms var(--ease-out), border-color 500ms var(--ease-out), rotate 600ms var(--ease-out);
+}
+
+.cardIcon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.markIcon {
+  background:
+    url("/assets/logos/convergeflow-mark.png") center / 60% no-repeat,
+    linear-gradient(150deg, rgba(17, 185, 168, 0.32), rgba(17, 185, 168, 0.04));
+}
+
+.cardTitle {
+  margin-top: 0.5rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: var(--white);
+  transition: color 500ms var(--ease-out);
+}
+
+.cardBody {
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--text-2);
+  transition: color 500ms var(--ease-out);
+}
+
+/* Hover: the card floods white; text turns dark and accents teal */
+.card:hover {
+  border-color: rgba(255, 255, 255, 0.9);
+  translate: 0 -6px;
+  box-shadow: 0 30px 60px -28px rgba(143, 240, 226, 0.45);
+}
+
+.card:hover .cardNum {
+  color: var(--teal-600);
+}
+
+.card:hover .cardIcon {
+  border-color: transparent;
+  background-color: var(--teal-500);
+  background-image: none;
+  color: #ffffff;
+  rotate: -8deg;
+}
+
+.card:hover .markIcon {
+  background:
+    url("/assets/logos/convergeflow-mark-onlight.png") center / 60% no-repeat,
+    #ffffff;
+  box-shadow: 0 0 0 1px rgba(2, 133, 121, 0.25);
+}
+
+.card:hover .cardTitle,
+.card:hover .panelTitle {
+  color: #03100e;
+}
+
+.card:hover .cardBody,
+.card:hover .panelList li {
+  color: #3d4f4c;
+}
+
+/* Text darkens just behind the white flood, so it never sits dark on dark */
+.card:hover :is(.cardNum, .cardTitle, .cardBody, .panelTitle, .panelList li) {
+  transition-delay: 120ms;
+}
+
+/* ============================================================ who does what */
+.splitGrid {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: clamp(2.5rem, 1.5rem + 3vw, 4rem);
+  perspective: 1400px;
+}
+
+@media (min-width: 900px) {
+  .splitGrid {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: stretch;
+  }
+}
+
+.panel {
+  grid-template-rows: auto 1fr;
+  gap: 1.5rem;
+  min-height: 0;
+  padding: clamp(1.5rem, 1rem + 1.5vw, 2.25rem);
+  border-radius: 26px;
+}
+
+.panelTeam {
+  border-color: rgba(143, 240, 226, 0.3);
+  background: linear-gradient(160deg, rgba(17, 185, 168, 0.16), rgba(6, 14, 13, 0.86) 55%);
+  box-shadow: 0 0 60px -30px rgba(63, 214, 195, 0.55);
+}
+
+.panelHead {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.panelTitle {
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: var(--white);
+  transition: color 500ms var(--ease-out);
+}
+
+.panelList {
+  display: grid;
+  align-content: start;
+  gap: 0.875rem;
+}
+
+.panelList li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--text);
+  transition: color 500ms var(--ease-out);
+}
+
+.tick {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  margin-top: 0.0625rem;
+  border: 1px solid var(--stroke-2);
+  border-radius: 50%;
+  color: var(--text-3);
+  transition: border-color 500ms var(--ease-out), color 500ms var(--ease-out), background 500ms var(--ease-out);
+}
+
+.tick svg {
+  width: 13px;
+  height: 13px;
+}
+
+.tickOn {
+  border-color: transparent;
+  background: var(--teal-500);
+  color: var(--bg);
+  box-shadow: 0 0 12px rgba(63, 214, 195, 0.55);
+}
+
+.card:hover .tick {
+  border-color: rgba(2, 133, 121, 0.35);
+  color: var(--teal-600);
+}
+
+.card:hover .tickOn {
+  background: var(--teal-500);
+  color: #ffffff;
+}
+
+/* Handoff: a light flowing from the practice to the team */
+.handoff {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 0.625rem;
+  padding-block: 0.25rem;
+}
+
+.handoffLine {
+  position: relative;
+  width: 2px;
+  height: 3.5rem;
+  overflow: hidden;
+  border-radius: 2px;
+  background: rgba(143, 240, 226, 0.2);
+}
+
+.handoffLine i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 40%;
+  background: linear-gradient(to bottom, transparent, var(--mint), #ffffff);
+  box-shadow: 0 0 10px var(--mint);
+  animation: flowDown 2.4s var(--ease-in-out) infinite;
+}
+
+@keyframes flowDown {
+  from {
+    transform: translateY(-110%);
+  }
+
+  to {
+    transform: translateY(260%);
+  }
+}
+
+.handoffLabel {
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+@media (min-width: 900px) {
+  .handoff {
+    width: clamp(6rem, 3rem + 5vw, 9rem);
+    padding-inline: 0.5rem;
+  }
+
+  .handoffLine {
+    width: 100%;
+    height: 2px;
+  }
+
+  .handoffLine i {
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, var(--mint), #ffffff);
+    animation-name: flowAcross;
+  }
+
+  @keyframes flowAcross {
+    from {
+      transform: translateX(-110%);
+    }
+
+    to {
+      transform: translateX(260%);
+    }
+  }
+}
+
+.splitNote {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  width: fit-content;
+  max-width: 100%;
+  margin: var(--space-6) auto 0;
+  padding: 0.625rem 1.125rem;
+  border: 1px solid var(--stroke-2);
+  border-radius: 999px;
+  background: rgba(9, 18, 17, 0.72);
+  font-size: 0.9375rem;
+  color: var(--text);
+}
+
+.splitNote span {
+  flex-shrink: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--mint);
+  box-shadow: 0 0 10px var(--mint);
+}
+
+/* ===================================================== with every service */
+.promise {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* The drifting light fades out toward the section's top and bottom */
+.promiseAurora {
+  mask-image: linear-gradient(to bottom, transparent, #000 20%, #000 80%, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 20%, #000 80%, transparent);
+}
+
+.promiseGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.875rem;
+  margin-top: clamp(2.5rem, 1.5rem + 3vw, 4rem);
+  perspective: 1400px;
+}
+
+@media (min-width: 640px) {
+  .promiseGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1100px) {
+  .promiseGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/*
+ * Each card shares its three rows (icons, titles, text) with the cards beside it
+ * through subgrid, so titles and text line up across a row whatever their length.
+ */
+.promiseCard {
+  grid-row: span 3;
+  grid-template-rows: subgrid;
+  row-gap: 0.75rem;
+  min-height: 0;
+}
+
+.promiseCard .cardTitle {
+  margin-top: clamp(2.5rem, 1.5rem + 3vw, 4.5rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .line,
+  .handoffLine i {
+    animation: none;
+  }
+}

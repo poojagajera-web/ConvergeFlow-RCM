@@ -224,7 +224,7 @@ export const SERVICE_PAGES: SitePage[] = [
           "Once identity and coverage details are right, verified benefits can be applied to help patients understand their share before care.",
           "An estimate helps a patient plan; it does not guarantee the final insurance payment.",
         ],
-        photo: { src: "/assets/photos/front-desk.jpg", alt: "Front-desk team member checking a patient's insurance card", caption: "Right person, right plan" },
+        photo: { src: "/assets/photos/v2/registration-feature.jpg", alt: "Front-desk coordinator scanning a patient's insurance card at reception", caption: "Right person, right plan" },
         link: { label: "Eligibility & benefits", href: "/services/eligibility-verification/" },
       },
     ],
@@ -650,7 +650,7 @@ export const SERVICE_PAGES: SitePage[] = [
           "Dental claims are sent as 837D through approved channels, with the batch, claim ID and attachment linkage retained.",
           "We confirm the clearinghouse and payer channels for your practice during setup, so nothing about submission is assumed.",
         ],
-        photo: { src: "/assets/photos/coder-screens.jpg", alt: "Billing specialist reviewing claims across two monitors", caption: "Sent with proof" },
+        photo: { src: "/assets/photos/v2/claims-feature.jpg", alt: "Billing specialist reviewing claims across two monitors with a printed checklist", caption: "Sent with proof" },
       },
     ],
     faq: [

@@ -1,0 +1,551 @@
+.section {
+  position: relative;
+}
+
+.stack {
+  display: grid;
+  gap: clamp(1.25rem, 1rem + 1.5vw, 2rem);
+  margin-top: clamp(2.5rem, 1.5rem + 3vw, 4rem);
+}
+
+.hold {
+  display: none;
+}
+
+/* =============================================================== stacking */
+/* Each card pins a little lower than the one before, so the stack shows its edges */
+@media (min-width: 992px) and (min-height: 720px) {
+  .stack {
+    gap: 14vh;
+  }
+
+  .item {
+    position: sticky;
+    top: calc(var(--header-h) + 1.25rem + var(--i) * 1.5rem);
+  }
+
+  /* An empty spacer after the last card keeps the finished stack pinned for a moment before it
+     scrolls away (padding or the card's own margin would not extend how far the cards can travel) */
+  .hold {
+    display: block;
+    height: 22vh;
+    margin-top: -14vh;
+  }
+
+  .card {
+    min-height: min(38rem, calc(100svh - var(--header-h) - 2.5rem - 3rem));
+  }
+}
+
+/* =================================================================== card */
+.card {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  overflow: hidden;
+  border: 1px solid var(--stroke-2);
+  border-radius: clamp(24px, 1.5vw + 14px, 36px);
+  background: linear-gradient(150deg, #0c1a19 0%, #060d0c 55%, #040908 100%);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.03) inset,
+    0 -24px 60px -30px rgba(0, 0, 0, 0.9),
+    0 40px 80px -40px rgba(0, 0, 0, 0.9);
+  transform-origin: 50% 0;
+  isolation: isolate;
+}
+
+/* dims the card as the next one covers it */
+.shade {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  border-radius: inherit;
+  background: #030807;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cardGlow {
+  position: absolute;
+  inset: -30% auto auto -20%;
+  z-index: -1;
+  width: 70%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(17, 185, 168, 0.18), transparent);
+  pointer-events: none;
+}
+
+@media (min-width: 992px) {
+  .card {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  }
+}
+
+/* ---------- Left: the phase ---------- */
+.info {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: var(--space-5);
+  padding: clamp(1.5rem, 1rem + 2vw, 2.75rem);
+  isolation: isolate;
+}
+
+/* The phase number, huge and outlined, behind the title */
+.watermark {
+  position: absolute;
+  top: clamp(5.5rem, 4rem + 2.5vw, 7rem);
+  right: clamp(1rem, 0.5rem + 1vw, 1.75rem);
+  z-index: -1;
+  font-family: var(--font-display);
+  font-size: clamp(6.5rem, 4rem + 6vw, 11rem);
+  font-weight: 600;
+  line-height: 0.8;
+  letter-spacing: -0.06em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(143, 240, 226, 0.22);
+  background: linear-gradient(180deg, rgba(143, 240, 226, 0.12), transparent 75%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  pointer-events: none;
+  user-select: none;
+}
+
+.infoTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.phase {
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mint);
+}
+
+.phase i {
+  font-style: normal;
+  color: var(--text-3);
+}
+
+.count {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3125rem 0.75rem;
+  border: 1px solid var(--stroke-2);
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.count::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--mint);
+  box-shadow: 0 0 8px var(--mint);
+}
+
+.infoMain {
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: 0.75rem;
+}
+
+.title {
+  max-width: 11ch;
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 1.4rem + 2.4vw, 3.5rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: var(--white);
+}
+
+.summary {
+  max-width: 28rem;
+  font-size: var(--fs-small);
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+/* ---------- Stage rows: light on hover ---------- */
+/* The stages as a connected list: a line joins their icons through the gaps */
+.rows {
+  position: relative;
+  display: grid;
+  gap: 0.625rem;
+}
+
+.rows::before {
+  content: "";
+  position: absolute;
+  top: 1.5rem;
+  bottom: 1.5rem;
+  left: calc(0.625rem + 21px);
+  width: 2px;
+  background: linear-gradient(to bottom, var(--mint), rgba(143, 240, 226, 0.15));
+}
+
+.row {
+  --mx: 50%;
+  --my: 50%;
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.625rem 0.75rem 0.625rem 0.625rem;
+  overflow: hidden;
+  border: 1px solid var(--stroke);
+  border-radius: 16px;
+  /* opaque, so the connecting line only shows between rows */
+  background: #0a1514;
+  isolation: isolate;
+  transition: border-color 500ms var(--ease-out), translate 600ms var(--ease-out), background 500ms var(--ease-out), box-shadow 500ms var(--ease-out);
+}
+
+/* The selected stage glows and opens */
+.row[data-on] {
+  align-items: start;
+  border-color: rgba(143, 240, 226, 0.45);
+  background: linear-gradient(120deg, #0f2a27, #0a1514 65%);
+  box-shadow: 0 0 30px -12px rgba(63, 214, 195, 0.55);
+}
+
+.row[data-on] .rowIcon {
+  border-color: transparent;
+  background: var(--mint);
+  color: #03100e;
+  box-shadow: 0 0 16px rgba(143, 240, 226, 0.5);
+}
+
+.row[data-on] .rowNum {
+  color: var(--mint);
+}
+
+.row[data-on] .rowGo {
+  border-color: transparent;
+  background: var(--mint);
+  color: #03100e;
+}
+
+/* What the stage covers, opening smoothly (grid rows 0fr → 1fr) */
+.rowMore {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 550ms var(--ease-out);
+}
+
+.rowMore > span {
+  overflow: hidden;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--text-2);
+  opacity: 0;
+  transition: opacity 400ms var(--ease-out), color 500ms var(--ease-out);
+}
+
+.row[data-on] .rowMore {
+  grid-template-rows: 1fr;
+}
+
+.row[data-on] .rowMore > span {
+  padding-top: 0.375rem;
+  opacity: 1;
+  transition-delay: 150ms;
+}
+
+.rowIcon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--stroke-glow);
+  border-radius: 12px;
+  background: linear-gradient(150deg, rgba(17, 185, 168, 0.32), rgba(17, 185, 168, 0.04));
+  color: var(--mint);
+  transition: background 500ms var(--ease-out), color 500ms var(--ease-out), border-color 500ms var(--ease-out), rotate 600ms var(--ease-out);
+}
+
+.rowIcon svg {
+  width: 19px;
+  height: 19px;
+}
+
+.rowText {
+  display: grid;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.rowNum {
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  transition: color 500ms var(--ease-out);
+}
+
+.rowLink {
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--white);
+  outline: none;
+  transition: color 500ms var(--ease-out);
+}
+
+/* the whole row is the link's hit area */
+.rowLink::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+.row:has(.rowLink:focus-visible) {
+  outline: 2px solid var(--mint);
+  outline-offset: 3px;
+}
+
+.rowGo {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--stroke-2);
+  border-radius: 50%;
+  color: var(--mint);
+  transition: background 500ms var(--ease-out), color 500ms var(--ease-out), border-color 500ms var(--ease-out), translate 500ms var(--ease-out);
+}
+
+.rowGo svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.row:hover {
+  border-color: rgba(255, 255, 255, 0.9);
+  translate: 4px 0;
+}
+
+.row:hover .rowIcon {
+  border-color: transparent;
+  background: var(--teal-500);
+  color: #ffffff;
+  rotate: -8deg;
+}
+
+.row:hover .rowNum {
+  color: var(--teal-600);
+}
+
+.row:hover .rowLink {
+  color: #03100e;
+}
+
+.row:hover .rowMore > span {
+  color: #3d4f4c;
+}
+
+.row:hover .rowGo {
+  border-color: transparent;
+  background: #03100e;
+  color: var(--mint);
+  translate: 3px 0;
+}
+
+/* text darkens just behind the white flood */
+.row:hover :is(.rowNum, .rowLink, .rowMore > span) {
+  transition-delay: 120ms;
+}
+
+/* ---------- Right: the stage photos ---------- */
+.media {
+  position: relative;
+  min-height: 15rem;
+  margin: 0 0.75rem 0.75rem;
+  overflow: hidden;
+  border-radius: calc(clamp(24px, 1.5vw + 14px, 36px) - 10px);
+  aspect-ratio: 4 / 3;
+  isolation: isolate;
+}
+
+@media (min-width: 992px) {
+  .media {
+    margin: 0.75rem 0.75rem 0.75rem 0;
+    aspect-ratio: auto;
+  }
+}
+
+.photo {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  scale: 1.06;
+  transition: opacity 800ms var(--ease-out), scale 1.4s var(--ease-out);
+}
+
+.photo[data-on] {
+  opacity: 1;
+  scale: 1;
+}
+
+.photo img {
+  object-fit: cover;
+}
+
+.mediaShade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(to top, rgba(3, 8, 7, 0.75) 0%, rgba(3, 8, 7, 0.2) 35%, transparent 55%);
+}
+
+.mediaTag {
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  max-width: calc(100% - 6rem);
+  padding: 0.5rem 1rem 0.5rem 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  background: rgba(3, 8, 7, 0.72);
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--white);
+  animation: tagIn 600ms var(--ease-out) both;
+}
+
+.mediaTag b {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--mint);
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #03100e;
+}
+
+@keyframes tagIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.mediaDots {
+  position: absolute;
+  right: 1.25rem;
+  bottom: 1.5rem;
+  z-index: 2;
+  display: flex;
+  gap: 0.375rem;
+}
+
+.mediaDots i {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.4);
+  transition: width 500ms var(--ease-out), background 500ms var(--ease-out);
+}
+
+.mediaDots i[data-on] {
+  width: 22px;
+  background: var(--mint);
+}
+
+/* Phones: the open stage's description uses the row's full width, under the icon */
+@media (max-width: 599.98px) {
+  .rowText {
+    display: contents;
+  }
+
+  .row {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      "icon num go"
+      "icon link go"
+      "more more more";
+    row-gap: 0;
+  }
+
+  .rowIcon {
+    grid-area: icon;
+  }
+
+  .rowNum {
+    grid-area: num;
+  }
+
+  .rowLink {
+    grid-area: link;
+  }
+
+  .rowGo {
+    grid-area: go;
+  }
+
+  .rowMore {
+    grid-area: more;
+  }
+
+  .row[data-on] .rowMore > span {
+    padding-top: 0.625rem;
+  }
+}
+
+/* Small phones: tighter rows */
+@media (max-width: 419.98px) {
+  .row {
+    gap: 0.625rem;
+  }
+
+  .rowIcon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .rowGo {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .photo,
+  .mediaTag {
+    animation: none;
+    transition-duration: 1ms;
+  }
+}

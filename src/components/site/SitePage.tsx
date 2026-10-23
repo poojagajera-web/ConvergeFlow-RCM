@@ -5,6 +5,16 @@ import { plain } from "@/components/content/Rich";
 import type { Faq, SitePage as Page } from "@/content/site/types";
 import { ROBOTS, SITE_URL, canonicalFor } from "@/lib/site";
 import { Footer } from "@/components/layout/Footer";
+import { ServicesHub } from "@/components/services/ServicesHub";
+import { StagePage } from "@/components/services/StagePage";
+import { InnerPage } from "@/components/services/InnerPage";
+import { ResourcesPage } from "@/components/services/ResourcesPage";
+import { AboutPage } from "@/components/company/AboutPage";
+import { ContactPage } from "@/components/company/ContactPage";
+import { DemoPage } from "@/components/company/DemoPage";
+import { PricingPage } from "@/components/company/PricingPage";
+import { WhyPage } from "@/components/company/WhyPage";
+import { navGroupFor } from "@/content/navigation";
 import { SiteFaq } from "./SiteFaq";
 import { SiteHero } from "./SiteHero";
 import { SiteSections } from "./Sections";
@@ -19,6 +29,16 @@ export function metadataFor(seo: { title: string; description: string }, route: 
     openGraph: { title: seo.title, description: seo.description, type: "website", ...(canonical ? { url: canonical } : {}) },
   };
 }
+
+/** The Company pages, each with its own design. */
+const COMPANY_PAGES: Record<string, (props: { page: Page }) => React.JSX.Element> = {
+  "/about/": AboutPage,
+  "/why-convergeflow/": WhyPage,
+  "/pricing/": PricingPage,
+  "/contact/": ContactPage,
+  "/demo/": DemoPage,
+  "/resources/": ResourcesPage,
+};
 
 export const faqSchema = (items: Faq[]) => ({
   "@type": "FAQPage",
@@ -39,15 +59,32 @@ function schemaFor(page: Page) {
   return { "@context": "https://schema.org", "@graph": graph };
 }
 
-/** One page: hero, content sections and FAQ, then the footer carrying the page's call to action. */
+/**
+ * One page: hero, content sections and FAQ, then the footer carrying the page's
+ * call to action. The Services hub, the eight stage pages, the Who We Help and
+ * How It Works pages and the Company pages have their own home-style layouts.
+ */
 export function SitePage({ page }: { page: Page }) {
+  const Company = COMPANY_PAGES[page.route];
   return (
     <>
       <JsonLd schema={schemaFor(page)} />
       <MotionScope>
         <main id="main" tabIndex={-1}>
-          <SiteHero hero={page.hero} />
-          <SiteSections sections={page.sections} />
+          {page.route === "/services/" ? (
+            <ServicesHub page={page} />
+          ) : page.stage ? (
+            <StagePage page={page} />
+          ) : navGroupFor(page.route) ? (
+            <InnerPage page={page} />
+          ) : Company ? (
+            <Company page={page} />
+          ) : (
+            <>
+              <SiteHero hero={page.hero} />
+              <SiteSections sections={page.sections} />
+            </>
+          )}
           <SiteFaq items={page.faq} />
         </main>
         <Footer cta={page.cta} />

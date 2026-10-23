@@ -494,45 +494,50 @@ function Related({ s }: { s: Of<"related"> }) {
   );
 }
 
+/** One content section, rendered by its kind. */
+export function SiteSection({ s }: { s: Section }) {
+  switch (s.kind) {
+    case "cards":
+      return <Cards s={s} />;
+    case "steps":
+      return <Steps s={s} />;
+    case "split":
+      return <Split s={s} />;
+    case "chips":
+      return <Chips s={s} />;
+    case "feature":
+      return <Feature s={s} />;
+    case "statement":
+      return <Statement s={s} />;
+    case "table":
+      return <Table s={s} />;
+    case "cadence":
+      return <Cadence s={s} />;
+    case "balance":
+      return <Balance s={s} />;
+    case "anatomy":
+      return <Anatomy s={s} />;
+    case "evidence":
+      return <Evidence s={s} />;
+    case "journey":
+      return <Journey s={s} />;
+    case "stages":
+      return <Stages s={s} />;
+    case "downloads":
+      return <Downloads s={s} />;
+    case "related":
+      return <Related s={s} />;
+    default:
+      return null;
+  }
+}
+
 export function SiteSections({ sections }: { sections: Section[] }) {
   return (
     <>
-      {sections.map((s, i) => {
-        switch (s.kind) {
-          case "cards":
-            return <Cards key={i} s={s} />;
-          case "steps":
-            return <Steps key={i} s={s} />;
-          case "split":
-            return <Split key={i} s={s} />;
-          case "chips":
-            return <Chips key={i} s={s} />;
-          case "feature":
-            return <Feature key={i} s={s} />;
-          case "statement":
-            return <Statement key={i} s={s} />;
-          case "table":
-            return <Table key={i} s={s} />;
-          case "cadence":
-            return <Cadence key={i} s={s} />;
-          case "balance":
-            return <Balance key={i} s={s} />;
-          case "anatomy":
-            return <Anatomy key={i} s={s} />;
-          case "evidence":
-            return <Evidence key={i} s={s} />;
-          case "journey":
-            return <Journey key={i} s={s} />;
-          case "stages":
-            return <Stages key={i} s={s} />;
-          case "downloads":
-            return <Downloads key={i} s={s} />;
-          case "related":
-            return <Related key={i} s={s} />;
-          default:
-            return null;
-        }
-      })}
+      {sections.map((s, i) => (
+        <SiteSection key={i} s={s} />
+      ))}
     </>
   );
 }

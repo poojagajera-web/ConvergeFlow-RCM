@@ -1,12 +1,13 @@
 "use client";
 
-import { useRef, type PointerEvent } from "react";
+import { useRef } from "react";
 import { useMotion } from "@/components/motion/useMotion";
 import { gsap } from "@/lib/gsap";
 import { HOME_FACTS } from "@/content/site/home";
 import type { IconName } from "@/content/site/types";
 import { Icon } from "@/components/site/Icon";
 import { Aurora } from "@/components/fx/Aurora";
+import { setFloodOrigin } from "@/components/fx/flood";
 import styles from "./Facts.module.css";
 
 const ICONS: IconName[] = ["route", "users", "clock", "chart"];
@@ -40,14 +41,6 @@ export function Facts() {
     });
   });
 
-  // The white flood grows from where the pointer enters and drains back to where it leaves.
-  const setOrigin = (e: PointerEvent<HTMLLIElement>) => {
-    const card = e.currentTarget;
-    const r = card.getBoundingClientRect();
-    card.style.setProperty("--fx", `${e.clientX - r.left}px`);
-    card.style.setProperty("--fy", `${e.clientY - r.top}px`);
-  };
-
   return (
     <section ref={ref} className={`section ${styles.section}`} aria-labelledby="facts-title">
       {/* Green at half the hero's strength */}
@@ -65,7 +58,7 @@ export function Facts() {
 
       <ul className={`container ${styles.cards}`} data-cards>
         {HOME_FACTS.cells.map((c, i) => (
-          <li key={c.label} className={styles.card} data-fact data-glow onPointerEnter={setOrigin} onPointerLeave={setOrigin}>
+          <li key={c.label} className={styles.card} data-fact data-glow onPointerEnter={setFloodOrigin} onPointerLeave={setFloodOrigin}>
             <span className={styles.fill} aria-hidden="true" />
             <span className={styles.glow} aria-hidden="true" />
             <span className={styles.edge} aria-hidden="true" />

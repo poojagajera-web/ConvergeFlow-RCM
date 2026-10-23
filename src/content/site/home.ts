@@ -123,15 +123,15 @@ export const HOME_JOURNEY: { eyebrow: string; title: string; accent: string; int
   intro: "Choose the stages in your agreed scope. Each one has a named owner, a documented status and evidence you can check.",
   folders: [
     {
-      photo: { src: "/assets/photos/front-desk.jpg", alt: "Front-desk team member with a patient at check-in", caption: "before the visit" },
+      photo: { src: "/assets/photos/v2/d-registration.jpg", alt: "Patient handing her insurance card to a front-desk coordinator", caption: "before the visit" },
       note: "Active coverage is only the starting point.",
     },
     {
-      photo: { src: "/assets/photos/coder-screens.jpg", alt: "Billing specialist reviewing claims across two monitors", caption: "matched to the chart" },
+      photo: { src: "/assets/photos/v2/d-claims-submission.jpg", alt: "Billing specialist sending a claim from her laptop", caption: "matched to the chart" },
       note: "Reimbursement preferences never determine the code.",
     },
     {
-      photo: { src: "/assets/photos/billing-review.jpg", alt: "Two team members reviewing billing documents together", caption: "posted & reconciled" },
+      photo: { src: "/assets/photos/v2/d-payment-posting.jpg", alt: "Finance coordinator checking an itemised statement", caption: "posted & reconciled" },
       note: "A contractual adjustment is never billed to the patient.",
     },
   ],

@@ -1,0 +1,872 @@
+/* =================================================================== hero */
+.hero {
+  position: relative;
+  padding: calc(var(--header-h) + env(safe-area-inset-top, 0px) + clamp(1.5rem, 1rem + 2.5vw, 3rem)) 0 clamp(3rem, 2rem + 3vw, 5rem);
+  overflow: clip;
+  isolation: isolate;
+  background: var(--bg);
+}
+
+/* an editorial header: the title left, the lead and actions right */
+.heroHead {
+  display: grid;
+  gap: var(--space-5) clamp(2rem, 1rem + 4vw, 6rem);
+  align-items: end;
+}
+
+@media (min-width: 1000px) {
+  .heroHead {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  }
+}
+
+.heroTitleCol {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-5);
+}
+
+.heroSide {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-4);
+  padding-bottom: 0.5rem;
+}
+
+/* ---------- The cinematic photo ---------- */
+.frameWrap {
+  margin-top: clamp(2.5rem, 1.5rem + 3vw, 4rem);
+}
+
+.frame {
+  position: relative;
+  height: clamp(22rem, 12rem + 26vw, 40rem);
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid rgba(143, 240, 226, 0.25);
+  border-radius: clamp(24px, 1.5vw + 14px, 40px);
+  box-shadow: 0 60px 120px -50px rgba(0, 0, 0, 0.95), 0 0 120px -50px rgba(63, 214, 195, 0.6);
+  isolation: isolate;
+}
+
+.drift {
+  position: absolute;
+  inset: -7% 0;
+}
+
+.drift img,
+.band img,
+.tileLink img {
+  object-fit: cover;
+}
+
+.frameShade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(0deg, rgba(3, 9, 9, 0.85), transparent 42%),
+    linear-gradient(180deg, rgba(3, 9, 9, 0.4), transparent 30%);
+}
+
+.frameNote {
+  position: absolute;
+  top: clamp(1rem, 0.5rem + 1.5vw, 1.75rem);
+  right: clamp(1rem, 0.5rem + 1.5vw, 1.75rem);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: 19rem;
+  padding: 0.75rem 1rem 0.75rem 0.75rem;
+  border: 1px solid rgba(143, 240, 226, 0.35);
+  border-radius: 18px;
+  background: rgba(6, 18, 16, 0.86);
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--white);
+}
+
+.frameNote > span {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  background: linear-gradient(140deg, var(--mint), var(--teal-500));
+  color: #03100e;
+}
+
+.frameNote svg {
+  width: 17px;
+  height: 17px;
+}
+
+.frameCaption,
+.bandTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  background: rgba(3, 16, 14, 0.82);
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--white);
+}
+
+.bandTag {
+  position: absolute;
+}
+
+.frameCaption {
+  position: absolute;
+  top: clamp(1rem, 0.5rem + 1.5vw, 1.75rem);
+  left: clamp(1rem, 0.5rem + 1.5vw, 1.75rem);
+}
+
+.frameCaption span,
+.bandTag span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--mint);
+  box-shadow: 0 0 10px var(--mint);
+}
+
+/* the three specialist roles along the foot */
+.roles {
+  position: absolute;
+  left: clamp(1rem, 0.5rem + 1.5vw, 1.75rem);
+  right: clamp(1rem, 0.5rem + 1.5vw, 1.75rem);
+  bottom: clamp(1rem, 0.5rem + 1.5vw, 1.75rem);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.625rem;
+}
+
+.roles li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem 0.75rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 18px;
+  background: rgba(6, 18, 16, 0.78);
+  backdrop-filter: blur(10px);
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--white);
+}
+
+.roleIcon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: var(--teal-500);
+  color: #ffffff;
+}
+
+.roleIcon svg {
+  width: 18px;
+  height: 18px;
+}
+
+@media (max-width: 759.98px) {
+  .frame {
+    height: auto;
+    aspect-ratio: auto;
+    display: grid;
+    align-content: end;
+    min-height: 30rem;
+  }
+
+  .roles {
+    position: relative;
+    inset: auto;
+    grid-template-columns: minmax(0, 1fr);
+    margin: 0 0.75rem 0.75rem;
+  }
+
+  .frameNote {
+    left: 0.75rem;
+    right: auto;
+    top: 3.75rem;
+    max-width: calc(100% - 1.5rem);
+  }
+
+  .frameCaption {
+    left: 0.75rem;
+    top: 0.75rem;
+  }
+}
+
+/* ======================================================= managed service */
+.role {
+  position: relative;
+  overflow-x: clip;
+}
+
+.roleSpread {
+  display: grid;
+  gap: clamp(1.5rem, 1rem + 2vw, 3rem);
+}
+
+.roleSpread :global(.site-head) {
+  margin-bottom: 0;
+}
+
+@media (min-width: 1000px) {
+  .roleSpread {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: end;
+    column-gap: clamp(2.5rem, 1rem + 4vw, 5rem);
+  }
+}
+
+.roleText {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.rolePara {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--stroke);
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.roleNum {
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--mint);
+}
+
+.band {
+  position: relative;
+  height: clamp(16rem, 8rem + 30vw, 36rem);
+  margin: clamp(2.5rem, 1.5rem + 3vw, 4.5rem) 0 0;
+  overflow: hidden;
+}
+
+.bandShade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(3, 9, 9, 0.6), transparent 45%);
+}
+
+/* lined up with the page container */
+.bandTag {
+  left: max(5%, calc((100% - 1440px) / 2));
+  bottom: 1.5rem;
+}
+
+/* ====================================================== specialist cards */
+.badges {
+  position: relative;
+  overflow-x: clip;
+}
+
+.pcards {
+  display: grid;
+  gap: clamp(1rem, 0.5rem + 1.5vw, 1.75rem);
+  margin-top: clamp(2.5rem, 1.5rem + 3vw, 4rem);
+  perspective: 1600px;
+}
+
+@media (min-width: 760px) {
+  .pcards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1100px) {
+  .pcards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.pcardSlot {
+  display: grid;
+}
+
+.pcard {
+  --tx: 0;
+  --ty: 0;
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
+  border-radius: 30px;
+  background: linear-gradient(180deg, rgba(14, 30, 28, 0.95), rgba(6, 12, 12, 0.95));
+  box-shadow: 0 50px 90px -50px rgba(0, 0, 0, 0.95);
+  isolation: isolate;
+  transform: rotateY(calc(var(--tx) * 5deg)) rotateX(calc(var(--ty) * -5deg));
+  transition: transform 500ms var(--ease-out), box-shadow 600ms var(--ease-out), background 600ms var(--ease-out);
+}
+
+/* a gradient edge that brightens on hover */
+.pcardEdge {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(160deg, rgba(143, 240, 226, 0.55), rgba(143, 240, 226, 0.08) 40%, rgba(79, 143, 230, 0.25));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  pointer-events: none;
+  transition: opacity 500ms var(--ease-out);
+}
+
+.pPhoto {
+  position: relative;
+  aspect-ratio: 16 / 11;
+  overflow: hidden;
+}
+
+.pPhoto img {
+  object-fit: cover;
+  transition: scale 1200ms var(--ease-out);
+}
+
+.pPhotoShade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(6, 12, 12, 1), rgba(6, 12, 12, 0.2) 45%, transparent 70%);
+  transition: opacity 600ms var(--ease-out);
+}
+
+.pRole {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(10px);
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.pBody {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 0.875rem;
+  padding: 0 clamp(1.25rem, 1rem + 1vw, 1.75rem) clamp(1.25rem, 1rem + 1vw, 1.75rem);
+}
+
+.pIcon {
+  display: grid;
+  place-items: center;
+  width: 60px;
+  height: 60px;
+  margin-top: -30px;
+  border-radius: 18px;
+  background: linear-gradient(140deg, var(--mint), var(--teal-500));
+  color: #03100e;
+  box-shadow: 0 16px 34px -12px rgba(17, 185, 168, 0.8);
+  transition: rotate 600ms var(--ease-out);
+}
+
+.pIcon svg {
+  width: 26px;
+  height: 26px;
+}
+
+.pTitle {
+  font-family: var(--font-display);
+  font-size: clamp(1.375rem, 1.2rem + 0.5vw, 1.75rem);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  color: var(--white);
+  transition: color 500ms var(--ease-out);
+}
+
+.pText {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--text-2);
+  transition: color 500ms var(--ease-out);
+}
+
+.pStages {
+  display: grid;
+  gap: 0.375rem;
+  margin-top: 0.25rem;
+}
+
+.pStage {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 44px;
+  padding: 0.375rem 0.75rem 0.375rem 0.375rem;
+  border: 1px solid var(--stroke);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text);
+  transition: background 400ms var(--ease-out), color 400ms var(--ease-out), border-color 400ms var(--ease-out);
+}
+
+.pStage span {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: rgba(143, 240, 226, 0.12);
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--mint);
+}
+
+.pStage svg {
+  width: 14px;
+  height: 14px;
+  margin-left: auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: translate 400ms var(--ease-out);
+}
+
+.pStage:hover,
+.pStage:focus-visible {
+  border-color: transparent;
+  background: var(--teal-600);
+  color: #ffffff;
+}
+
+.pStage:hover span,
+.pStage:focus-visible span {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.pStage:hover svg {
+  translate: 3px 0;
+}
+
+.pStage:focus-visible {
+  outline: 2px solid var(--mint);
+  outline-offset: 2px;
+}
+
+/* the eight stages, this role's lit */
+.pStrip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--stroke-2);
+}
+
+.pStrip i {
+  flex: 1;
+  height: 6px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.pStrip i[data-on] {
+  background: linear-gradient(90deg, var(--teal-500), var(--mint));
+  box-shadow: 0 0 10px rgba(143, 240, 226, 0.5);
+}
+
+.pStrip span {
+  flex: none;
+  margin-left: 0.5rem;
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--text-3);
+}
+
+/* hover: the card turns light */
+.pcard:hover {
+  background: linear-gradient(180deg, #ffffff, #eef7f5);
+  box-shadow: 0 50px 90px -40px rgba(0, 0, 0, 0.95), 0 0 80px -30px rgba(143, 240, 226, 0.7);
+}
+
+.pcard:hover .pPhoto img {
+  scale: 1.07;
+}
+
+.pcard:hover .pPhotoShade {
+  opacity: 0.25;
+}
+
+.pcard:hover .pIcon {
+  rotate: -8deg;
+}
+
+.pcard:hover .pTitle {
+  color: #03100e;
+}
+
+.pcard:hover .pText {
+  color: #3d4f4c;
+}
+
+.pcard:hover .pStage:not(:hover) {
+  border-color: rgba(2, 133, 121, 0.2);
+  background: #ffffff;
+  color: #03100e;
+}
+
+.pcard:hover .pStage:not(:hover) span {
+  background: rgba(17, 185, 168, 0.14);
+  color: var(--teal-600);
+}
+
+.pcard:hover .pStrip {
+  border-top-color: rgba(2, 133, 121, 0.25);
+}
+
+.pcard:hover .pStrip i:not([data-on]) {
+  background: rgba(3, 16, 14, 0.1);
+}
+
+.pcard:hover .pStrip span {
+  color: #5b6d6a;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pcard {
+    transform: none;
+  }
+}
+
+/* ========================================================== handoff relay */
+.relay {
+  --p: 0;
+  position: relative;
+}
+
+.track {
+  position: relative;
+  margin-top: clamp(2.5rem, 1.5rem + 3vw, 4rem);
+}
+
+.rail {
+  position: absolute;
+  top: 26px;
+  left: calc(50% / var(--n));
+  right: calc(50% / var(--n));
+  height: 4px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.railFill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--teal-500), var(--mint));
+  box-shadow: 0 0 18px rgba(143, 240, 226, 0.6);
+  transform: scaleX(var(--p));
+  transform-origin: 0 50%;
+}
+
+/* the baton carried along the track */
+.baton {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--p) * 100%);
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  margin: -23px 0 0 -23px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: var(--teal-600);
+  box-shadow: 0 0 0 6px rgba(143, 240, 226, 0.25), 0 0 30px rgba(143, 240, 226, 0.8);
+}
+
+.baton svg {
+  width: 20px;
+  height: 20px;
+}
+
+.marks {
+  display: grid;
+  grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.mark {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 0.75rem;
+  text-align: center;
+  opacity: 0.4;
+  transition: opacity 600ms var(--ease-out);
+}
+
+.mark[data-on] {
+  opacity: 1;
+}
+
+.markDot {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border: 1px solid var(--stroke-2);
+  border-radius: 50%;
+  background: #0b1716;
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--text-2);
+  transition: background 500ms var(--ease-out), color 500ms var(--ease-out), border-color 500ms var(--ease-out), box-shadow 500ms var(--ease-out);
+}
+
+.mark[data-on] .markDot {
+  border-color: transparent;
+  background: linear-gradient(140deg, var(--mint), var(--teal-500));
+  color: #03100e;
+  box-shadow: 0 0 30px rgba(143, 240, 226, 0.5);
+}
+
+.markTitle {
+  margin-top: 0.75rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.125rem, 1rem + 0.4vw, 1.375rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--white);
+}
+
+.markBody {
+  max-width: 18rem;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+/* Phones and tablets: the track runs down the left */
+@media (max-width: 899.98px) {
+  .rail {
+    top: calc(50% / var(--n));
+    bottom: calc(50% / var(--n));
+    left: 26px;
+    right: auto;
+    width: 4px;
+    height: auto;
+  }
+
+  .railFill {
+    transform: scaleY(var(--p));
+    transform-origin: 50% 0;
+  }
+
+  .baton {
+    top: calc(var(--p) * 100%);
+    left: 50%;
+  }
+
+  .marks {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2rem;
+  }
+
+  .mark {
+    grid-template-columns: 56px minmax(0, 1fr);
+    justify-items: start;
+    column-gap: 1.25rem;
+    row-gap: 0.375rem;
+    text-align: left;
+  }
+
+  .markDot {
+    grid-row: span 2;
+  }
+
+  .markTitle {
+    margin-top: 0.375rem;
+  }
+}
+
+/* ================================================== practices we support */
+.tileRow {
+  display: grid;
+  gap: 1rem;
+  margin-top: clamp(2rem, 1rem + 3vw, 3.5rem);
+}
+
+.tile {
+  position: relative;
+  min-height: 22rem;
+}
+
+@media (min-width: 1000px) {
+  .tileRow {
+    display: flex;
+    height: 30rem;
+  }
+
+  .tile {
+    flex: 1 1 0;
+    min-width: 0;
+    transition: flex-grow 800ms cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  .tile:hover,
+  .tile:focus-within {
+    flex-grow: 1.9;
+  }
+}
+
+.tileLink {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-content: end;
+  overflow: hidden;
+  border: 1px solid var(--stroke);
+  border-radius: 28px;
+  background: #0b1716;
+  isolation: isolate;
+}
+
+.tileLink img {
+  z-index: -2;
+  transition: scale 1200ms var(--ease-out);
+}
+
+.tile:hover .tileLink img {
+  scale: 1.06;
+}
+
+.tileShade {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(0deg, rgba(3, 9, 9, 0.95) 8%, rgba(3, 9, 9, 0.55) 50%, rgba(3, 9, 9, 0.15));
+}
+
+.tileNum {
+  position: absolute;
+  top: 1.25rem;
+  left: 1.25rem;
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 0.625rem;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(10px);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+  transition: background 500ms var(--ease-out), color 500ms var(--ease-out), border-color 500ms var(--ease-out);
+}
+
+.tile:hover .tileNum,
+.tile:focus-within .tileNum {
+  border-color: transparent;
+  background: #ffffff;
+  color: #03100e;
+}
+
+.tileText {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1.5rem;
+}
+
+.tileTitle {
+  font-family: var(--font-display);
+  font-size: clamp(1.625rem, 1.3rem + 1vw, 2.25rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  color: var(--white);
+}
+
+.tileBody {
+  max-width: 30rem;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--text-2);
+}
+
+@media (min-width: 1000px) {
+  .tileBody {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+}
+
+.tileGo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--mint);
+}
+
+.tileGo svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: translate 400ms var(--ease-out);
+}
+
+.tile:hover .tileGo svg {
+  translate: 4px 0;
+}
+
+.tileLink:focus-visible {
+  outline: 2px solid var(--mint);
+  outline-offset: 3px;
+}
+
+/* section wrappers */
+.tiles {
+  position: relative;
+}

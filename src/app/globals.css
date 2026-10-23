@@ -227,6 +227,11 @@ button {
   border-radius: 6px;
 }
 
+/* Containers focused by script (back to top, in-page links) don't get a ring */
+:is(main, section, article, div)[tabindex="-1"]:focus {
+  outline: none;
+}
+
 /* ---------- Layout ---------- */
 .container {
   width: 90%;

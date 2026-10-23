@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { ButtonLink } from "@/components/ui/Button";
 import { SmartLink } from "@/components/ui/SmartLink";
 import { useMotion } from "@/components/motion/useMotion";
+import { getLenis } from "@/components/motion/SmoothScroll";
 import { gsap } from "@/lib/gsap";
 import { onSiteReady } from "@/lib/siteReady";
 import { HOME_HERO, HOME_HERO_POINTS } from "@/content/site/home";
@@ -59,6 +60,17 @@ export function Hero() {
     });
     return onSiteReady(() => tl.play());
   });
+
+  // "Scroll to explore": glide to the content just below the hero, clear of the fixed header.
+  const scrollPastHero = () => {
+    const hero = ref.current;
+    if (!hero) return;
+    const header = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--header-h")) || 76;
+    const top = hero.getBoundingClientRect().bottom + window.scrollY - header;
+    const lenis = getLenis();
+    if (lenis) lenis.scrollTo(top, { duration: 1.4 });
+    else window.scrollTo({ top, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+  };
 
   return (
     <section ref={ref} className={styles.hero} aria-labelledby="home-title">
@@ -124,12 +136,12 @@ export function Hero() {
           <span className={styles.liveDot} aria-hidden="true" />
           Starting with OpenDental
         </p>
-        <p className={styles.metaRight} aria-hidden="true">
+        <button type="button" className={styles.metaRight} onClick={scrollPastHero}>
           Scroll <span>to explore</span>
-          <svg viewBox="0 0 16 16">
+          <svg viewBox="0 0 16 16" aria-hidden="true">
             <path d="M8 3v9.5M4 9l4 4 4-4" />
           </svg>
-        </p>
+        </button>
       </div>
     </section>
   );

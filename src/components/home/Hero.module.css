@@ -280,12 +280,27 @@
 }
 
 .metaLeft,
+/* "Scroll to explore" is a button that scrolls to the content below */
 .metaRight {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  min-height: 40px;
+  padding: 0 0.25rem;
+  border: 0;
+  background: none;
   font-family: var(--font-display);
   font-size: 0.875rem;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: color 300ms var(--ease-out);
+}
+
+.metaRight:hover {
+  color: var(--mint);
+}
+
+.metaRight:hover span {
   color: var(--text-2);
 }
 
@@ -376,5 +391,47 @@
   .line,
   .pill::before {
     animation: none;
+  }
+}
+
+/* Pointing at (or tabbing to) a hero button blurs and dims everything behind it
+   (the light, the headline, the copy), so the button stands out on its own.
+   The light is scaled a touch so its blurred edges stay off-screen. */
+.bg,
+.pill,
+.title,
+.lead,
+.points,
+.bar {
+  transition: filter 600ms var(--ease-out), opacity 600ms var(--ease-out), scale 600ms var(--ease-out);
+}
+
+.hero:has(.actions a:hover) .bg,
+.hero:has(.actions a:focus-visible) .bg {
+  filter: blur(18px) saturate(1.2);
+  opacity: 0.55;
+  scale: 1.08;
+}
+
+.hero:has(.actions a:hover) :is(.pill, .lead, .points, .bar),
+.hero:has(.actions a:focus-visible) :is(.pill, .lead, .points, .bar) {
+  filter: blur(4px);
+  opacity: 0.4;
+}
+
+.hero:has(.actions a:hover) .title,
+.hero:has(.actions a:focus-visible) .title {
+  filter: blur(5px) drop-shadow(0 0 30px rgba(143, 240, 226, 0.22));
+  opacity: 0.45;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bg,
+  .pill,
+  .title,
+  .lead,
+  .points,
+  .bar {
+    transition: none;
   }
 }

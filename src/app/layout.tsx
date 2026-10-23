@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Google_Sans, Plus_Jakarta_Sans } from "next/font/google";
 import { Header } from "@/components/layout/Header";
 import { Preloader } from "@/components/layout/Preloader";
+import { BackToTop } from "@/components/layout/BackToTop";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import { HOME_META } from "@/content/site/home";
 import { ROBOTS, SITE_URL } from "@/lib/site";
@@ -61,6 +62,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Header />
         {/* Each page renders its own <main id="main"> and footer (the footer carries the page's call to action). */}
         {children}
+        <BackToTop />
       </body>
     </html>
   );

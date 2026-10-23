@@ -1,0 +1,1341 @@
+/* =================================================================== hero */
+.hero {
+  position: relative;
+  display: grid;
+  align-content: start;
+  padding: calc(var(--header-h) + env(safe-area-inset-top, 0px) + clamp(2rem, 1rem + 3vw, 4rem)) 0 0;
+  overflow: clip;
+  isolation: isolate;
+  background: var(--bg);
+}
+
+@media (min-width: 1100px) {
+  .hero {
+    min-height: max(100svh, 52rem);
+  }
+}
+
+.heroBg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+}
+
+.heroAurora {
+  position: absolute;
+  inset: 0;
+  isolation: isolate;
+}
+
+.heroGrid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 84px 84px;
+  mask-image: radial-gradient(60% 55% at 50% 30%, #000, transparent 80%);
+  -webkit-mask-image: radial-gradient(60% 55% at 50% 30%, #000, transparent 80%);
+}
+
+/* a soft spotlight where the pages fan out */
+.spot {
+  position: absolute;
+  left: 50%;
+  bottom: -30%;
+  width: min(120vw, 90rem);
+  aspect-ratio: 2 / 1;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(63, 214, 195, 0.32), rgba(40, 120, 200, 0.08) 55%, transparent);
+}
+
+.heroCopy {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-5);
+  text-align: center;
+}
+
+.heroTitle {
+  max-width: 16ch;
+  font-size: clamp(2.5rem, 1rem + 4.6vw, 5.5rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.055em;
+  filter: drop-shadow(0 0 30px rgba(143, 240, 226, 0.22));
+}
+
+.line {
+  --c: #ffffff;
+  --s: #8ff0e2;
+  display: block;
+  padding-bottom: 0.2em;
+  margin-bottom: -0.2em;
+  background-image: linear-gradient(100deg, var(--c) 0 40%, var(--s) 50%, var(--c) 60% 100%);
+  background-size: 280% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-wrap: balance;
+  animation: shine 9s var(--ease-in-out) 3.2s infinite;
+}
+
+.lineAccent {
+  --c: #8ff0e2;
+  --s: #ffffff;
+  animation-delay: 3.5s;
+}
+
+@keyframes shine {
+  0% {
+    background-position: 100% 0;
+  }
+
+  22%,
+  100% {
+    background-position: 0% 0;
+  }
+}
+
+.heroLead {
+  max-width: 38rem;
+  font-size: var(--fs-lede);
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
+@media (max-width: 479.98px) {
+  .heroActions,
+  .heroActions > * {
+    width: 100%;
+  }
+}
+
+/* ---------- The hand of pages ---------- */
+.deck {
+  --cw: clamp(5.5rem, 3rem + 8vw, 11.5rem);
+  --step: 5.2deg;
+  position: relative;
+  height: calc(var(--cw) * 1.75);
+  margin-top: clamp(2.5rem, 1.5rem + 3vw, 4rem);
+}
+
+@media (min-width: 760px) {
+  .deck {
+    --step: 6.4deg;
+  }
+}
+
+.fan {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 300%;
+}
+
+.card {
+  --lift: 0px;
+  position: absolute;
+  left: 50%;
+  top: 6%;
+  width: var(--cw);
+  aspect-ratio: 0.72;
+  margin-left: calc(var(--cw) / -2);
+  overflow: hidden;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.35),
+    0 30px 50px -24px rgba(0, 0, 0, 0.9);
+  transform-origin: 50% 330%;
+  transform: rotate(calc(var(--a) * var(--step))) translateY(calc(var(--lift) + var(--rise, 0px)));
+  transition: --lift 500ms var(--ease-out), box-shadow 500ms var(--ease-out);
+  pointer-events: auto;
+}
+
+/* the two covers stand a little taller, side by side at the centre */
+.card[data-cover] {
+  --lift: -14px;
+  z-index: 2;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.5),
+    0 40px 60px -24px rgba(0, 0, 0, 0.95),
+    0 0 50px -10px rgba(143, 240, 226, 0.55);
+}
+
+.card img {
+  object-fit: cover;
+  object-position: 50% 0%;
+}
+
+.card:hover {
+  --lift: -34px;
+  z-index: 3;
+  box-shadow:
+    0 0 0 2px var(--mint),
+    0 40px 60px -24px rgba(0, 0, 0, 0.95),
+    0 0 60px -10px rgba(143, 240, 226, 0.7);
+}
+
+@property --lift {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+.deckTag {
+  position: absolute;
+  top: -1.75rem;
+  z-index: 4;
+  display: inline-flex;
+  gap: 0.375rem;
+  padding: 0.375rem 0.875rem;
+  border: 1px solid var(--stroke-2);
+  border-radius: 999px;
+  background: rgba(9, 18, 17, 0.85);
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-2);
+}
+
+.deckTag b {
+  color: var(--mint);
+}
+
+.deckTagL {
+  right: calc(50% + var(--cw) * 1.4);
+}
+
+.deckTagR {
+  left: calc(50% + var(--cw) * 1.4);
+}
+
+@media (max-width: 759.98px) {
+  .deckTag {
+    display: none;
+  }
+}
+
+/* the arc sinks into the next section */
+.deckFade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 5;
+  height: 45%;
+  background: linear-gradient(0deg, var(--bg) 10%, transparent);
+  pointer-events: none;
+}
+
+/* ============================================================== brochures */
+.brochures {
+  position: relative;
+  overflow-x: clip;
+}
+
+.foldList {
+  display: grid;
+  /* a fixed track, so the swipe row cannot widen it */
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(3.5rem, 2rem + 4vw, 5rem);
+  margin-top: clamp(2rem, 1rem + 3vw, 3.5rem);
+}
+
+.fold {
+  position: relative;
+  min-width: 0;
+}
+
+/* Phones first: heading, pages, contents, download */
+.foldLayout {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.foldHead {
+  order: 1;
+  display: grid;
+  justify-items: start;
+  gap: 1rem;
+}
+
+.swipeWrap {
+  order: 2;
+  min-width: 0;
+}
+
+.toc {
+  order: 3;
+}
+
+.foldFoot {
+  order: 4;
+  display: grid;
+  gap: 0.875rem;
+}
+
+.foldStage {
+  display: none;
+}
+
+.foldTitle {
+  max-width: 18ch;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 1.1rem + 2.2vw, 3.25rem);
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -0.045em;
+  color: var(--white);
+  text-wrap: balance;
+}
+
+.foldLead {
+  max-width: 40rem;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+.foldActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.foldMeta {
+  font-size: 0.875rem;
+  color: var(--text-3);
+}
+
+@media (max-width: 479.98px) {
+  .foldActions,
+  .foldActions > * {
+    width: 100%;
+  }
+}
+
+/* ---------- Pinned: the bar on top, the fold filling the rest of the screen ---------- */
+.fold[data-live] .foldPin {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 0.75rem;
+  height: 100svh;
+  padding: calc(var(--header-h) + 0.75rem) 0 1rem;
+}
+
+.fold[data-live] .foldLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  column-gap: 2rem;
+}
+
+.fold[data-live] .foldHead {
+  gap: 0.625rem;
+}
+
+.fold[data-live] .foldTitle {
+  max-width: none;
+  font-size: clamp(1.75rem, 1rem + 1.5vw, 2.625rem);
+}
+
+.fold[data-live] .foldLead {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  font-size: 1rem;
+}
+
+.fold[data-live] .foldFoot {
+  justify-items: end;
+  gap: 0.5rem;
+}
+
+.fold[data-live] .swipeWrap,
+.fold[data-live] .toc {
+  display: none;
+}
+
+@media (max-height: 899.98px) {
+  .fold[data-live] .foldLead {
+    display: none;
+  }
+}
+
+/* the stage measures itself, and the fold and its rail size from it */
+.fold[data-live] .foldStage {
+  --reserve: 7rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  min-height: 0;
+  container-type: size;
+  perspective: 2200px;
+}
+
+.fold[data-kind="book"] .foldStage {
+  --reserve: 7.5rem;
+}
+
+.stageGlow {
+  position: absolute;
+  inset: 8% 12% 24%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(63, 214, 195, 0.2), rgba(40, 120, 200, 0.05) 60%, transparent);
+  pointer-events: none;
+}
+
+.tilt {
+  transform-style: preserve-3d;
+}
+
+.acc,
+.railWrap {
+  width: min(94cqw, calc((100cqh - var(--reserve)) * var(--wide)));
+}
+
+.acc {
+  position: relative;
+  aspect-ratio: var(--wide);
+  transform-style: preserve-3d;
+}
+
+/* ---------- The six-panel zig-zag ---------- */
+.panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(100% / var(--cols));
+  height: 100%;
+  transform-origin: 0% 50%;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* each further panel hangs off the previous panel's right edge */
+.panel .panel {
+  left: 100%;
+  width: 100%;
+}
+
+.face {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 2px;
+  background: #ffffff;
+  box-shadow: inset 1px 0 0 rgba(0, 0, 0, 0.08), 0 30px 50px -30px rgba(0, 0, 0, 0.8);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.faceBack {
+  transform: rotateY(180deg);
+}
+
+.paper {
+  background: linear-gradient(90deg, #e6e1d6, #f7f5ef 50%, #e9e4da);
+}
+
+.face img {
+  object-fit: cover;
+}
+
+.shade {
+  position: absolute;
+  inset: 0;
+  background: #02100e;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.faceBtn {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: end center;
+  padding: 0 0 1rem;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+}
+
+.faceBtn span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 0.875rem;
+  border-radius: 999px;
+  background: rgba(3, 16, 14, 0.9);
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: #ffffff;
+  opacity: 0;
+  translate: 0 8px;
+  transition: opacity 350ms var(--ease-out), translate 350ms var(--ease-out);
+}
+
+.faceBtn svg {
+  width: 15px;
+  height: 15px;
+}
+
+.face:hover .faceBtn span {
+  opacity: 1;
+  translate: 0 0;
+}
+
+/* ---------- The two-page book ---------- */
+.book {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+.leaf,
+.bookEnd,
+.bookBase {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+}
+
+.leaf,
+.bookEnd {
+  left: 50%;
+}
+
+.leaf {
+  transform-origin: 0% 50%;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* the page facing right: square spine edge on the left, a soft fold shadow */
+.leaf > .face:first-child {
+  border-radius: 2px 10px 10px 2px;
+}
+
+.leaf > .face:first-child::after,
+.leaf > .faceBack::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.leaf > .face:first-child::after {
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.22), rgba(0, 0, 0, 0.05) 4%, transparent 12%);
+}
+
+/* the turned page lies on the left */
+.leaf > .faceBack {
+  border-radius: 10px 2px 2px 10px;
+}
+
+.leaf > .faceBack::after {
+  background: linear-gradient(to left, rgba(0, 0, 0, 0.22), rgba(0, 0, 0, 0.05) 4%, transparent 12%);
+}
+
+/* the back cover, with the page edges showing beneath */
+.bookEnd {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 1rem;
+  padding: 1.5rem 1rem;
+  border-radius: 2px 10px 10px 2px;
+  background:
+    radial-gradient(90% 60% at 50% 0%, rgba(63, 214, 195, 0.28), transparent 70%),
+    linear-gradient(160deg, #123e38, #071a18);
+  box-shadow:
+    1px 1px 0 #ebe7de,
+    2px 2px 0 #cbc5b8,
+    3px 3px 0 #ebe7de,
+    4px 4px 0 #c3bdaf,
+    5px 5px 0 #e4dfd4,
+    0 50px 80px -30px rgba(0, 0, 0, 0.95);
+  text-align: center;
+  transform: translateZ(-1px);
+}
+
+/* the turned pages piling up on the left */
+.bookBase {
+  left: 0;
+  border-radius: 10px 2px 2px 10px;
+  background: #f3f0e9;
+  box-shadow:
+    -1px 1px 0 #cbc5b8,
+    -2px 2px 0 #ebe7de,
+    -3px 3px 0 #c3bdaf,
+    -4px 4px 0 #e4dfd4,
+    0 50px 80px -30px rgba(0, 0, 0, 0.95);
+  opacity: 0;
+  transform: translateZ(-1px);
+}
+
+.endKicker {
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mint);
+}
+
+.endTitle {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 1rem + 1.2vw, 2.25rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--white);
+}
+
+.endTitle em {
+  display: block;
+  font-style: normal;
+  color: var(--mint);
+}
+
+.endBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.625rem 1rem;
+  border-radius: 999px;
+  background: var(--mint);
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 700;
+  white-space: nowrap;
+  color: #03100e;
+  transition: background 300ms var(--ease-out);
+}
+
+.endBtn:hover {
+  background: #ffffff;
+}
+
+.endBtn svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* ---------- Rail of page titles under the fold ---------- */
+.railWrap {
+  display: grid;
+  justify-items: center;
+  gap: 0.75rem;
+}
+
+.rail {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  gap: 0.25rem 0.5rem;
+  width: 100%;
+}
+
+.rail li {
+  transition: opacity 500ms var(--ease-out);
+}
+
+/* the pages not on show recede */
+.fold[data-kind="book"] .rail li:not([data-on]) {
+  opacity: 0.35;
+}
+
+.railBtn {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.5rem 0.25rem 0.25rem;
+  border: 0;
+  border-top: 2px solid var(--stroke-2);
+  background: none;
+  font: inherit;
+  text-align: left;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: color 350ms var(--ease-out), border-color 350ms var(--ease-out);
+}
+
+.railBtn:hover {
+  border-top-color: var(--mint);
+  color: var(--white);
+}
+
+.railBtn:focus-visible {
+  outline: 2px solid var(--mint);
+  outline-offset: 2px;
+}
+
+.railNum {
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--mint);
+}
+
+.railTitle {
+  font-size: 0.875rem;
+  line-height: 1.35;
+}
+
+.foldStep {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.foldStep i,
+.pager i {
+  width: 8px;
+  height: 4px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.22);
+  transition: width 500ms var(--ease-out), background 500ms var(--ease-out);
+}
+
+.foldStep i[data-on],
+.pager i[data-on] {
+  width: 26px;
+  background: var(--mint);
+  box-shadow: 0 0 10px rgba(143, 240, 226, 0.6);
+}
+
+.foldStep span,
+.pager span {
+  margin-left: 0.75rem;
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+/* ---------- Swipeable pages ---------- */
+.swipe {
+  --sw: min(76vw, calc(min(64svh, 34rem) * var(--ar)), 24rem);
+  position: relative;
+  display: flex;
+  gap: 1rem;
+  padding: 0.75rem calc(50% - var(--sw) / 2) 1.25rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  /* neighbouring pages fade at the edges rather than stopping hard */
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+
+.swipe::-webkit-scrollbar {
+  display: none;
+}
+
+.swipe:focus-visible {
+  outline: 2px solid var(--mint);
+  outline-offset: 2px;
+  border-radius: 12px;
+}
+
+.swipeItem {
+  position: relative;
+  flex: 0 0 var(--sw);
+  aspect-ratio: var(--ar);
+  overflow: hidden;
+  border-radius: 10px;
+  background: #ffffff;
+  scroll-snap-align: center;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.4),
+    0 30px 60px -30px rgba(0, 0, 0, 0.9),
+    0 0 40px -16px rgba(63, 214, 195, 0.5);
+}
+
+.swipeOpen {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+}
+
+.swipeOpen img {
+  object-fit: cover;
+}
+
+.swipeOpen:focus-visible {
+  outline: 3px solid var(--mint);
+  outline-offset: -3px;
+}
+
+.swipeNum {
+  position: absolute;
+  right: 0.5rem;
+  bottom: 0.5rem;
+  display: grid;
+  place-items: center;
+  min-width: 30px;
+  height: 30px;
+  padding: 0 0.375rem;
+  border-radius: 8px;
+  background: rgba(3, 16, 14, 0.85);
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  margin-top: 1rem;
+}
+
+/* ---------- Contents (with the swipeable pages) ---------- */
+.toc {
+  display: grid;
+  border-top: 1px solid var(--stroke);
+}
+
+.tocRow {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: 44px;
+  padding: 0.5rem 0.875rem;
+  border: 0;
+  border-bottom: 1px solid var(--stroke);
+  background: none;
+  font: inherit;
+  text-align: left;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: background 450ms var(--ease-out), color 450ms var(--ease-out);
+}
+
+.tocRow::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background: var(--mint);
+  box-shadow: 0 0 12px var(--mint);
+  transform: scaleY(0);
+  transition: transform 450ms var(--ease-out);
+}
+
+.tocRow:hover {
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--white);
+}
+
+.tocRow[aria-current] {
+  background: linear-gradient(90deg, rgba(17, 185, 168, 0.16), transparent 85%);
+  color: var(--white);
+}
+
+.tocRow[aria-current]::before {
+  transform: scaleY(1);
+}
+
+.tocRow:focus-visible {
+  outline: 2px solid var(--mint);
+  outline-offset: -2px;
+}
+
+.tocNum {
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--mint);
+}
+
+.tocTitle {
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.tocPage {
+  font-size: 0.875rem;
+  color: var(--text-3);
+}
+
+/* ---------- Page reader ---------- */
+.reader {
+  width: min(94vw, 56rem);
+  max-width: none;
+  max-height: 92svh;
+  padding: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--stroke-2);
+  border-radius: 22px;
+  background: #0a1514;
+  color: var(--text);
+  box-shadow: 0 60px 120px -40px rgba(0, 0, 0, 0.95);
+}
+
+.fold[data-kind="accordion"] .reader {
+  width: min(94vw, 38rem);
+}
+
+.reader::backdrop {
+  background: rgba(2, 8, 8, 0.84);
+  backdrop-filter: blur(6px);
+}
+
+.readerInner {
+  display: grid;
+}
+
+.readerBar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.625rem 0.625rem 0.625rem 1.25rem;
+  border-bottom: 1px solid var(--stroke);
+  background: rgba(10, 21, 20, 0.96);
+}
+
+.readerTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--white);
+}
+
+.readerTitle > span:first-child {
+  flex: none;
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--mint);
+}
+
+.readerCtrls {
+  display: flex;
+  flex: none;
+  gap: 0.375rem;
+}
+
+.readerBtn {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 1px solid var(--stroke-2);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--white);
+  cursor: pointer;
+  transition: background 300ms var(--ease-out), color 300ms var(--ease-out), opacity 300ms var(--ease-out);
+}
+
+.readerBtn:hover:not(:disabled) {
+  border-color: transparent;
+  background: var(--mint);
+  color: #03100e;
+}
+
+.readerBtn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.readerBtn:focus-visible {
+  outline: 2px solid var(--mint);
+  outline-offset: 2px;
+}
+
+.readerPage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: var(--ar);
+  background: #ffffff;
+  animation: readerIn 450ms var(--ease-out) both;
+}
+
+.readerPage img {
+  object-fit: contain;
+}
+
+@keyframes readerIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+@media (max-width: 479.98px) {
+  .readerTitle {
+    font-size: 0.9375rem;
+  }
+
+  .readerBtn {
+    width: 38px;
+    height: 38px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .readerPage {
+    animation: none;
+  }
+
+  .card {
+    transition: none;
+  }
+}
+
+/* ================================================================= guides */
+.guides {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.guidesAurora {
+  mask-image: linear-gradient(to bottom, transparent, #000 20%, #000 80%, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 20%, #000 80%, transparent);
+}
+
+.guidesHead {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.guidesHead :global(.site-head) {
+  margin-bottom: 0;
+}
+
+@media (min-width: 1100px) {
+  .guidesHead {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+  }
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  padding: 0.3125rem;
+  border: 1px solid var(--stroke-2);
+  border-radius: 24px;
+  background: rgba(9, 18, 17, 0.8);
+}
+
+.filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 40px;
+  padding: 0 0.5rem 0 1rem;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: background 300ms var(--ease-out), color 300ms var(--ease-out);
+}
+
+.filter span {
+  display: grid;
+  place-items: center;
+  min-width: 26px;
+  height: 26px;
+  padding: 0 0.375rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 0.875rem;
+  color: var(--text);
+}
+
+.filter:hover {
+  color: var(--mint);
+}
+
+.filter[aria-pressed="true"] {
+  background: linear-gradient(140deg, var(--mint), var(--teal-500));
+  color: #03100e;
+}
+
+.filter[aria-pressed="true"] span {
+  background: rgba(3, 16, 14, 0.18);
+  color: #03100e;
+}
+
+.filter:focus-visible {
+  outline: 2px solid var(--mint);
+  outline-offset: 2px;
+}
+
+.guideGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.875rem;
+  margin-top: clamp(2rem, 1rem + 2.5vw, 3rem);
+  perspective: 1400px;
+}
+
+@media (min-width: 640px) {
+  .guideGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1100px) {
+  .guideGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.guide {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: 0.875rem;
+  min-height: 17rem;
+  padding: clamp(1.25rem, 1rem + 1vw, 1.875rem);
+  overflow: hidden;
+  border: 1px solid var(--stroke);
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(12, 22, 21, 0.85), rgba(6, 12, 12, 0.75));
+  isolation: isolate;
+  /* filtered cards fade in after a change */
+  animation: guideIn 600ms var(--ease-out) both;
+  animation-delay: calc(var(--k) * 60ms);
+  transition: border-color 600ms var(--ease-out), translate 700ms var(--ease-out), box-shadow 700ms var(--ease-out);
+}
+
+@keyframes guideIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+}
+
+.guideTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.guideIcon {
+  display: grid;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  border: 1px solid var(--stroke-glow);
+  border-radius: 15px;
+  background: linear-gradient(150deg, rgba(17, 185, 168, 0.32), rgba(17, 185, 168, 0.04));
+  color: var(--mint);
+  transition: background 500ms var(--ease-out), color 500ms var(--ease-out), border-color 500ms var(--ease-out), rotate 600ms var(--ease-out);
+}
+
+.guideIcon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.guideCat {
+  padding: 0.3125rem 0.75rem;
+  border: 1px solid var(--stroke-2);
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-2);
+  transition: color 500ms var(--ease-out), border-color 500ms var(--ease-out);
+}
+
+.guideTitle {
+  margin-top: 0.75rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.375rem, 1.15rem + 0.6vw, 1.75rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  color: var(--white);
+  transition: color 500ms var(--ease-out);
+}
+
+.guideLink {
+  color: inherit;
+  outline: none;
+}
+
+/* the whole card is the link's hit area */
+.guideLink::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+.guide:has(.guideLink:focus-visible) {
+  outline: 2px solid var(--mint);
+  outline-offset: 3px;
+}
+
+.guideBody {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--text-2);
+  transition: color 500ms var(--ease-out);
+}
+
+.guideGo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--mint);
+  transition: color 500ms var(--ease-out);
+}
+
+.guideGo svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: translate 400ms var(--ease-out);
+}
+
+.guide:hover {
+  border-color: rgba(255, 255, 255, 0.9);
+  translate: 0 -6px;
+  box-shadow: 0 30px 60px -28px rgba(143, 240, 226, 0.45);
+}
+
+.guide:hover .guideIcon {
+  border-color: transparent;
+  background: var(--teal-500);
+  color: #ffffff;
+  rotate: -8deg;
+}
+
+.guide:hover .guideCat {
+  border-color: rgba(2, 133, 121, 0.3);
+  color: var(--teal-600);
+}
+
+.guide:hover .guideTitle {
+  color: #03100e;
+}
+
+.guide:hover .guideBody {
+  color: #3d4f4c;
+}
+
+.guide:hover .guideGo {
+  color: var(--teal-600);
+}
+
+.guide:hover .guideGo svg {
+  translate: 4px 0;
+}
+
+.guide:hover :is(.guideTitle, .guideBody, .guideGo, .guideCat) {
+  transition-delay: 120ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .line,
+  .guide {
+    animation: none;
+  }
+}
+
+/* ---------- The book, as large as the screen allows ---------- */
+.fold[data-kind="book"][data-live] .foldPin {
+  gap: clamp(1.25rem, 0.5rem + 2vh, 2.25rem);
+  padding: calc(var(--header-h) + 0.75rem) 0 1rem;
+}
+
+.fold[data-kind="book"][data-live] .foldHead > :first-child,
+.fold[data-kind="book"][data-live] .foldLead,
+.fold[data-kind="book"][data-live] .foldMeta {
+  display: none;
+}
+
+.fold[data-kind="book"][data-live] .foldTitle {
+  font-size: clamp(1.5rem, 1rem + 1vw, 2rem);
+}
+
+.fold[data-kind="book"][data-live] .foldLayout {
+  align-items: center;
+}
+
+/* room above the book (a turning page lifts toward the reader) and between the book and its rail */
+.fold[data-kind="book"][data-live] .foldStage {
+  --reserve: 7.5rem;
+  gap: 1.25rem;
+  padding-top: 0.75rem;
+}
+
+.fold[data-kind="book"][data-live] .acc,
+.fold[data-kind="book"][data-live] .railWrap {
+  width: min(98cqw, calc((100cqh - var(--reserve)) * var(--wide)));
+}
+
+/* the six page titles in one row under the spread */
+.fold[data-kind="book"] .rail {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.fold[data-kind="book"] .reader {
+  width: min(94vw, 64rem);
+}

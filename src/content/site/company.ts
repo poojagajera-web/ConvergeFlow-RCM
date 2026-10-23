@@ -35,7 +35,7 @@ export const COMPANY_PAGES: SitePage[] = [
       actions: [DEMO, { label: "See the services", href: "/services/" }],
       visual: {
         kind: "photo",
-        photo: { src: "/assets/photos/specialist-headset.jpg", alt: "Revenue cycle specialist at her desk with a headset", caption: "Your named team" },
+        photo: { src: "/assets/photos/v2/how-it-works.jpg", alt: "Practice manager shaking hands with her account team across a meeting table", caption: "Your named team" },
         note: "Owners agreed before day one",
       },
     },
@@ -296,7 +296,7 @@ export const COMPANY_PAGES: SitePage[] = [
       actions: [DEMO, { label: "How it works", href: "/how-it-works/" }],
       visual: {
         kind: "photo",
-        photo: { src: "/assets/photos/specialist-headset.jpg", alt: "Revenue cycle specialist at work", caption: "The team owns the work" },
+        photo: { src: "/assets/photos/v2/why-avatar.jpg", alt: "Revenue cycle specialist with a headset at her desk", caption: "The team owns the work" },
         note: "Not just a dashboard",
       },
     },
@@ -366,7 +366,7 @@ export const COMPANY_PAGES: SitePage[] = [
       actions: [{ label: "Contact the team", href: "/contact/" }, DEMO],
       visual: {
         kind: "photo",
-        photo: { src: "/assets/photos/billing-review.jpg", alt: "Two team members reviewing claims together", caption: "Specialists, side by side" },
+        photo: { src: "/assets/photos/v2/about-hero.jpg", alt: "A revenue cycle team at work in a bright open office", caption: "Specialists, side by side" },
         note: "From appointments to verified coverage",
       },
     },
@@ -380,7 +380,7 @@ export const COMPANY_PAGES: SitePage[] = [
           "Practices hand over agreed parts of the revenue cycle, from verified coverage before the visit to a reconciled account after it.",
           "We agree scope, owners and reporting before we start, and keep the practice informed through daily queues and weekly reviews.",
         ],
-        photo: { src: "/assets/photos/front-desk.jpg", alt: "Front-desk team member with a patient", caption: "Before the visit" },
+        photo: { src: "/assets/photos/v2/about-band.jpg", alt: "Dental practice front desk preparing the day before opening", caption: "Before the visit" },
       },
       {
         kind: "cards",
@@ -524,14 +524,6 @@ export const COMPANY_PAGES: SitePage[] = [
           { icon: "user", title: "Patients", body: "For bills or appointments, please contact your dental or medical practice directly." },
         ],
       },
-      {
-        kind: "chips",
-        eyebrow: "What to include",
-        title: "Help us",
-        accent: "help you faster.",
-        chips: ["Practice type", "Number of locations", "Practice system (e.g. OpenDental)", "Main payers", "Stages you need help with", "Where claims stall today"],
-        note: "Please keep patient names, identifiers, insurance documents and account credentials out of your message.",
-      },
     ],
     faq: [],
     cta: {
@@ -638,6 +630,7 @@ export const COMPANY_PAGES: SitePage[] = [
       },
       {
         kind: "related",
+        id: "guides",
         eyebrow: "Guides",
         title: "Explore",
         accent: "the workflow.",

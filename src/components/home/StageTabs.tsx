@@ -8,19 +8,10 @@ import { useMotion } from "@/components/motion/useMotion";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { liveHref } from "@/content/navigation";
 import { STAGES } from "@/content/site/services";
+import { HOME_STAGE_PHOTOS } from "@/content/site/stagePhotos";
 import styles from "./StageTabs.module.css";
 
-/** One 4K photo per stage (3584×4800); next/image serves resized versions. */
-const PHOTOS: { src: string; pos: string; alt: string }[] = [
-  { src: "/assets/photos/stages/registration.jpg", pos: "40% 50%", alt: "Front-desk coordinator checking a patient's insurance card at reception" },
-  { src: "/assets/photos/stages/eligibility.jpg", pos: "45% 50%", alt: "Verification specialist with a headset confirming coverage at her desk" },
-  { src: "/assets/photos/stages/prior-authorization.jpg", pos: "55% 50%", alt: "Dentist and care coordinator reviewing a treatment plan on a tablet" },
-  { src: "/assets/photos/stages/dental-coding.jpg", pos: "60% 50%", alt: "Dentist pointing at an x-ray while a coding specialist takes notes" },
-  { src: "/assets/photos/stages/claims-submission.jpg", pos: "55% 50%", alt: "Billing specialist at a dual-monitor workstation" },
-  { src: "/assets/photos/stages/payment-posting.jpg", pos: "55% 50%", alt: "Two team members reconciling remittance statements against a laptop" },
-  { src: "/assets/photos/stages/denial-management.jpg", pos: "60% 50%", alt: "Specialist on a payer call with an open folder of claim documents" },
-  { src: "/assets/photos/stages/ar-reporting.jpg", pos: "60% 50%", alt: "Practice manager and accounts specialist reviewing charts on a wall screen" },
-];
+const PHOTOS = HOME_STAGE_PHOTOS;
 
 const pad = (n: number) => String(n).padStart(2, "0");
 

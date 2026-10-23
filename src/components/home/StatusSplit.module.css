@@ -16,6 +16,8 @@
 .pin {
   position: relative;
   display: grid;
+  /* one column the width of the screen, never stretched by a wide item */
+  grid-template-columns: minmax(0, 1fr);
   justify-items: center;
   align-content: center;
   gap: clamp(1.5rem, 1rem + 2vw, 2.5rem);
@@ -364,13 +366,14 @@
   color: var(--text);
 }
 
+/* Wide enough that the longest status ("Accepted" at 14px) sits inside the ring */
 .ringWrap {
   position: relative;
   display: grid;
   place-items: center;
   align-self: center;
-  width: 100px;
-  height: 100px;
+  width: 112px;
+  height: 112px;
 }
 
 .ring {
@@ -401,7 +404,7 @@
   font-family: var(--font-display);
   font-size: 0.875rem;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
   color: rgb(var(--hue));
   animation: labelIn 600ms var(--ease-out) both;
@@ -453,6 +456,30 @@
 .steps li[data-on] .stepDot {
   background: currentColor;
   box-shadow: 0 0 8px currentColor;
+}
+
+/* Small phones: the three steps keep to the screen width (14px labels made the pill wider than 320px) */
+/* Small phones: the claim details take the full card width and the ring sits centred beneath */
+@media (max-width: 479.98px) {
+  .card {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ringWrap {
+    justify-self: center;
+  }
+}
+
+@media (max-width: 379.98px) {
+  .steps {
+    gap: 0.125rem;
+  }
+
+  .steps li {
+    gap: 0.375rem;
+    padding-inline: 0.5rem;
+    letter-spacing: 0.02em;
+  }
 }
 
 .caption {

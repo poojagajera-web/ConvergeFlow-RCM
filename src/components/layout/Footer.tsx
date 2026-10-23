@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { usePathname } from "next/navigation";
 import { Logo } from "@/components/ui/Logo";
 import { ButtonLink } from "@/components/ui/Button";
 import { SmartLink } from "@/components/ui/SmartLink";
@@ -24,6 +25,7 @@ const NEXT = [
 ];
 
 function Column({ title, links }: { title: string; links: NavLink[] }) {
+  const pathname = usePathname();
   if (!links.length) return null;
   return (
     <nav className={styles.column} aria-label={title}>
@@ -31,7 +33,7 @@ function Column({ title, links }: { title: string; links: NavLink[] }) {
       <ul>
         {links.map((link) => (
           <li key={link.href}>
-            <SmartLink href={link.href} className={styles.link}>
+            <SmartLink href={link.href} className={styles.link} aria-current={link.href === pathname ? "page" : undefined}>
               {link.label}
             </SmartLink>
           </li>
@@ -185,7 +187,7 @@ export function Footer({ cta }: { cta?: Cta }) {
                   <span className="visually-hidden"> (opens in a new tab)</span>
                 </a>
               </p>
-              <SmartLink href="#main" className={styles.top}>
+              <SmartLink href="#main" className={styles.top} data-back-to-top>
                 Back to top
                 <svg viewBox="0 0 16 16" aria-hidden="true">
                   <path d="M8 13V3.5M4 7l4-4 4 4" />

@@ -102,7 +102,7 @@ export type Section =
   | ({ kind: "anatomy"; body?: string } & Heading)
   | ({ kind: "evidence"; items: Item[]; body?: string } & Heading)
   | ({ kind: "journey"; groups: JourneyGroup[] } & Heading)
-  | ({ kind: "stages"; items: (Item & { href?: string })[]; note?: string } & Heading)
+  | ({ kind: "stages"; items: (Item & { href?: string })[]; note?: string; layout?: "cycle" | "flow" } & Heading)
   | ({ kind: "contact" } & Heading)
   | ({ kind: "downloads"; items: { title: string; body: string; href: string; meta: string }[] } & Heading)
   | ({ kind: "related"; routes: string[] } & Heading);

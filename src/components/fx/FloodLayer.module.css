@@ -1,0 +1,62 @@
+/*
+ * The white sheet: a large disc centred where the pointer entered (--fx/--fy)
+ * that scales up from nothing. Only its transform animates, so it stays smooth.
+ */
+.fill {
+  position: absolute;
+  left: var(--fx, 50%);
+  top: var(--fy, 0%);
+  z-index: -1;
+  width: 360%;
+  aspect-ratio: 1;
+  /* percentage margins resolve against the card width: this centres the disc on the point */
+  margin: -180% 0 0 -180%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, #ffffff 0%, #f6fcfb 40%, #e4f5f1 100%);
+  transform: scale(0);
+  transition: transform 800ms cubic-bezier(0.65, 0, 0.35, 1);
+  pointer-events: none;
+}
+
+/* Soft light that follows the pointer (--mx/--my come from MotionScope's data-glow) */
+.glow {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 0%), rgba(63, 214, 195, 0.16), transparent 70%);
+  opacity: 0;
+  transition: opacity 500ms var(--ease-out);
+  pointer-events: none;
+}
+
+/* A teal line drawing along the top edge */
+.edge {
+  position: absolute;
+  top: 0;
+  left: 1.5rem;
+  right: 1.5rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--teal-400) 30%, var(--teal-400) 70%, transparent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 700ms var(--ease-out);
+  pointer-events: none;
+}
+
+[data-flood]:hover > .fill {
+  transform: scale(1);
+}
+
+[data-flood]:hover > .glow {
+  opacity: 1;
+}
+
+[data-flood]:hover > .edge {
+  transform: scaleX(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fill {
+    transition-duration: 1ms;
+  }
+}
