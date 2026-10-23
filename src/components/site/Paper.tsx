@@ -124,13 +124,3 @@ export function Polaroid({ photo, tilt = -3, className = "", priority = false, s
     </figure>
   );
 }
-
-/** A small glowing note chip. */
-export function StickyNote({ text, tone = "yellow", tilt = 4, className = "" }: { text: string; tone?: "yellow" | "mint"; tilt?: number; className?: string }) {
-  return (
-    <p className={`${styles.sticky} ${className}`} data-tone={tone} style={{ ["--tilt" as string]: `${tilt * 0.3}deg` }}>
-      <span className={styles.stickyDot} aria-hidden="true" />
-      {text}
-    </p>
-  );
-}

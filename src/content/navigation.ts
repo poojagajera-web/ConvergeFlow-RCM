@@ -28,7 +28,7 @@ const normalize = (href: string) => {
 };
 
 /** True for hashes, external URLs and internal routes this build serves. */
-export function isLive(href: string) {
+function isLive(href: string) {
   if (href.startsWith("#") || /^(https?:|mailto:|tel:)/.test(href)) return true;
   return BUILT_ROUTES.has(normalize(href));
 }

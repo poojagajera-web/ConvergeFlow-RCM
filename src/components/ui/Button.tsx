@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes, ReactNode } from "react";
+import type { ReactNode } from "react";
 import { SmartLink } from "@/components/ui/SmartLink";
 
 type Variant = "primary" | "secondary";
@@ -40,13 +40,5 @@ export function ButtonLink({ href, variant = "primary", size = "md", arrow = tru
     <SmartLink href={href} className={classes(variant, size, arrow, className)} onClick={onClick}>
       <Inner arrow={arrow}>{children}</Inner>
     </SmartLink>
-  );
-}
-
-export function Button({ variant = "primary", size = "md", arrow = true, className = "", children, ...rest }: Common & ButtonHTMLAttributes<HTMLButtonElement>) {
-  return (
-    <button className={classes(variant, size, arrow, className)} {...rest}>
-      <Inner arrow={arrow}>{children}</Inner>
-    </button>
   );
 }

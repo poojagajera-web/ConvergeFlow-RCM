@@ -5,7 +5,7 @@
  * next/image serves resized versions. `pos` keeps the subject in frame when
  * the photo is cropped.
  */
-export type StagePhoto = { src: string; pos: string; alt: string };
+type StagePhoto = { src: string; pos: string; alt: string };
 
 const set = (prefix: string, list: [string, string, string][]): StagePhoto[] =>
   list.map(([slug, pos, alt]) => ({ src: `/assets/photos/v2/${prefix}-${slug}.jpg`, pos, alt }));

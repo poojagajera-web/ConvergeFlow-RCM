@@ -17,8 +17,6 @@ export const DEMO_FORM = {
 
 export const PRACTICE_TYPES = ["Dental practice", "DSO or group practice", "Medical practice", "Other"];
 
-export const LOCATION_OPTIONS = ["1", "2–5", "6–15", "16 or more"];
-
 /** Shown beside every demo form until delivery is configured and approved. */
 export const FORM_NOTICE =
   "Online requests are not enabled yet. The form will open once request delivery and the privacy notice are confirmed. Until then, email hari@softqubes.com.";

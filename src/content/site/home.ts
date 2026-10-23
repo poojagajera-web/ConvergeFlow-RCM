@@ -1,9 +1,7 @@
 /**
- * Homepage (V2 order): offer → the claim story → who does what → the journey
- * → dental detail → working together → accountability & evidence → questions
- * → request. Sources: RCM brochure, Dental billing brochure, V2 design notes.
+ * Homepage content. Sources: RCM brochure, Dental billing brochure, V2 design notes.
  */
-import type { Cta, DocSpec, Faq, Item, Photo } from "./types";
+import type { Cta, Faq } from "./types";
 
 export const HOME_META = {
   title: "Managed Revenue Cycle Management for Dental & Medical Practices | ConvergeFlow",
@@ -21,169 +19,6 @@ export const HOME_HERO = {
     { label: "Explore services", href: "/services/" },
   ],
   facts: ["For dental and medical practices", "Starting with OpenDental", "Evidence for every check"],
-};
-
-export type StoryChapter = { key: string; label: string; title: string; accent: string; body: string; points: string[]; href: string; doc: DocSpec };
-
-/** The claim file's three chapters, ending in a closed account. */
-export const HOME_STORY: { eyebrow: string; title: string; accent: string; chapters: StoryChapter[]; closing: { title: string; sub: string } } = {
-  eyebrow: "From the chair to a closed account",
-  title: "One claim file,",
-  accent: "followed all the way.",
-  chapters: [
-    {
-      key: "before",
-      label: "01 · Before care",
-      title: "Clean claims start",
-      accent: "before the patient arrives.",
-      body: "Registration, benefits and authorization checked across payer portals, then returned to your practice system with evidence.",
-      points: ["Registration & demographics", "Eligibility & benefits", "Prior authorization"],
-      href: "/services/eligibility-verification/",
-      doc: {
-        kind: "insurance",
-        title: "Benefits verification",
-        ref: "Carrier 1 · PPO",
-        rows: [
-          ["Coverage", "Active"],
-          ["Deductible", "Met"],
-          ["Frequency", "2 per year"],
-          ["Payer order", "Primary"],
-        ],
-        stamp: "Verified",
-      },
-    },
-    {
-      key: "claims",
-      label: "02 · Claims",
-      title: "Every service captured.",
-      accent: "Every claim scrubbed.",
-      body: "Documentation and coding reviewed, charges captured and claims scrubbed before they are sent, with proof of every transmission.",
-      points: ["Dental coding & preparation", "Claim scrubbing", "Electronic submission"],
-      href: "/services/claims-submission/",
-      doc: {
-        kind: "claim",
-        title: "Claim · 837D",
-        ref: "Tooth 30 · M O",
-        rows: [
-          ["Procedure", "Restoration"],
-          ["Chart", "Matches"],
-          ["Attachment", "Linked"],
-          ["Scrub", "Passed"],
-        ],
-        stamp: "Submitted",
-      },
-    },
-    {
-      key: "payments",
-      label: "03 · Payments & follow-up",
-      title: "Paid accurately.",
-      accent: "Closed cleanly.",
-      body: "Remittances matched to deposits, denials worked to the root cause and balances followed to a documented resolution.",
-      points: ["Payment posting", "Denial management", "AR & reporting"],
-      href: "/services/payment-posting/",
-      doc: {
-        kind: "remittance",
-        title: "Remittance",
-        ref: "Illustrative",
-        rows: [
-          ["Plan pays", "$400"],
-          ["Patient share", "$400"],
-          ["Adjustment", "$200"],
-          ["Deposit", "Matched"],
-        ],
-        stamp: "Paid",
-      },
-    },
-  ],
-  closing: { title: "Account closed.", sub: "The cycle ends only when the account has a documented financial resolution." },
-};
-
-export const HOME_WHO = {
-  eyebrow: "Who does what",
-  title: "Your practice keeps the care.",
-  accent: "We own the agreed work.",
-  intro: "Before we start, we agree the scope, the owners and how we report. Every handoff gets an owner and a documented status.",
-  practice: {
-    title: "Your practice",
-    note: "the chart is yours",
-    items: ["Clinical records and signed documentation", "Provider details and payer contracts", "Treatment and clinical decisions", "Timely answers when we ask"],
-  },
-  team: {
-    title: "ConvergeFlow team",
-    note: "we take it from here",
-    items: ["Verification, benefits and authorizations", "Coding review, claims and submission", "Posting, denials and A/R follow-up", "Evidence, status and agreed reporting"],
-  },
-};
-
-/** The eight stages as tabbed folders (one per lifecycle group). */
-export const HOME_JOURNEY: { eyebrow: string; title: string; accent: string; intro: string; folders: { photo: Photo; note: string }[] } = {
-  eyebrow: "The managed journey",
-  title: "Eight stages,",
-  accent: "one accountable team.",
-  intro: "Choose the stages in your agreed scope. Each one has a named owner, a documented status and evidence you can check.",
-  folders: [
-    {
-      photo: { src: "/assets/photos/v2/d-registration.jpg", alt: "Patient handing her insurance card to a front-desk coordinator", caption: "before the visit" },
-      note: "Active coverage is only the starting point.",
-    },
-    {
-      photo: { src: "/assets/photos/v2/d-claims-submission.jpg", alt: "Billing specialist sending a claim from her laptop", caption: "matched to the chart" },
-      note: "Reimbursement preferences never determine the code.",
-    },
-    {
-      photo: { src: "/assets/photos/v2/d-payment-posting.jpg", alt: "Finance coordinator checking an itemised statement", caption: "posted & reconciled" },
-      note: "A contractual adjustment is never billed to the patient.",
-    },
-  ],
-};
-
-export const HOME_DENTAL = {
-  eyebrow: "Dental work, explained concretely",
-  title: "Dental claims fail",
-  accent: "for dental reasons.",
-  body: "A missing tooth number, an expired frequency limit, a radiograph that never got attached. Our team works the whole cycle so those gaps get caught before the payer finds them.",
-  chips: ["Deductibles", "Annual maximum", "Coverage %", "Frequencies", "Waiting periods", "Payer order"],
-  audiences: [
-    { label: "Dental practices", href: "/industries/dental/", body: "Dental billing, fully managed." },
-    { label: "DSOs & groups", href: "/industries/dso/", body: "Responsibilities agreed location by location." },
-    { label: "Medical practices", href: "/industries/medical/", body: "Coverage to a reconciled account." },
-  ],
-};
-
-export const HOME_TOGETHER: { eyebrow: string; title: string; accent: string; intro: string; steps: Item[]; ongoing: string } = {
-  eyebrow: "Working together",
-  title: "An operating model",
-  accent: "you can see.",
-  intro: "Onboarding comes first; then the day-to-day work runs on an agreed rhythm. No fixed rollout duration is promised; it depends on your scope and payers.",
-  steps: [
-    { icon: "clipboard", title: "Practice inputs", body: "Complete clinical records, provider details, payer contracts and timely clarification." },
-    { icon: "lock", title: "Access setup", body: "Approved system access starting with OpenDental, payer connectivity and secure credential handling." },
-    { icon: "route", title: "Agreed workflow", body: "Coding review, claim preparation, submission monitoring, posting and follow-up, with owners named." },
-    { icon: "flag", title: "Launch review", body: "Work queues, escalation contacts, reporting cadence and acceptance criteria confirmed." },
-  ],
-  ongoing: "Then verifications run on schedule ahead of every visit, and the work continues with daily queues and weekly reviews.",
-};
-
-export const HOME_PROOF = {
-  statement: { text: "We don't just report the problem.", accent: "We fix it." },
-  evidence: {
-    eyebrow: "Accountability & evidence",
-    title: "Evidence for",
-    accent: "every check.",
-    body: "Portal captures, reference numbers and timestamps, stored securely, so you can see what was done and when.",
-    items: [
-      { icon: "eye", title: "Portal capture", body: "What the payer showed at the time." },
-      { icon: "stamp", title: "Payer reference", body: "Recorded against the patient and visit." },
-      { icon: "clock", title: "Timestamp", body: "When each check or submission ran." },
-      { icon: "user", title: "Named owner", body: "Who is accountable for the next step." },
-    ] as Item[],
-  },
-  cadence: [
-    { icon: "clock", title: "Daily", body: "Incomplete records, claims on hold, rejections and unposted receipts." },
-    { icon: "calendar", title: "Weekly", body: "Denial causes, aging balances, underpayments and attachment delays." },
-    { icon: "chart", title: "Defined measures", body: "Days in A/R, denial rate, net collection rate and verification success by payer, defined with you." },
-  ] as Item[],
-  note: "Targets are set from your baseline and agreed scope. No reimbursement outcome is guaranteed.",
 };
 
 export const HOME_FAQ: Faq[] = [
@@ -209,20 +44,6 @@ export const HOME_CTA: Cta = {
 /* V4 homepage additions (dark "glow" design). Sources: RCM brochure, */
 /* Dental billing brochure. No figures beyond the brochure's own.     */
 /* ------------------------------------------------------------------ */
-
-/** Revenue-cycle shorthand floating around the hero (decorative). */
-export const HOME_TOKENS = [
-  { text: "837D", x: 8, y: 22, depth: 0.9, rotate: -6, boxed: true },
-  { text: "ERA → EFT", x: 4, y: 52, depth: 0.55 },
-  { text: "CDT", x: 14, y: 72, depth: 1, rotate: 8, boxed: true },
-  { text: "#30 · M O", x: 82, y: 20, depth: 0.7 },
-  { text: "COB", x: 88, y: 46, depth: 1, rotate: -8, boxed: true },
-  { text: "EOB", x: 80, y: 70, depth: 0.6 },
-  { text: "A/R 61–90", x: 22, y: 40, depth: 0.35 },
-  { text: "NPI", x: 72, y: 34, depth: 0.35 },
-  { text: "PPO", x: 66, y: 80, depth: 0.45 },
-  { text: "ADA 1–32", x: 30, y: 84, depth: 0.4 },
-];
 
 export const HOME_HERO_POINTS = ["Benefits verified before care", "Claims followed to a decision", "Balances resolved with an owner"];
 

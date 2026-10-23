@@ -397,36 +397,3 @@
   background: var(--mint);
   box-shadow: 0 0 8px var(--mint);
 }
-
-/* ---------- Note chip ---------- */
-.sticky {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.625rem;
-  max-width: 16rem;
-  padding: 0.75rem 1rem;
-  border: 1px solid var(--stroke-glow);
-  border-radius: 16px;
-  background: rgba(5, 14, 14, 0.85);
-  font-size: 0.875rem;
-  line-height: 1.35;
-  color: var(--text);
-  box-shadow: 0 0 30px -8px rgba(63, 214, 195, 0.5), 0 20px 40px -20px rgba(0, 0, 0, 0.9);
-  transform: rotate(var(--tilt, 0deg));
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-}
-
-.stickyDot {
-  flex-shrink: 0;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--mint);
-  box-shadow: 0 0 10px var(--mint);
-}
-
-.sticky[data-tone="yellow"] .stickyDot {
-  background: var(--amber);
-  box-shadow: 0 0 10px var(--amber);
-}

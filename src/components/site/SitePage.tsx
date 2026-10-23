@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { MotionScope } from "@/components/motion/MotionScope";
 import { JsonLd } from "@/components/content/JsonLd";
 import { plain } from "@/components/content/Rich";
@@ -16,8 +17,6 @@ import { PricingPage } from "@/components/company/PricingPage";
 import { WhyPage } from "@/components/company/WhyPage";
 import { navGroupFor } from "@/content/navigation";
 import { SiteFaq } from "./SiteFaq";
-import { SiteHero } from "./SiteHero";
-import { SiteSections } from "./Sections";
 
 export function metadataFor(seo: { title: string; description: string }, route: string): Metadata {
   const canonical = canonicalFor(route);
@@ -60,12 +59,14 @@ function schemaFor(page: Page) {
 }
 
 /**
- * One page: hero, content sections and FAQ, then the footer carrying the page's
- * call to action. The Services hub, the eight stage pages, the Who We Help and
- * How It Works pages and the Company pages have their own home-style layouts.
+ * One page in its own layout (the Services hub, the eight stage pages, the Who
+ * We Help and How It Works pages, or a Company page), then the FAQ and the
+ * footer carrying the page's call to action.
  */
 export function SitePage({ page }: { page: Page }) {
   const Company = COMPANY_PAGES[page.route];
+  // every built route has a layout above; a page without one isn't published
+  if (page.route !== "/services/" && !page.stage && !navGroupFor(page.route) && !Company) notFound();
   return (
     <>
       <JsonLd schema={schemaFor(page)} />
@@ -77,13 +78,8 @@ export function SitePage({ page }: { page: Page }) {
             <StagePage page={page} />
           ) : navGroupFor(page.route) ? (
             <InnerPage page={page} />
-          ) : Company ? (
-            <Company page={page} />
           ) : (
-            <>
-              <SiteHero hero={page.hero} />
-              <SiteSections sections={page.sections} />
-            </>
+            Company && <Company page={page} />
           )}
           <SiteFaq items={page.faq} />
         </main>

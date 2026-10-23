@@ -16,18 +16,21 @@ npm run lint
 
 ```
 src/
-  app/                 layout (fonts, header/footer, Lenis), home, /demo, not-found, globals.css (tokens)
+  app/                 layout (fonts, header/footer, Lenis), home, /demo, [...slug] (every other page), not-found, globals.css (tokens)
   content/
-    home.ts            all home-page copy and product data
-    navigation.ts      sitemap IA (ConvergeFlow_RCM_Sitemap.xlsx) + BUILT_ROUTES
+    navigation.ts      sitemap IA, mega menus and footer links
+    site/              page copy: home, services, audiences, company, brochures, forms, stage photos
   components/
-    layout/            Header (mega menus, mobile sheet), Footer
-    sections/          one folder-less component + CSS module per home section
-    product/           live verification console, video dialog
-    forms/             DemoForm (shared by home #demo and /demo)
+    home/              the home-page sections
+    services/          Services hub, stage pages, Who We Help / How It Works pages, Resources
+    company/           About, Why ConvergeFlow, Pricing, Contact, Request a Demo
+    site/              SitePage (route → layout), FAQ, shared section renderers, Icon, Paper
+    layout/            Header (mega menus, mobile sheet), Footer, Preloader
+    fx/                Aurora, FloodLayer, ParticleSphere, ScrollText
     motion/            SmoothScroll (Lenis ↔ GSAP ticker), MotionScope (data-anim reveals), useMotion
-    ui/                Button, SmartLink (hash-aware links), Logo
-  lib/gsap.ts          plugin registration + shared media queries
+    content/           JsonLd, Rich
+    ui/                ButtonLink, SmartLink (hash-aware links), Logo
+  lib/                 gsap.ts (plugins + media queries), site.ts (origin, robots, canonical), siteReady.ts
 ```
 
 ## Animation conventions
@@ -38,9 +41,9 @@ src/
 
 ## Adding sitemap pages
 
-Navigation lists every sitemap slug. Until a page exists, links fall back to the matching home-page section. When you ship a route, add its slug to `BUILT_ROUTES` in `src/content/navigation.ts` and the header, mega menus and footer switch to it automatically.
+Navigation lists every sitemap slug, but the header, mega menus and footer only link to built routes. A page is built once it is in `SITE_PAGES` (`src/content/site/index.ts`) and `SitePage` has a layout for it.
 
 ## Open items
 
-- The demo form validates and confirms locally only — it is not connected to a CRM, email or scheduling backend yet (the original site behaved the same way).
-- Pricing, Login/client portal, Resources content and legal pages from the sitemap are not built.
+- The demo form is not connected yet: submit stays disabled with a notice until request delivery and the privacy notice are confirmed.
+- The OpenDental page (`/technology/opendental/`) is not built yet, so it isn't linked.
